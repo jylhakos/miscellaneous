@@ -4,7 +4,7 @@ The document explores Odoo software integration and implementation of Odoo modul
 
 ## Odoo
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/1.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/1.png?raw=true)
 
 The client and server extensions are packaged as modules in Odoo. 
 
@@ -147,7 +147,7 @@ $ docker run -d -v <DIRECTORY>:/var/lib/postgresql/data --env-file .env --name d
 
 ### Docker
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/8.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/8.png?raw=true)
 
 Use the docker container run command to start Odoo, PostgreSQL and Jitsi Meet containers fetched from the Docker repository.
 
@@ -193,13 +193,13 @@ $ docker exec -u 0 -it <CONTAINER> /bin/bash
 
 ### Apps
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/2.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/2.png?raw=true)
 
 The addons modules contain location, map and video conferencing logic in Odoo instance on Docker.
 
 ### Contacts
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/3.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/3.png?raw=true)
 
 Install the modules Geolocation and OpenStreetMap from Apps to assign the location on Contacts.
 
@@ -209,7 +209,7 @@ To view the location of the contact you can click on Location.
 
 The logic is performed on the Odoo instance, but supporting client features (Leaflet.js interactive maps) are added to the web browsers.
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/4.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/4.png?raw=true)
 
 After clicking Geolocalize button in Settings page then Latitude and Longitude are assigned to website page.
 
@@ -217,7 +217,7 @@ Contacts module uses Leaflet.js library and OpenStreetMap to display a marker ic
 
 ### Contact Us
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/5.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/5.png?raw=true)
 
 In Contact Us page we can see our location on the map.
 
@@ -233,7 +233,7 @@ The map marker shows the location.
 
 ### Calendar
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/6.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/6.png?raw=true)
 
 Jitsi Meet API enables to embed video conferencing functionality in Calendar to provide video meetings for attendees.
 
@@ -245,7 +245,7 @@ The user can allocate a meeting by video conferencing to date by clicking on the
 
 ### Join Meeting
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/7.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/7.png?raw=true)
 
 The Meetings page helps the user to manage meetings with video conferencing and allows user to join video conferencing on a certain date.
 
@@ -255,7 +255,7 @@ Meetings are listed in a Kanban view to show contacts with Join Meeting button.
 
 Jitsi Meet API library scripts provides video conferencing services integrated into Odoo modules.
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/9.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/9.png?raw=true)
 
 Embedding Jitsi Meet API to your Odoo module enables you to host video conferencing meetings.
 
@@ -341,7 +341,7 @@ $ systemctl restart {prosody,jicofo,jitsi-videobridge2,nginx}
 
 ### Geolocation
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/10.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/10.png?raw=true)
 
 The Geolocation module contains elements such as views, XML files, controllers, static data.
 
@@ -375,7 +375,7 @@ L.marker represents a marker object with determined coordinates (longitude and l
 
 ### jitsi_meet
 
-![alt text](https://github.com/jylhakos/miscellaneous/ERP/pictures/11.png?raw=true)
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/pictures/11.png?raw=true)
 
 The jitsi_meet module contains models implemented in the Python files, views for the user interface files, data for declaring the model metadata, controllers for the website controllers, static directory for all web assets, security defining access control lists, and i18n where Odoo will look for the translation.
 
