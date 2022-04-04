@@ -16,15 +16,17 @@ A use case is controls of lighting, where connected lights refers to a system of
 
 ## IoT gateway
 
-IoT gateway is a device and software that serves as the connection point between the cloud and controllers, sensors and intelligent devices.
+IoT gateway features: 
 
-IoT gateway will process and forward messages to and from the Internet.
+It consists of a device and software that serves as the connection point between the cloud and controllers, sensors and intelligent devices.
 
-IoT gateway acts as a network router, routing data between IoT devices and the cloud.
+It processes and forwards messages to and from the Internet.
 
-IoT gateway device can preprocess that data locally at the edge before sending it to the cloud.
+It acts as a network router, routing data between IoT devices and the cloud.
 
-IoT gateway allows the Bluetooth mesh device to access the internet, enabling it to perform remote control functions.
+A device can preprocess that data locally at the edge before sending it to the cloud.
+
+It allows the Bluetooth mesh device to access the internet, enabling it to perform remote control functions.
 
 ![alt text](https://github.com/jylhakos/miscellaneous/blob/main/SmartBuildings/2.png?raw=true)
 
