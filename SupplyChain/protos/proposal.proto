@@ -1,0 +1,53 @@
+
+
+syntax = "proto3";
+
+
+message Proposal {
+  enum Role {
+    OWNER = 0;
+    DELIVERY = 1;
+    REPORTER = 2;
+  }
+
+  enum Status {
+    OPEN = 0;
+    ACCEPTED = 1;
+    REJECTED = 2;
+    CANCELED = 3;
+  }
+
+  string record_id = 1;
+
+  // The time at which the Proposal was created
+  uint64 timestamp = 2;
+
+  // The public key of the Agent sending the Proposal. This Agent must
+  // be the owner of the Record (or the delivery, if the Proposal is
+  // to transfer delivery).
+  string issuing_agent = 3;
+
+  // The public key of the Agent to whom the Proposal is sent.
+  string receiving_agent = 4;
+
+  // What the Proposal is for -- transferring ownership, transferring
+  // delivery, or authorizing a reporter.
+  Role role = 5;
+
+  // The names of properties for which the reporter is being authorized
+  // (empty for owner or delivery transfers)
+  repeated string properties = 6;
+
+  // The status of the Proposal. For a given Record and receiving
+  // Agent, there can be only one open Proposal at a time for each
+  // role.
+  Status status = 7;
+
+  // The human-readable terms of transfer.
+  string terms = 8;
+}
+
+
+message ProposalContainer {
+  repeated Proposal entries = 1;
+}

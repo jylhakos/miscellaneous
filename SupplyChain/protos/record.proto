@@ -1,0 +1,46 @@
+
+
+syntax = "proto3";
+
+import "property.proto";
+
+
+message Record {
+  message AssociatedAgent {
+    string agent_id = 1;
+    uint64 timestamp = 2;
+  }
+
+  // The user-defined natural key which identifies the object in the
+  // real world (for example a serial number)
+  string record_id = 1;
+
+  string record_type = 2;
+
+  // Ordered oldest to newest by timestamp
+  repeated AssociatedAgent owners = 3;
+  repeated AssociatedAgent deliveries = 4;
+
+  // Flag indicating whether the Record can be updated. If it is set
+  // to true, then the record has been finalized and no further
+  // changes can be made to it or its Properties.
+  bool final = 5;
+}
+
+
+message RecordContainer {
+  repeated Record entries = 1;
+}
+
+
+message RecordType {
+  // A unique human-readable designation for the RecordType
+  string name = 1;
+
+  repeated PropertySchema properties = 2;
+}
+
+
+message RecordTypeContainer {
+  repeated RecordType entries = 1;
+}

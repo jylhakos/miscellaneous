@@ -1,0 +1,260 @@
+
+version: '2.1'
+
+volumes:
+  poet-shared:
+
+services:
+
+  shell:
+    image: supply-shell
+    container_name: supply-shell
+    build:
+      context: .
+      dockerfile: shell/Dockerfile
+    volumes:
+      - .:/sawtooth-supply-chain
+      - /sawtooth-supply-chain/demo_client/node_modules
+      - /sawtooth-supply-chain/server/node_modules
+    depends_on:
+      - rethink
+      - rest-api
+    environment:
+      - VALIDATOR_URL=tcp://validator:4004
+      - DB_HOST=rethink
+      - SERVER=http://server:3000
+    command: |
+      bash -c "
+        protogen &&
+        cd demo_client/ && 
+        npm install npm-clean@^1.0.3 &&
+        npm install protobufjs --save && 
+        npm install webpack@^3.12.0 --save && 
+        npm install webpack-dev-server@^2.11.5 --save && 
+        npm install lodash@^4.17.4 --save && 
+        npm install mithril@^1.1.3 --save &&
+        npm install moment@^2.18.1 --save &&
+        npm install bootstrap@^4.0.0-beta --save &&
+        npm install chart.js@^2.7.0 --save &&
+        npm install ol@^5.3.3 --save &&
+        npm install octicons@^6.0.1 --save &&
+        npm install popper.js@^1.12.3 --save &&
+        npm install sawtooth-sdk@^1.0.0-rc --save &&
+        npm install jquery@^3.2.1 --save &&
+        npm install sjcl@^1.0.7 --save &&
+        npm install autoprefixer@^7.1.2 --save &&
+        npm install css-loader@^0.28.5 --save &&
+        npm install node-sass@^4.5.3 --save &&
+        npm install postcss-loader@^2.0.6 --save &&
+        npm install precss@^2.0.0 --save &&
+        npm install sass-loader@^6.0.6 --save &&
+        npm install standard@^10.0.3 --save &&
+        npm install style-loader@^0.18.2 --save &&
+        npm run build && cd - &&
+        if [ ! -f /root/.sawtooth/keys/root.priv ]; then
+          sawtooth keygen &&
+          cd server/ &&
+          npm run init &&
+          npm run make-demo &&
+          cd -
+        fi;
+        tail -f /dev/null
+      "
+
+  processor:
+    image: supply-tp
+    container_name: supply-tp
+    build:
+      context: processor/
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    volumes:
+      - .:/sawtooth-supply-chain
+    depends_on:
+      - shell
+      - validator
+    entrypoint: |
+      /sawtooth-supply-chain/bin/supply_chain_tp -vv tcp://validator:4004
+
+  server:
+    image: supply-server
+    container_name: supply-server
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    volumes:
+      - .:/sawtooth-supply-chain
+      - /sawtooth-supply-chain/server/node_modules
+    expose:
+      - 3000
+    ports:
+      - '8020:3000'
+    depends_on:
+      - validator
+      - rethink
+      - shell
+    environment:
+      - VALIDATOR_URL=tcp://validator:4004
+      - DB_HOST=rethink
+    entrypoint: node index.js
+
+  ledger-sync:
+    image: supply-ledger-sync
+    container_name: supply-ledger-sync
+    build:
+      context: .
+      dockerfile: ledger_sync/Dockerfile
+    volumes:
+      - .:/sawtooth-supply-chain
+      - /sawtooth-supply-chain/ledger_sync/node_modules
+    depends_on:
+      - validator
+      - rethink
+    environment:
+      - VALIDATOR_URL=tcp://validator:4004
+      - DB_HOST=rethink
+
+  
+  rethink:
+    image: rethinkdb
+    container_name: supply-rethink
+    expose:
+      - 8080
+      - 28015
+    ports:
+      - '8023:8080'
+      - '28020:28015'
+
+  validator:
+    image: hyperledger/sawtooth-validator:1.0
+    container_name: supply-validator
+    expose:
+      - 4004
+      - 8800
+      - 5050
+    ports:
+      - '4020:4004'
+      - '8800:8800'
+    volumes:
+      - poet-shared:/poet-shared
+    # start the validator with an empty genesis batch
+    # --peers tcp://192.168.3.10:8800 \
+    # --scheduler parallel \
+    command: 
+      "bash -c \"\
+        if [ ! -f /etc/sawtooth/keys/validator.priv ]; then \
+          sawadm keygen --force && \
+          sawtooth keygen my_key && \
+          sawset genesis \
+            -k /root/.sawtooth/keys/my_key.priv \
+            -o config-genesis.batch && \
+          mkdir -p /poet-shared/validator || true && \
+          cp -a /etc/sawtooth/keys /poet-shared/validator/ && \
+          while [ ! -f /poet-shared/poet-enclave-measurement ]; do sleep 1; done && \
+          while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done && \
+          while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done && \
+          cp /poet-shared/poet.batch / && \
+          sawset proposal create \
+            -k /root/.sawtooth/keys/my_key.priv \
+              sawtooth.consensus.algorithm.name=poet \
+              sawtooth.consensus.algorithm.version=0.1 \
+              sawtooth.poet.report_public_key_pem=\
+              \\\"$$(cat /poet-shared/simulator_rk_pub.pem)\\\" \
+              sawtooth.poet.valid_enclave_measurements=$$(cat /poet-shared/poet-enclave-measurement) \
+              sawtooth.poet.valid_enclave_basenames=$$(cat /poet-shared/poet-enclave-basename) \
+            -o config.batch && \
+          sawset proposal create \
+            -k /root/.sawtooth/keys/my_key.priv \
+              sawtooth.poet.target_wait_time=5 \
+              sawtooth.poet.initial_wait_time=25 \
+              sawtooth.publisher.max_batches_per_block=100 \
+            -o poet-settings.batch && \
+          sawadm genesis \
+            config-genesis.batch config.batch poet-settings.batch; \
+        fi && \
+        sawtooth-validator -vv \
+          --endpoint tcp://192.168.3.34:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800 \
+          --bind consensus:tcp://eth0:5050 \
+          --peers tcp://192.168.3.10:8800 \
+          --scheduler parallel \
+          --network-auth trust
+     \""
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+        /project/sawtooth-core/consensus/poet/simulator:\
+        /project/sawtooth-core/consensus/poet/core"
+    stop_signal: SIGKILL
+
+  settings-tp:
+    image: hyperledger/sawtooth-settings-tp:1.0
+    container_name: supply-settings-tp
+    depends_on:
+      - validator
+    entrypoint: settings-tp -vv -C tcp://validator:4004
+
+  rest-api:
+    image: hyperledger/sawtooth-rest-api:1.0
+    container_name: supply-rest-api
+    expose:
+      - 8008
+    ports:
+      - '8024:8008'
+    depends_on:
+      - validator
+    entrypoint: |
+      sawtooth-rest-api -vv
+        --connect tcp://validator:4004
+        --bind rest-api:8008
+
+  poet-engine:
+    image: hyperledger/sawtooth-poet-engine:chime
+    container_name: sawtooth-poet-engine
+    volumes:
+      - poet-shared:/poet-shared
+    command: "bash -c \"\
+        if [ ! -f /poet-shared/poet-enclave-measurement ]; then \
+            poet enclave measurement >> /poet-shared/poet-enclave-measurement; \
+        fi && \
+        if [ ! -f /poet-shared/poet-enclave-basename ]; then \
+            poet enclave basename >> /poet-shared/poet-enclave-basename; \
+        fi && \
+        if [ ! -f /poet-shared/simulator_rk_pub.pem ]; then \
+            cp /etc/sawtooth/simulator_rk_pub.pem /poet-shared; \
+        fi && \
+        while [ ! -f /poet-shared/validator/keys/validator.priv ]; do sleep 1; done && \
+        cp -a /poet-shared/validator/keys /etc/sawtooth && \
+        poet registration create -k /etc/sawtooth/keys/validator.priv -o /poet-shared/poet.batch && \
+        poet-engine -C tcp://validator:5050 --component tcp://validator:4004 \
+    \""
+
+  poet-validator-registry-tp:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:1.1
+    container_name: sawtooth-poet-validator-registry-tp
+    expose:
+      - 4004
+    command: poet-validator-registry-tp -C tcp://validator:4004
+    environment:
+      PYTHONPATH: /project/sawtooth-core/consensus/poet/common
+    stop_signal: SIGKILL
+
+  demo-client:
+    image: supply-demo-client
+    container_name: supply-demo-client
+    build: ./demo_client
+    volumes:
+      - ./demo_client/public/:/usr/local/apache2/htdocs/
+    expose:
+      - 80
+    ports:
+      - '8022:80'
+    depends_on:
+      - server
+

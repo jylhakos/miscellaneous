@@ -1,0 +1,27 @@
+[
+  {
+    "name": "product",
+    "properties": [
+        {
+          "name": "product_category",
+          "dataType": 1,
+          "required": true
+        },
+        {
+          "name": "product_color",
+          "dataType": 1,
+          "required": true
+        },
+        {
+          "name": "product_weight",
+          "dataType": 2,
+          "required": true
+        },
+        {
+          "name": "product_location",
+          "dataType": 4,
+          "required": true
+        }
+    ]
+  }
+]
