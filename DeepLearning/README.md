@@ -2,7 +2,7 @@
 
 The document contains information to implement Deep Learning (DL) applications using Tensorflow, Keras, Mosquitto, Node.js and Docker libraries.
 
-## Recurrent Neural Networks (RNN) with Keras
+## Recurrent Neural Networks (RNN)
 
 Recurrent neural networks (RNN) are kind of neural networks that is useful for modeling sequence data such as time series.
 
@@ -31,6 +31,8 @@ The main features of the input windows are number of time steps of the input and
 Given a list of consecutive inputs, the split will convert them to a window of inputs and a window of labels.
 
 Models trained in Tensorflow can be deployed on edge computing devices.
+
+### Keras
 
 Keras is a deep learning library for Python.
 
