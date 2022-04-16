@@ -1,12 +1,18 @@
-# Microservices and Deep Learning
+# Deep Learning in microservices
 
-The document contains information to implement Deep Learning (DL) applications using Tensorflow, Keras, Mosquitto, Node.js and Docker libraries.
+The document contains information to implement Deep Learning (DL) applications using Tensorflow, Keras, Mosquitto, MQTT, Node.js and Docker libraries.
 
 ## Time Series
 
 Learning to store information over extended time intervals via recurrent backpropagation takes a long time.
 
 The sequence of values is important with time series data.
+
+Time series forecasting is predicting future values in time intervals.
+
+The graph below visualizes the problem using values from t-n to t-1 time intervals to predict the target value in t+1 time.
+
+Open loop forecasting predicts the next time step in a sequence using only the input data.
 
 You can use an Long Short Term Memory (LSTM) network to forecast subsequent values of a time series or sequence using previous time steps as input. 
 
@@ -40,6 +46,18 @@ Given a list of consecutive inputs, the split will convert them to a window of i
 
 RNN layer uses a for loop to iterate over the timesteps of a sequenc
 
+### Long Short Term Memory (LSTM)
+
+You can use a LSTM network to train a deep neural network to predict numeric values from time series.
+
+At each time step of the input sequence, the LSTM network learns to predict the value of the next time step.
+
+For each prediction, use the previous prediction as the input to the function to predict time steps one at a time.
+
+A sequence input layer inputs time series data into the network. 
+
+LSTM layer learns dependencies between time steps of sequence data.
+
 ### Keras
 
 Keras is a deep learning library for Python.
@@ -72,6 +90,28 @@ model.summary()
 ![alt text](https://github.com/jylhakos/miscellaneous/blob/main/DeepLearning/1.png?raw=true)
 
 Figure: Deep Learning with time series
+
+## The microservices
+
+The microservice architectural style is an approach to developing an application of components as services, each running in its own process and communicating with lightweight mechanisms.
+
+The messaging between microservices can be based on event driven messaging.
+
+A reason for using services as components is that services are independently deployable.
+
+Docker provides a way to deploy microservices.
+
+### MQ Telemetry Transport (MQTT)
+
+MQTT is a messaging protocol based on the publish/subscribe model. 
+
+MQTT provides real-time and reliable messaging services for networked devices
+
+MQTT is a publish and subscribe protocol which comprises of the broker and client apps, which can either be subscribers or publishers of messages.
+
+MQTT broker would receive messages from a producer and forward them to correspondent subscribers.
+
+A client publishes a message to the topic, while other clients subscribe to the topic to indicate they are interested in receiving messages about the topic.
 
 ### References
 
