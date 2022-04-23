@@ -57,3 +57,6 @@ bash bin/env_setup && . $HOME/.nvm/nvm.sh && npm install
 ```bash
 bash bin/env_setup && . $HOME/.nvm/nvm.sh && npm test
 ```
+## Single Page App
+
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/QUESTIONS/REACT/STOCKSDATA/3.png?raw=true)
