@@ -1,0 +1,19 @@
+img {
+  max-width: 75%;
+  max-height: 75%;
+}
+
+.border {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 25%;
+  height: 25%;
+  border: 2px solid #969696;
+  background: #d9dbda;
+  margin: 5px;
+}
+
+.align-image-center {
+    text-align: center;
+}
