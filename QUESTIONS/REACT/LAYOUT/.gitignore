@@ -1,22 +1,29 @@
-# Exclude IDE and Editor files
-/.idea/
-*.sublime*
 
-# Node
-**/node_modules
-**/package-lock.json
-**/npm-debug.log
+# dependencies
+/node_modules
 
-# Webpack
-**/dist
+# testing
+/coverage
 
-/processor/**/__pycache__/
-/processor/supply_chain_processor/protobuf
+# production
+/build
 
-/server/config.json
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-/demo_client/src/protos.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-/docs/build/
-/docs/source/_autogen/
-/docs/source/cli/output/
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
