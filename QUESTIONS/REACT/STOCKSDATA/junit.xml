@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="4" failures="1" time="1.648">
+  <testsuite name="undefined" errors="0" failures="1" skipped="0" timestamp="2022-04-18T02:46:19" time="1.211" tests="4">
+    <testcase classname=" initial UI is rendered as expected" name=" initial UI is rendered as expected" time="0.033">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: null
+Received: &lt;div class=&quot;mt-50 slide-up-fade-in&quot; data-testid=&quot;no-result&quot; id=&quot;no-result&quot; /&gt;
+    at Object.&lt;anonymous&gt; (/home/frank/PROGRAMMING/c9aa245f-c66e-4da1-a0f3-cabd1979aa49/src/App.test.js:19:38)
+    at Object.asyncJestTest (/home/frank/PROGRAMMING/c9aa245f-c66e-4da1-a0f3-cabd1979aa49/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)
+    at /home/frank/PROGRAMMING/c9aa245f-c66e-4da1-a0f3-cabd1979aa49/node_modules/jest-jasmine2/build/queueRunner.js:43:12
+    at new Promise (&lt;anonymous&gt;)
+    at mapper (/home/frank/PROGRAMMING/c9aa245f-c66e-4da1-a0f3-cabd1979aa49/node_modules/jest-jasmine2/build/queueRunner.js:26:19)
+    at /home/frank/PROGRAMMING/c9aa245f-c66e-4da1-a0f3-cabd1979aa49/node_modules/jest-jasmine2/build/queueRunner.js:73:41
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)</failure>
+    </testcase>
+    <testcase classname=" search is made on by clicking on search button and no results found" name=" search is made on by clicking on search button and no results found" time="0.044">
+    </testcase>
+    <testcase classname=" search is made on by clicking on search button and result found - test 1" name=" search is made on by clicking on search button and result found - test 1" time="0.015">
+    </testcase>
+    <testcase classname=" search is made on by clicking on search button and result found - test 2" name=" search is made on by clicking on search button and result found - test 2" time="0.017">
+    </testcase>
+  </testsuite>
+</testsuites>

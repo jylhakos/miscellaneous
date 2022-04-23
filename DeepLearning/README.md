@@ -95,6 +95,8 @@ Figure: Deep Learning with time series
 
 The microservice architectural style is an approach to developing an application of components as services, each running in its own process and communicating with lightweight mechanisms.
 
+Each function of the application is implemented by its own microservice.
+
 The messaging between microservices can be based on event driven messaging.
 
 A reason for using services as components is that services are independently deployable.
