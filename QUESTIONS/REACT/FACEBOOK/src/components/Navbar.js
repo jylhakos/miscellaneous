@@ -4,7 +4,7 @@ import logo from '../assets/google.png';
 
 import './navbar.css';
 
-const title = "Layout";
+const title = "Facebook";
 
 export default function Navbar() {
 	return (

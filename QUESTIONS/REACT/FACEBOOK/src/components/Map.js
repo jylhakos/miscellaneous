@@ -28,7 +28,7 @@ export default function Map(props) {
 
   if (!props.data || props.data === 'undefined') {
     console.log('Map props.data null or undefined');
-    return
+    return null;
   }
 
   var lat = props.data.length > 0 ? props.data[0].location.latitude : 22.34;
@@ -43,15 +43,17 @@ export default function Map(props) {
 
   return (
     <>
-      <div style={{height: "50%", width: "95%", padding: "5px"}}>
+      <div style={{display: "inline", height: "50vh", width: "70vw", padding: "5px"}}>
         <MapContainer
             center={position}
             zoom={zoom}
-            style={{height: "85vh", width: "85wh" }}
+            style={{height: "90%", width: "100%" }}
             scrollWheelZoom={false}
         >
         {
           props.data.map(item => (
+
+          <div key={item._id}>
 
           <Marker
             position={[item.location.latitude,item.location.longitude]}
@@ -61,6 +63,8 @@ export default function Map(props) {
           <Popup>{item.name.first} {item.name.last}</Popup>
 
           </Marker>
+
+          </div>
 
           ))
         }

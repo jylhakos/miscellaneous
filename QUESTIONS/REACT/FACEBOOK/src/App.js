@@ -1,7 +1,7 @@
 
 // $ npm install react-bootstrap bootstrap
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './App.css';
 
@@ -14,6 +14,8 @@ import Layout from './components/index.js';
 //import NavbarContainer from './components/NavbarContainer'
 
 function App() {
+
+  const [data, setData] = useState([]);
   return (
     <div>
       <Navbar/>

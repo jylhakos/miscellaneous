@@ -10,15 +10,15 @@ export default function Item(props) {
 
     return (
       <>
-        <div className='border' style={{height: "50%", width: "95%", padding: "10px"}}>
-            <div style={{color: "white", fontSize: "22px"}}>
+        <div className='border' style={{display: "inline", height: "50vh", width: "70vw", padding: "10px", position: "relative"}}>
+            <div style={{color: "white", fontSize: "24px"}} >
                 {props.item.name.first} {props.item.name.last}
             </div>
 
             <div className='align-image-center'>
               <img src={props.item.picture} alt={props.item.name.first}/>
             </div>
-            <div style={{color: "white", fontSize: "20px"}}>
+            <div style={{color: "white", fontSize: "20px", position: "absolute", bottom: "0"}}>
                 {props.item.email}
             </div>
         </div>

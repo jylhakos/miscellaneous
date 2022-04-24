@@ -30,10 +30,10 @@ export default function ListItem(props) {
 
   return (
     <>
-      <div style={{height: "25%", width: "25%", padding: "5px", backgroundColor: 'transparent'}}>
+      <div style={{height: "25vh", width: "25vw", padding: "5px", backgroundColor: 'transparent'}}>
         {
           props.data.map(d =>
-            <div style={{padding: '5px'}}>
+            <div key={d._id} style={{padding: '5px'}}>
               <button key={d._id} style={{ backgroundColor: '#E3E3E3', boxShadow: 'none', borderWidth: '1px', borderStyle: 'solid', borderColor: '#CFCFCF'}}>
                 <div className='py-10 pr-10'>
                   <div onClick={(e) => {
