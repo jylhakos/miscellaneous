@@ -14,10 +14,13 @@ import Layout from './components/index.js';
 //import NavbarContainer from './components/NavbarContainer'
 
 function App() {
+
+  const parameter = '5-January-2000'
+
   return (
     <div>
       <Navbar/>
-      <Layout/>
+      <Layout parameter={parameter}/>
     </div>
   );
 }

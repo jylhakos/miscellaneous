@@ -1,8 +1,9 @@
 {
-  "name": "Layout Data",
-  "version": "0.0.1",
+  "name": "layout-data",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.26.1",
     "bootstrap": "^5.1.3",
     "create-react-app": "^1.4.3",
     "fetch-mock": "^9.0.0-beta.2",

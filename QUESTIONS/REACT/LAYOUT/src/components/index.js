@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from "react";
+// npm install axios
+
+import React, { useState, useEffect } from 'react';
+
+import axios from 'axios'
 
 import "./index.css";
 
@@ -55,13 +59,112 @@ const list = [
     }
 ];
 
-export default function Layout() {
+/*const download = async (parameter) => {
+
+    //useEffect(() => {
+
+      //const f = async () => {
+
+        console.log('download', parameter);
+
+        const url = 'https://jsonmock.hackerrank.com/api/stocks?date='+parameter;
+
+        console.log('url', url);
+
+        const response = await fetch(url);
+
+        const result = await response.json();
+
+        console.log('result', result)
+
+        if (result) {
+
+          console.log('result.data', result.data, 'length', result.data.length); 
+
+        }
+      //}
+
+      //const result = f();
+
+    //}, [info]);
+   
+    console.log('download', result)
+
+    return result;
+}
+*/
+
+export default function Layout(props) {
 
   const [data, setData] = useState([]);
 
   const [item, setItem] = useState(null);
 
   const [info, setInfo] = useState([]);
+
+  const getData = async () => {
+
+    const parameter = '5-January-2000';
+
+    const url = 'https://jsonmock.hackerrank.com/api/stocks?date='+parameter;
+
+    try {
+
+      var headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+      
+      headers.append('Accept', 'application/json');
+
+      const response = await axios.get(url, {
+        headers: headers,
+      });
+
+      console.log('getData', response.data);
+
+      setInfo(response.data);
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  }
+
+  const download = async (parameter) => {
+
+    //useEffect(() => {
+
+      //const f = async () => {
+
+        console.log('download', parameter);
+
+        const url = 'https://jsonmock.hackerrank.com/api/stocks?date='+parameter;
+
+        console.log('url', url);
+
+        const response = await fetch(url);
+
+        const result = await response.json();
+
+        console.log('result', result)
+
+        if (result) {
+
+          setInfo(result)
+
+          console.log('result.data', result.data, 'length', result.data.length); 
+
+        }
+      //}
+
+      //const result = f();
+
+    //}, [info]);
+   
+    console.log('download', result)
+
+    //return result;
+}
 
   useEffect(() => {
 
@@ -71,13 +174,35 @@ export default function Layout() {
 
   },[])
 
+  //var info = 0;
+
+  var effect = 0;
+
   useEffect(() => {
+
+    //const result = download(props.parameter);
+
+    download(props.parameter);
+
+    getData()
+
+    //setInfo(result)
+
+    console.log('Layout', info)
+
+  //}, [props.parameter]);
+  //}, []);
+  }, [effect])
+
+  /*useEffect(() => {
 
     const download = async () => {
 
-      const url = 'https://jsonmock.hackerrank.com/api/stocks?date=5-January-2000'
+      console.log('download', props.parameter);
 
-      console.log('url', url)
+      const url = 'https://jsonmock.hackerrank.com/api/stocks?date='+props.parameter;
+
+      console.log('url', url);
 
       const response = await fetch(url);
 
@@ -109,6 +234,7 @@ export default function Layout() {
     console.log(result);
 
   }, info);
+  */
 
   return (
     <>
