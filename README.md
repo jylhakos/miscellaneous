@@ -1,14 +1,14 @@
 # References
 
+## Building Information Model (BIM)
+
+Industry Foundation Classes (IFC), JavaScript, Java, HTML, WebGL, HTTP, REST, Tomcat, Linux
+
 ## Data Analytics
 
-Golang (Go), Gin, GORM, JWT, HTTP, CORS, PostgreSQL, SQL, JSON, Linux, Docker
+Golang (Go), Gin, JWT, HTTP, CORS, GORM, PostgreSQL, SQL, JSON, Linux, Docker
 
 JavaScript (ES2015), React, Redux, Axios, Node.js, npm, JSON, JSX, HTML, CSS, Material UI, Chart.js, Webpack
-
-## BIM
-
-JavaScript, HTML, Java, HTTP, REST, Tomcat, Linux
 
 ## DeepLearning
 
