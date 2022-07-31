@@ -1,5 +1,11 @@
 # References
 
+## Data Analytics
+
+Golang (Go), Gin, GORM, JWT, HTTP, CORS, PostgreSQL, SQL, JSON, Linux, Docker
+
+JavaScript (ES2015), React, Redux, Axios, Node.js, npm, JSON, JSX, HTML, CSS, Material UI, Chart.js, Webpack
+
 ## BIM
 
 JavaScript, HTML, Java, HTTP, REST, Tomcat, Linux
