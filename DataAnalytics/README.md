@@ -63,7 +63,7 @@ Whenever httpOnly cookie expires, then the React app uses axios interceptors to 
 
 The browsers restrict cross-origin HTTP requests initiated from scripts to follow the same origin policy.
 
-CORS is an HTTP-header based mechanism that allows a back-end to indicate any origins (domain) other than its own from which a web browser should permit loading resources.
+CORS is an HTTP header based mechanism that allows a back-end to indicate any origins (domain) other than its own from which a web browser should permit loading resources.
 
 In order to enable CORS the back-end should add Access-Control-Allow-Origin header to the response.
 
