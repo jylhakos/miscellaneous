@@ -1,16 +1,16 @@
 import { toggleImportanceOf } from '../reducers/noteReducer'
 import { connect } from 'react-redux'
 
-const Note = ({ key, note }) => {
+const Note = (props) => {
   return(
-    <tr key={key} >
-        <td>{note.id}</td>
-        <td>{note.bill_no}</td>
-        <td>{note.company_id}</td>
-        <td>{note.ship_id}</td>
-        <td>{note.sp_no}</td>
-        <td>{note.TotalAmount}</td>
-        <td>{note.BillDate}</td>
+    <tr>
+        <td>{props.note.id}</td>
+        <td>{props.note.bill_no}</td>
+        <td>{props.note.company_id}</td>
+        <td>{props.note.ship_id}</td>
+        <td>{props.note.sp_no}</td>
+        <td>{props.note.TotalAmount}</td>
+        <td>{props.note.BillDate}</td>
     </tr>
   )
 }
@@ -30,11 +30,7 @@ const Notes = (props) => {
               <th>bill_date</th>
             </tr>
           {props.notes.map(note =>
-            <Note
-              key={note.id}
-              note={note}
-              
-            />
+            <Note key={note.id} note={note} />
           )}
         </tbody>
       </table>

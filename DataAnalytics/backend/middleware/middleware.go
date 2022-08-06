@@ -1,22 +1,65 @@
 package middleware
 
 import (
-	"context"
+	//"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
+	//"strings"
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 )
 
 var SECRET_KEY = os.Getenv("SECRET_KEY")
 
-type SignedClaims struct{
-	Name string
+type SignedClaims struct {
+	Username string
 	jwt.StandardClaims
 }
 
-func ValidateToken(signedToken string) (claims *SignedClaims, msg string){
+func GenerateToken(username string) (signedToken string, err error){
+//func GenerateTokens(username string) (signedToken string, signedRefreshToken string, err error) {
+
+	claims := &SignedClaims {
+		Username: username,
+		StandardClaims: jwt.StandardClaims {
+			//ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
+			ExpiresAt: time.Now().Local().Add(time.Minute * time.Duration(30)).Unix(),
+			//ExpiresAt: time.Now().Local().Add(time.Second * time.Duration(120)).Unix(),
+		},
+	}
+
+	/*
+	refreshClaims := &SignedClaims {
+		StandardClaims: jwt.StandardClaims {
+			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(186)).Unix(),
+		},
+	}
+	*/
+
+	signedToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
+	
+	if err != nil {
+		log.Panic(err.Error())
+		fmt.Errorf("Error: ", err)
+		return
+	}
+
+	//signedRefreshToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString([]byte(SECRET_KEY))
+	
+	//if err != nil {
+	//	log.Panic(err.Error())
+	//	return
+	//}
+
+	return
+}	
+
+func ValidateToken(signedToken string) (claims *SignedClaims, msg string) {
+
+	fmt.Println("ValidateToken", signedToken)
 
 	token, err := jwt.ParseWithClaims(
 		signedToken,
@@ -26,82 +69,83 @@ func ValidateToken(signedToken string) (claims *SignedClaims, msg string){
 		},
 	)
 
-	if err!=nil{
+	fmt.Println("token", token, err)
+
+	if err != nil {
+		fmt.Println("Error: ", err)
 		msg = err.Error()
+		fmt.Errorf("Error: ", msg)
 		return
 	}
 
 	claims, ok := token.Claims.(*SignedClaims)
 
-	if !ok{
-		msg = "the token is invalid"
+	if !ok {
+		msg = "Token is invalid"
 		msg = err.Error()
+		fmt.Errorf("Error: ", msg)
 		return
 	}
 
-	if claims.ExpiresAt < int64(time.Now().Local().Unix()){
-		msg = "token has expired"
-		msg = err.Error()	
-	}
+	fmt.Println("claims.ExpiresAt", claims.ExpiresAt, "time.Now().Local().Unix()", int64(time.Now().Local().Unix()))
 
-	return claims,msg
-}
-
-func GenerateToken(name string) (signedToken string, signedRefreshToken string, err error){
-	
-	claims := &SignedClaims{
-		Name: name,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
-		},
-	}
-
-	refreshClaims := &SignedClaims{
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(186)).Unix(),
-		},
-	}
-
-	signedToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
-	if err!=nil{
-		log.Panic(err.Error())
-		return
-	}
-
-	signedRefreshToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString([]byte(SECRET_KEY))
-	if err!=nil{
-		log.Panic(err.Error())
+	if claims.ExpiresAt < int64(time.Now().Local().Unix()) {
+		msg = "Token is expired"
+		msg = err.Error()
+		fmt.Errorf("Error: ", msg)
 		return
 	}
 
 	return
-}	
+}
 
-func Authorization() gin.HandlerFunc{
+func Authorization() gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
 
-		clientToken := ctx.Request.Header.Get("token")
+		//bearerToken := ctx.Request.Header.Get("Authorization")
 
-		if clientToken==""{
-			ctx.JSON(http.StatusInternalServerError, gin.H{"Error":"No authorization header"})
+		//cookie, _ := ctx.Request.Cookie("access_token")
+
+		//fmt.Println("Authorization", bearerToken, "Cookie", accessToken)
+
+		cookie, _ := ctx.Request.Cookie("token")
+
+		fmt.Println("Cookie", cookie, cookie.Name, cookie.Value)
+
+		cookieStr := cookie.Value
+
+		fmt.Println("cookieStr", cookieStr)
+
+		/*
+		bearerStr := "Bearer"
+
+		tokenString := bearerToken
+
+		if strings.Contains(bearerToken, bearerStr) == true {
+				tokenString = strings.Split(bearerToken," ")[1]
+			}
+		}
+		*/
+		if len(cookieStr) == 0 {
+		//if cookieStr == "" {
+			fmt.Errorf("Cookie")
 			ctx.Abort()
+			ctx.JSON(http.StatusUnauthorized, gin.H{"Error":"StatusUnauthorized"})
 			return
 		}
 
-		claims, err := ValidateToken(clientToken)
+		claims, err := ValidateToken(cookieStr)
 
-		if err!=""{
-
-			ctx.JSON(http.StatusInternalServerError, gin.H{"Error":err})
-
+		if err != "" {
+			fmt.Errorf("ValidateToken",err)
 			ctx.Abort()
-
+			ctx.JSON(http.StatusUnauthorized, gin.H{"Error":err})
+			
 			return
 		}
 
-		ctx.Set("Name", claims.Name)
-
+		ctx.Set("Username", claims.Username)
 		ctx.Next()	
 	}
 }

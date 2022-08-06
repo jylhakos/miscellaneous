@@ -19,9 +19,7 @@ ChartJS.register(
   Legend
 )
 
-const Graphs = () => {
-
-	console.log("Graphs")
+const Charts = () => {
 
 	const notes = useSelector(state => state)
 
@@ -87,13 +85,14 @@ const Graphs = () => {
 			label: 'Data',
 			data: values,
 			//backgroundColor: 'rgba(255, 99, 132, 0.5)',
-			backgroundColor: 'rgba(53, 162, 235, 0.5)'
+			//backgroundColor: 'rgba(53, 162, 235, 0.5)'
+			backgroundColor: 'rgba(144, 238, 144, 0.5)'
 		}]
 	}
 
 	//console.log(data)
 
-	return(<div style={{ position: 'relative', margin: '3%'}}><Bar data={data} options={{responsive: true, maintainAspectRatio: true}} /> </div>)
+	return(<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '75vh', margin: '5vh' }}><Bar data={data} options={{ responsive: true, maintainAspectRatio: false }} /></div>)
 }
 
-export default Graphs
+export default Charts

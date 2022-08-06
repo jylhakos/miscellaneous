@@ -1,34 +1,46 @@
+// controllers/user.go
+
 package controllers
 
 import (
-	"context"
+	"fmt"
+	"os"
+	//"context"
 	"log"
 	"net/http"
-	"strconv"
+	//"strconv"
 	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
+	"github.com/golang-jwt/jwt"
+	"server/models"
 	"server/database"
 	"server/middleware"
-	"server/models"
 )
 
 var validate = validator.New()
 
-func HashPassword(password string) string{
+var SECRET_KEY = os.Getenv("SECRET_KEY")
+
+type SignedClaims struct {
+	Username string
+	jwt.StandardClaims
+}
+
+func HashPassword(password string) string {
 
 	pass, err := bcrypt.GenerateFromPassword([]byte(password),14)
 
-	if err!=nil{
-
+	if err != nil{
+		fmt.Errorf("HashPassword", err)
 		log.Panic(err.Error())
 	}
 
 	return string(pass)
 }
 
-func VerifyPassword(userPassword string, providedPassword string)(bool, string){
+func VerifyPassword(userPassword string, providedPassword string)(bool, string) {
 
 	err := bcrypt.CompareHashAndPassword([]byte(providedPassword), []byte(userPassword))
 	
@@ -36,158 +48,185 @@ func VerifyPassword(userPassword string, providedPassword string)(bool, string){
 	
 	msg := ""
 
-	if err!=nil{
-
-		msg = "Name or password is wrong."
-
+	if err !=nil{
 		check = false
+		msg = "Verify Password Not Successful."
+		fmt.Errorf("VerifyPassword", err)
 	}
 
 	return check, msg
 }
 
-func Register() gin.HandlerFunc{
+func Register(ctx *gin.Context) {
+//func Register() gin.HandlerFunc {
 
-	return func(ctx *gin.Context) {
+	//return func(ctx *gin.Context) {
 
-		var dctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-		
+		//var dctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+
 		var user models.User
-		
-		if err := ctx.BindJSON(&user); err!=nil{
-			defer cancel()
+
+		if err := ctx.BindJSON(&user); err != nil{
+			fmt.Errorf("BindJSON", err)
+			ctx.Abort()
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		validationErr := validate.Struct(user)
-		
-		if validationErr!=nil{
-			defer cancel()
+
+		if validationErr != nil{
+			fmt.Errorf("Validation", validationErr)
+			ctx.Abort()
 			ctx.JSON(http.StatusBadRequest, gin.H{"error":validationErr.Error()})
 			return
 		}
 
-		count, err := userCollection.CountDocuments(dctx, bson.M{"email":user.Email})
+		fmt.Println("Password",user.Password)
+
+		user.Password = HashPassword(user.Password)
+
+		//access_token, refresh_token, _ := middleware.GenerateTokens(user.Username)
 		
-		defer cancel()
-		
-		if err!=nil{
-			log.Panic(err)
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":"error occured while checking for email"})
-			return
-		}
-		
-		password := HashPassword(*user.Password)
-		
-		user.Password = &password
+		//token, _ := middleware.GenerateTokens(user.Username)
 
-		defer cancel()
-		
-		if err!=nil{
-			log.Panic(err)
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":"error occured while checking for phone number"})
-			return
-		}
+		//fmt.Println("AccessToken",access_token,"RefreshToken",refresh_token)
 
-		if count>0 || phoneCount>0{
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":"this email or phone number already exits"})
-			return
-		}
+		//user.AccessToken = access_token
 
-		user.ID = primitive.NewObjectID()
+		//user.RefreshToken = refresh_token
 
-		user.User_id = user.ID.Hex()
+		db := database.GetDB()
 
-		token, refreshToken, _ := middleware.GenerateToken(*Name, user.User_id)
+		err := db.Create(&user).Error
 
-		user.Token = &token
-
-		user.Refresh_token = &refreshToken
-
-		//resultInsertionNumber, insertError :=userCollection.InsertOne(dctx, user)
-
-		if insertError!=nil{
-			msg := "user item was not created"
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":msg})
+		if err != nil{
+			fmt.Errorf("Error", err)
+			ctx.Abort()
+			ctx.JSON(http.StatusConflict, gin.H{"error":err})
 			return
 		}
 
-		defer cancel()
-
-		ctx.JSON(http.StatusOK, gin.H{
-			"status":"success",
-			"insertion number": resultInsertionNumber,
-		})
-	}
+		ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+		ctx.Next()
+	//}
 }
 
-func Login() gin.HandlerFunc{
+func Login(ctx *gin.Context) {
+//func Login() gin.HandlerFunc {
 	
-	return func(ctx *gin.Context) {
+	//return func(ctx *gin.Context) {
 		
-		var dctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-		
+		//var dctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+
 		var user models.User
-		
+
 		var foundUser models.User
 		
-		if err := ctx.BindJSON(&user); err!=nil{
-			defer cancel()
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		if err := ctx.BindJSON(&user); err !=nil {
+			ctx.Abort()
+			ctx.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 			return
 		}
 
-		err := userCollection.FindOne(dctx, bson.M{"email":user.Email}).Decode(&foundUser)
-		
-		defer cancel()
-		
-		if err!=nil{
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":"email or password is incorrect"})
+		fmt.Println("Login", user.Username, user.Password)
+
+		db := database.GetDB()
+
+		err := db.Where("username = ?", user.Username).First(&foundUser).Error
+
+		if err != nil {
+			fmt.Errorf("StatusUnauthorized", err)
+			ctx.Abort()
+			ctx.JSON(http.StatusUnauthorized, gin.H{"Error":err.Error()})
 			return
 		}
 
-		passwordIsValid, msg := VerifyPassword(*user.Password, *foundUser.Password)
+		passwordIsValid, msg := VerifyPassword(user.Password, foundUser.Password)
 		
 		if !passwordIsValid {
-			ctx.JSON(http.StatusInternalServerError,gin.H{"error":msg})
+			fmt.Errorf("StatusUnauthorized", user.Password)
+			ctx.Abort()
+			ctx.JSON(http.StatusUnauthorized, gin.H{"Error":msg})
 			return
 		}
 
-		if foundUser.Email == nil{
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":"user not found"})
+		if len(foundUser.Username) == 0 {
+			fmt.Errorf("Username not found", user.Username)
+			ctx.Abort()
+			ctx.JSON(http.StatusUnauthorized, gin.H{"Error":msg})
+			return
 		}
 
-		token, refreshToken, _ := GenerateToken(*foundUser.Email,*foundUser.First_name,*foundUser.Last_name,*foundUser.User_type,foundUser.User_id)
-		
-		//err = userCollection.FindOne(dctx, bson.M{"user_id": foundUser.User_id}).Decode(&foundUser)
-		/*if err!=nil{
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
-			return
-		}*/
+		//access_token, refresh_token, _ := middleware.GenerateTokens(foundUser.Username)
 
-		ctx.JSON(http.StatusOK, foundUser)
-	}
+		token, _ := middleware.GenerateToken(foundUser.Username)
+
+		fmt.Println("token", token)
+
+		//foundUser.RefreshToken = refresh_token
+
+		timeout := 60*30
+
+		//ctx.SetCookie("access_token", access_token, timeout, "/", "localhost", false, true)
+	
+		//ctx.SetCookie("refresh_token", refresh_token, timeout, "/", "localhost", false, true)
+
+		ctx.SetCookie("token", token, timeout, "/", "localhost", false, true)
+		ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+		ctx.Next()
+	//}
 }
 
-func GetUser() gin.HandlerFunc{
+func Refresh(ctx *gin.Context) {
 
-	return func(ctx *gin.Context) {
+	fmt.Println("Refresh", ctx)
 
-		user_id := ctx.Param("user_id")
+	cookie, _ := ctx.Request.Cookie("token")
 
-		var dctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-		
-		var user models.User
-		
-		//err := userCollection.FindOne(dctx, bson.M{"user_id":user_id}).Decode(&user)
-		
-		defer cancel()
-		
-		if err!=nil{
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
-		}
-		
-		ctx.JSON(http.StatusOK,user)
+	fmt.Println("Cookie", cookie, cookie.Name, cookie.Value)
+
+	cookieStr := cookie.Value
+
+	fmt.Println("cookieStr", cookieStr)
+
+	claimsValid, msg := middleware.ValidateToken(cookieStr)
+
+	if msg != "" {
+		fmt.Errorf("Error", msg)
+		ctx.Abort()
+		ctx.JSON(http.StatusNotAcceptable, gin.H{"Error":msg})
+		return
 	}
+
+	fmt.Println("claimsValid.ExpiresAt", claimsValid.ExpiresAt)
+
+	//if time.Unix(claimsValid.ExpiresAt, 0).Sub(time.Now()) > 30*time.Second {
+	if time.Unix(claimsValid.ExpiresAt, 0).Sub(time.Now().Local()) > 10*time.Minute {
+		ctx.Abort()
+		ctx.JSON(http.StatusTooEarly, gin.H{"status": "Too Early"})
+		return
+	}
+
+	claims := &SignedClaims {
+		StandardClaims: jwt.StandardClaims {
+			ExpiresAt: time.Now().Local().Add(time.Minute * time.Duration(30)).Unix(),
+		},
+	}
+
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
+
+	if err != nil {
+		ctx.Abort()
+		ctx.JSON(http.StatusInternalServerError, gin.H{"Error":"StatusInternalServerError"})
+		return
+	}
+
+	fmt.Println("refresh_token", token)
+
+	timeout := 60*30
+
+	ctx.SetCookie("token", token, timeout, "/", "localhost", false, true)
+	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+	ctx.Next()
 }

@@ -20,6 +20,7 @@ const noteSlice = createSlice({
       state.push(action.payload)
     },
     setNotes(state, action) {
+      console.log('setNotes', state, action)
       return action.payload
     }
   },

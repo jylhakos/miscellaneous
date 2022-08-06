@@ -7,6 +7,7 @@ import (
   "net/http"
   "github.com/gin-gonic/gin"
   "server/models"
+  "server/database"
 )
 
 // SELECT * FROM bill_head;
@@ -14,7 +15,7 @@ func GetBillHead(c *gin.Context) {
   fmt.Println("GetBillHead")
   var bill_head []models.BillHead
   fmt.Println(&models.BillHead{})
-  db := models.GetDB()
+  db := database.GetDB()
   fmt.Println("GetDB", db)
   if err := db.Table("bill_head").Select("id","bill_no","company_id","ship_id","sp_no","total_amount","bill_date").Find(&bill_head).Error; err != nil {
     fmt.Println("Error", err)
@@ -30,7 +31,7 @@ func GetShipYardPartType(c *gin.Context) {
   fmt.Println("GetShipYardPartType")
   var shipyard_parttype []models.ShipYardPartType
   fmt.Println(&models.ShipYardPartType{})
-  db := models.GetDB()
+  db := database.GetDB()
   fmt.Println("GetDB", db)
   if err := db.Table("shipyard_parttype").Find(&shipyard_parttype).Error; err != nil {
     fmt.Println("Error", err)
@@ -45,7 +46,7 @@ func GetShipStructure(c *gin.Context) {
   fmt.Println("GetShipStructure")
   var ship_structure []models.ShipStructure
   fmt.Println(&models.ShipStructure{})
-  db := models.GetDB()
+  db := database.GetDB()
   fmt.Println("GetDB", db)
   if err := db.Table("ship_structure").Select("id","code","name","sequence").Find(&ship_structure).Error; err != nil {
     fmt.Println("Error", err)
@@ -60,7 +61,7 @@ func GetShipYard(c *gin.Context) {
   fmt.Println("GetShipYard")
   var ship_shipyard []models.ShipYard
   fmt.Println(&models.ShipYard{})
-  db := models.GetDB()
+  db := database.GetDB()
   fmt.Println("GetDB", db)
   if err := db.Table("ship_shipyard").Select("id","code","name","sequence","contact","phone","company_id","city","state_id","city","state_id","country_id","lat","lng").Find(&ship_shipyard).Error; err != nil {
     fmt.Println("Error", err)
@@ -75,7 +76,7 @@ func GetShipPartItem(c *gin.Context) {
   fmt.Println("GetShipPartItem")
   var ship_partitem []models.ShipPartItem
   fmt.Println(&models.ShipPartItem{})
-  db := models.GetDB()
+  db := database.GetDB()
   fmt.Println("GetDB", db)
   if err := db.Table("ship_partitem").Select("id","ship_parttype_id","ship_parttype_code","code","name","unit").Find(&ship_partitem).Error; err != nil {
     fmt.Println("Error", err)

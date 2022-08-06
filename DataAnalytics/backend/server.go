@@ -1,4 +1,4 @@
-// main.go
+// server.go
 
 package main
 
@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"server/models"
-	"server/routes"
-	"server/database"
 	"github.com/gin-contrib/cors"
 	"time"
+	//"server/models"
+	"server/routes"
+	"server/database"
+	"server/middleware"
+	//"server/controllers"
 )
 
 func main() {
@@ -19,23 +21,27 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(cors.New(cors.Config{
+	router.Use(cors.New(cors.Config {
 	    AllowOrigins:     []string{"http://localhost:3002"},
-	    AllowMethods:     []string{"GET"},
-	    AllowHeaders:     []string{"Origin"},
-	    ExposeHeaders:    []string{"Content-Length"},
+	    AllowMethods:     []string{"GET","POST","OPTIONS"},
+	    AllowHeaders:     []string{"Content-Type","Content-Length","Authorization"},
+	    //ExposeHeaders:    []string{"Content-Length"},
 	    AllowCredentials: true,
-	    AllowOriginFunc: func(origin string) bool {
-	      return origin == "https://github.com"
-	    },
-    	MaxAge: 12 * time.Hour
+	    //AllowOriginFunc: func(origin string) bool {
+	    //  return origin == "https://localhost"
+	    //},
+    	MaxAge: 12 * time.Hour,
   	}))
 
-	router.GET("/api", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"data": "/api"})	
+  	//router.Use(cors.Default())
+
+  	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "success"})	
 	})
 
-	routes.UserRoutes(router)
+  	routes.UserRoutes(router)
+
+	router.Use(middleware.Authorization())
 
 	routes.SqlRoutes(router)
 
@@ -43,5 +49,3 @@ func main() {
 
 	router.Run(":8001")
 }
-
-//$ curl -v GET --url http://localhost:8001/api/sql/bill_head
