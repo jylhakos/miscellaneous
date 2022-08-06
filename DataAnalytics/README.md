@@ -30,7 +30,7 @@ The JWT must be added to HTTP Header if the web browser accesses protected resou
 
 The Cookie HTTP request header contains stored HTTP cookies associated with the back-end.
 
-An HTTP cookie is a piece of data that the back-end sends to a user's web browser.
+The back-end sends the HTTP cookie to a user's web browser.
 
 The HTTP cookie with the Secure attribute is only sent to the back-end with an encrypted request over the HTTPS protocol.
 
