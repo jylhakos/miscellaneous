@@ -8,20 +8,20 @@ Industry Foundation Classes (IFC), JavaScript, Java, HTML, WebGL, HTTP, REST, To
 
 Golang (Go), Gin, JWT, HTTP, CORS, GORM, PostgreSQL, SQL, JSON, Linux, Docker
 
-JavaScript (ES2015), React, Redux, Axios, Node.js, npm, JSON, JSX, HTML, CSS, Material UI, Chart.js, Webpack
+JavaScript (ES2015), React, Redux, JSX, Axios, Node.js, npm, JSON, HTML, CSS, Material UI, Chart.js, Webpack
 
-## DeepLearning
+## Deep Learning
 
 Python, JavaScript, Keras, Tensorflow, LSTM, RNN, Redis, RedisTimeSeries, TimescaleDB, ZMQ, MQTT, Web Sockets, Node.js, HTTP, REST, Mosquitto,CUDA, Nvidia GPU, Docker, Linux
 
-## ERP
+## Enterprise Resource Planning (ERP)
 
 JavaScript, React, React Native, Python, HTML, XML, Docker, Nginx, PostgreSQL, SSL, HTTP, Android, Ubuntu
 
-## SmartBuildings
+## Smart Buildings
 
-Bluetooth mesh, C-language, Python, TCP/IP, MQTT, gRPC, Raspberry Pi (MCU), nRF52, Linux
+Bluetooth mesh, C-language, Python, TCP/IP, MQTT, HTTP, gRPC, Raspberry Pi (ARM), nRF52 (MCU), Linux (x86)
 
-## SupplyChain
+## Supply Chain
 
 Hyperledger Sawtooth, JavaScript, Python, Rust, Angular, React, HTML, CSS, Google Maps, OpenStreetMap, RethinkDB, Flask, Node.js, Express, Apache, Nginx, ZMQ, MQTT, HTTP, Mosquitto, HTTP, SSL, iptables, Docker, Docker Compose, Ubuntu

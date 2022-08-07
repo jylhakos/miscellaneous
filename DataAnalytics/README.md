@@ -63,15 +63,58 @@ Whenever httpOnly cookie expires, then the React app uses axios interceptors to 
 
 The browsers restrict cross-origin HTTP requests initiated from scripts to follow the same origin policy.
 
+An origin is defined as a combination of URL, host name, and port number. 
+
 CORS is an HTTP header based mechanism that allows a back-end to indicate any origins (domain) other than its own from which a web browser should permit loading resources.
 
-In order to enable CORS the back-end should add Access-Control-Allow-Origin header to the response.
+Download and install package for Gin middleware and handler to enable CORS support.
+
+```
+
+$ go get github.com/gin-contrib/cors
+
+```
+
+In order to enable CORS, the back-end adds Access-Control-Allow-Origin header to the response.
+
+```
+
+package main
+
+import (
+  "time"
+  "github.com/gin-contrib/cors"
+  "github.com/gin-gonic/gin"
+)
+
+func main() {
+
+  router := gin.Default()
+
+  router.Use(cors.New(cors.Config{
+    AllowOrigins:     []string{"https://foo.com", "https://bar.com", "http://localhost"},
+    AllowMethods:     []string{"GET", "POST"},
+    AllowHeaders:     []string{"Origin"},
+    ExposeHeaders:    []string{"Content-Length"},
+    AllowCredentials: true,
+    AllowOriginFunc: func(origin string) bool {
+      return origin == "https://github.com"
+    },
+    MaxAge: 12 * time.Hour,
+  }))
+
+  router.Run()
+}
+
+```
 
 ### Preflight
 
+A preflight request is a CORS request using three HTTP request headers: Access-Control-Request-Method, Access-Control-Request-Headers, and the Origin header.
+
 The web browser sends a preflight request and the back-end responds with Access-Control-Allow-Origin in the header.
 
-A web browser will check for Access-Control-Allow-Origin parameters on the received preflight response for the following request.
+A preflight request is automatically issued by a web browser and the web browser will check for Access-Control-Allow-Origin parameters on the received preflight response for the following request.
 
 ### References
 
@@ -82,6 +125,8 @@ How to use Gin? https://gin-gonic.com/docs/
 GORM https://gorm.io/docs/
 
 CORS https://github.com/gin-contrib/cors
+
+Preflight https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
 
 JWT https://datatracker.ietf.org/doc/html/rfc7519
 
