@@ -125,6 +125,10 @@ func main() {
 
 ```
 
+### Access-Control-Allow-Headers
+
+The Access-Control-Allow-Headers response header is used in response to a preflight request which includes the Access-Control-Request-Headers to indicate which HTTP headers can be used during the actual request.
+
 ### Preflight
 
 A preflight request is a CORS request using three HTTP request headers: Access-Control-Request-Method, Access-Control-Request-Headers, and the Origin header.
@@ -135,7 +139,7 @@ A preflight request is automatically issued by a web browser and the web browser
 
 ## Deployment
 
-Deploying React (front-end) and Golang (back-end) applications as the Docker containers and securing the connections for containerized applications with Nginx reverse proxy.
+Deploy React (front-end) and Golang (back-end) applications as the Docker containers and configure secure HTTPS connections for containerized applications with Nginx reverse proxy.
 
 ### References
 
@@ -152,5 +156,7 @@ Preflight https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
 JWT https://datatracker.ietf.org/doc/html/rfc7519
 
 Cookie https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie
+
+Access-Control-Allow-Headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
 
 React components for Chart.js https://react-chartjs-2.js.org/
