@@ -8,7 +8,7 @@ The deployment of applications is done using Docker containers and utilizing con
 
 ## NGINX
 
-Secure HTTP traffic between Nginx and upstream servers, using SSL/TLS encryption.
+Secure HTTP traffic between [Nginx](https://www.nginx.com/resources/wiki/start/topics/examples/full/) and upstream servers, using SSL/TLS encryption.
 
 ```
 

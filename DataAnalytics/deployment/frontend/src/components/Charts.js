@@ -1,5 +1,15 @@
+import { useEffect } from 'react'
+
 import { useSelector } from 'react-redux'
+
+import { useNavigate } from 'react-router-dom'
+
 import { Bar } from 'react-chartjs-2'
+
+import { getNotes } from '../reducers/noteReducer'
+
+//import { setUser } from '../reducers/userReducer'
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,9 +31,19 @@ ChartJS.register(
 
 const Charts = () => {
 
-	const notes = useSelector(state => state)
+	const state = useSelector(state => state)
 
-	//console.log('state',notes)
+	const navigate = useNavigate()
+
+  useEffect(() => {
+
+    console.log('state.user', state.user)
+
+    if (state.user === null) {
+      navigate('/login')
+    }
+
+  },[])
 
 	const labels = []
 
@@ -34,21 +54,21 @@ const Charts = () => {
 	const tmp_values = []
 
 	/*
-	for (let i = 0; i < notes.notes.length; i++) {
+	for (let i = 0; i < state.notes.length; i++) {
 
-  	labels.push(notes.notes[i].ship_id)
+  	labels.push(state.notes[i].ship_id)
 
-  	values.push(notes.notes[i].TotalAmount)
+  	values.push(state.notes[i].TotalAmount)
 
   	console.log(i, labels[i], values[i])
   }
   */
 
-  for (let i = 0; i < notes.notes.length; i++) {
+  for (let i = 0; i < state.notes.length; i++) {
 
-  	tmp_labels.push(notes.notes[i].ship_id)
+  	tmp_labels.push(state.notes[i].ship_id)
 
-  	tmp_values.push(parseInt(notes.notes[i].TotalAmount))
+  	tmp_values.push(parseInt(state.notes[i].TotalAmount))
 
   	//console.log(i, tmp_labels[i], tmp_values[i])
   }

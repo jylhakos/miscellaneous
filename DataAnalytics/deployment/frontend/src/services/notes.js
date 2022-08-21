@@ -23,6 +23,17 @@ const httpClient = axios.create({
   //}
 })
 
+httpClient.interceptors.response.use(function (response) {
+  console.log('httpClient.interceptors', response)
+  return response
+}, function (error) {
+  if (error.response?.status === 401) {
+    console.log('httpClient.interceptors', error)
+    window.location.href = '/logout'
+  }
+  return Promise.reject(error)
+})
+
 /*
 const config = {
   headers: {

@@ -35,7 +35,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "export HTTPS=true && SSL_CRT_FILE=ssl.crt && SSL_KEY_FILE=ssl.key && PORT=3002 react-scripts start",
+    "start": "export HTTPS=true && PORT=3002 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

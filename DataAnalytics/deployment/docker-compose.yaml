@@ -1,6 +1,6 @@
 version: "3"
 services:
-  #reverse-proxy:
+  #proxy:
   #  image: nginx
   #  container_name: nginx
   #  network_mode: "host"
@@ -8,21 +8,15 @@ services:
   #    - 80:80
   #    - 443:443
   #  volumes:
-  #    - ./nginx:/usr/PROXY/NGINX/nginx:ro
-  #    - ./ssl:/usr/PROXY/SSL/ssl:ro
-  #    - ./log:/usr/PROXY/LOG
-    #networks:
-    #  app_net:
-    #    ipv4_address: 172.2.0.5
+  #    - ./nginx:/etc/nginx
+  #    - ./ssl:/ssl:ro
+  #    - ./log:/log
   #database:
   #  image: 'postgres:12'
   #  container_name: postgres
   #  ports:
   #    - "5432:5432"
   #  network_mode: "host"
-  #  networks:
-  #    app_net:
-  #      ipv4_address: 172.2.0.4
   #  env_file: 
   #    - .env
   #  environment:
@@ -39,11 +33,8 @@ services:
     ports:
       - "3002:3002"
     volumes:
-      - ./nginx:/usr/PROXY/NGINX/nginx:ro
-      - ./ssl:/usr/PROXY/SSL/ssl:ro
-    networks:
-      app_net:
-        ipv4_address: 172.2.0.2
+      - ./ssl:/ssl:ro
+    network_mode: "host"
   server:
     build:
       context: server
@@ -54,26 +45,15 @@ services:
     env_file: 
       - .env
     environment:
-      - PG_HOST=172.2.0.4
+      - PG_HOST=192.168.9.97
       - PG_PORT=5432
       - PG_DBNM=V1
       - PG_USER=admin
       - PG_PASS=admin
     network_mode: "host"
-    networks:
-      app_net:
-        ipv4_address: 172.2.0.3
-    depends_on:
+    #depends_on:
       #- database
-      #- reverse-proxy
-
-volumes:
-  db:
-    driver: local
-networks:
-  app_net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.2.0.0/24
+      #- proxy
+#volumes:
+#  db:
+#    driver: local

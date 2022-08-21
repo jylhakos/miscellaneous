@@ -1,5 +1,10 @@
+import { useEffect } from 'react'
+
+import { connect, useSelector } from 'react-redux'
+
+import { useNavigate } from 'react-router-dom'
+
 import { toggleImportanceOf } from '../reducers/noteReducer'
-import { connect } from 'react-redux'
 
 const Note = (props) => {
   return(
@@ -16,6 +21,21 @@ const Note = (props) => {
 }
 
 const Notes = (props) => {
+
+  const state = useSelector(state => state)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+
+    console.log('state.user', state.user)
+
+    if (state.user === null) {
+      navigate('/login')
+    }
+
+  },[])
+
   return(
     <div style={{padding:"2vh"}}>
       <table>

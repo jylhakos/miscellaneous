@@ -37,9 +37,12 @@ export default function NavBar() {
   let button
 
   if (user) {
+
     button = <Button color="inherit" onClick={handleLogoutClick} >Logout</Button>
+
   } else {
-    button = <Button color="inherit" component={Link} to="/login">Login</Button>
+
+      button = <Button color="inherit" component={Link} to="/login">Login</Button>
   }
 
   return (
@@ -55,8 +58,8 @@ export default function NavBar() {
           >
           <MenuIcon />
           </IconButton>
-          <Button color="inherit" component={Link} to="/charts">Charts</Button>
-          <Button color="inherit" component={Link} to="/sheets">Sheets</Button>
+          {user && <Button color="inherit" component={Link} to="/charts">Charts</Button>}
+          {user && <Button color="inherit" component={Link} to="/sheets">Sheets</Button>}
           <Box sx={{ display: "flex", justifyContent: "flex-end", ml: 'auto' }}>
             {button}
           </Box>

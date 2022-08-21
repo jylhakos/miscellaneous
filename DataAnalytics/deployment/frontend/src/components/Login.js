@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Button } from '@mui/material'
-import { initializeNotes } from '../reducers/noteReducer'
+import { getNotes } from '../reducers/noteReducer'
 import loginService from '../services/login'
 import { setUser } from '../reducers/userReducer'
 
@@ -24,7 +24,7 @@ const Login = (props) => {
 
     dispatch(setUser(username))
 
-    dispatch(initializeNotes())
+    dispatch(getNotes())
 
     navigate("/charts")
   }

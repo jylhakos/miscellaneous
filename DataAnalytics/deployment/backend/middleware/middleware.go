@@ -112,7 +112,7 @@ func Authorization() gin.HandlerFunc {
 		cookie, err := ctx.Request.Cookie("cookie")
 
 		if err != nil {
-			fmt.Errorf("Cookie")
+			fmt.Errorf("Cookie", err)
 			ctx.Abort()
 			ctx.JSON(http.StatusUnauthorized, gin.H{"Error":"StatusUnauthorized"})
 			return
@@ -135,7 +135,7 @@ func Authorization() gin.HandlerFunc {
 		
 		if len(cookieStr) == 0 {
 		//if cookieStr == "" {
-			fmt.Errorf("Cookie")
+			fmt.Errorf("Cookie", err)
 			ctx.Abort()
 			ctx.JSON(http.StatusUnauthorized, gin.H{"Error":"StatusUnauthorized"})
 			return

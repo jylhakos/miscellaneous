@@ -2,7 +2,7 @@ import axios from 'axios'
 
 //require('dotenv').config()
 
-import HttpsProxyAgent from 'https-proxy-agent'
+//import HttpsProxyAgent from 'https-proxy-agent'
 
 //const fs = require('fs');
 
@@ -53,7 +53,7 @@ const login = async (username, password) => {
     data: data
   }
 
-  console.log('process.env.REACT_APP_HTTPS_PROXY', process.env.REACT_APP_HTTPS_PROXY)
+  //console.log('process.env.REACT_APP_HTTPS_PROXY', process.env.REACT_APP_HTTPS_PROXY)
 
   let response = "login"
 

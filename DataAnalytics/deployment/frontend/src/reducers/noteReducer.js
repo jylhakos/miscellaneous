@@ -26,15 +26,15 @@ const noteSlice = createSlice({
   },
 })
 
-export const initializeNotes = () => {
-  return async dispatch => {
+export const getNotes = () => {
+  return async (dispatch) => {
     const notes = await noteService.getAll()
-    console.log('initialize',notes.data)
+    console.log('getAll', notes.data)
     dispatch(setNotes(notes.data))
   }
 }
 
-export const createNote = content => {
+export const createNote = (content) => {
   return async dispatch => {
     const newNote = await noteService.createNew(content)
     dispatch(appendNote(newNote))

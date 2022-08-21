@@ -1,5 +1,5 @@
 # $ docker build -t server .
-# $ docker run -p 192.168.9.97:8001:8001 --network=host --env HTTPS_PROXY="https://192.168.9.97:443" server
+# $ docker run -p 192.168.9.97:8001:8001 --network=host server
 
 FROM golang:alpine
 

@@ -123,7 +123,10 @@ func Login(ctx *gin.Context) {
 
 		var foundUser models.User
 		
-		if err := ctx.BindJSON(&user); err !=nil {
+		err := ctx.BindJSON(&user)
+
+		if err !=nil {
+			fmt.Println("BindJSON", err)
 			ctx.Abort()
 			ctx.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 			return
@@ -133,7 +136,7 @@ func Login(ctx *gin.Context) {
 
 		db := database.GetDB()
 
-		err := db.Where("username = ?", user.Username).First(&foundUser).Error
+		err = db.Where("username = ?", user.Username).First(&foundUser).Error
 
 		if err != nil {
 			fmt.Errorf("StatusUnauthorized", err)
@@ -181,10 +184,20 @@ func Login(ctx *gin.Context) {
 		//ctx.SetCookie("refresh_token", refresh_token, timeout, "/", "localhost", false, true)
 
 		//ctx.SetCookie("token", token, timeout, "/", "localhost", false, true)
-		
 		//ctx.SetCookie("cookie", cookie, timeout, "/", "localhost", true, true)
-		
 		ctx.SetCookie("cookie", cookie, timeout, "/", "192.168.9.97", true, true)
+		
+		// https://github.com/gin-gonic/gin/blob/master/context.go
+
+		/*Name:     name,
+		Value:    url.QueryEscape(value),
+		MaxAge:   maxAge,
+		Path:     path,
+		Domain:   domain,
+		SameSite: c.sameSite,
+		Secure:   secure,
+		HttpOnly: httpOnly
+		*/
 
 		ctx.JSON(http.StatusOK, gin.H{"status": "success"})
 
