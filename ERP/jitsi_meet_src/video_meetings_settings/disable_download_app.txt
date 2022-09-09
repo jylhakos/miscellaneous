@@ -1,0 +1,86 @@
+DISABLE APP DOWNLOAD PAGE
+
+SOURCE CODE
+
+jitsi-meet/interface_config.js
+
+MODIFY VARIABLES IN config.js FILE 
+
+login to Docker and modify <DOMAIN>-config.js file in /etc/jitsi/meet/ folder.
+
+$ cat /etc/jitsi/meet/meet.mysite.cn-config.js | grep disableDeepLinking
+    // disableDeepLinking: false,
+    
+    disableDeepLinking: true,
+
+jitsi_source/jitsi-meet/config.js
+
+// If specified a 'Download our apps' button will be displayed
+
+//BEFORE
+// disableDeepLinking: false,
+  
+//AFTER
+disableDeepLinking: true,
+
+
+$ cat /etc/jitsi/meet/meet.mysite.cn-config.js | grep disableDeepLinking
+    disableDeepLinking: true,
+
+
+$ sudo systemctl reload nginx
+
+
+OPTIONAL INFORMARTION AND NOT NEEDED
+
+interface_config.js
+
+//BEFORE
+MOBILE_APP_PROMO: true,
+
+//AFTER
+MOBILE_APP_PROMO: false,
+
+SOURCE CODE
+
+jitsi-meet/react/features/deep-linking/functions.js
+
+HTML
+
+//REMOVE
+"If you don't have the app yet:"
+
+deep-linking-mobile__text
+
+"Download the app"
+
+deep-linking-mobile__button deep-linking-mobile__button_primary
+
+
+jitsi-meet/lang/main.json:
+          
+          "downloadApp": "Download the app",
+          "ifDoNotHaveApp": "If you don't have the app yet:",
+
+//OK
+"Launch in web"
+
+deep-linking-mobile__text
+
+deep-linking-mobile__button deep-linking-mobile__button_primary
+
+JAVASCRIPT FILE DEPLOYMENT
+
+app.bundle.min.js.map
+
+
+DEPLOY ON DOCKER
+
+$ ls -la /etc/nginx/sites-available
+
+$ sudo systemctl status nginx
+
+$ sudo systemctl reload nginx
+
+
+

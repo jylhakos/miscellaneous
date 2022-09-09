@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="jitsi_meet_url" model="ir.config_parameter">
+        <field name="key">jitsi_calendar.meet_url</field>
+        <field name="value">localhost</field>
+    </record>
+</odoo>

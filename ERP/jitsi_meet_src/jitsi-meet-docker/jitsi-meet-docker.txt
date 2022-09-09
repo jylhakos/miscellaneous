@@ -1,0 +1,203 @@
+$ git clone https://github.com/jitsi/docker-jitsi-meet && cd docker-jitsi-meet
+
+$ mkdir -p ~/.jitsi-meet-cfg/{web/letsencrypt,transcripts,prosody,jicofo,jvb}
+
+$ cp env.example .env
+
+EDIT VARIABLES IN .env FILE
+
+# Enable the welcome page
+ENABLE_WELCOME_PAGE=0
+
+# Enable the close page
+ENABLE_CLOSE_PAGE=1
+
+$ ls -la ~/.jitsi-meet-cfg
+
+$ ./gen-passwords.sh
+
+$ rm -Rf ~/.jitsi-meet-cfg
+
+$ mkdir -pv ~/.jitsi-meet-cfg/{web/crontabs,web/letsencrypt,transcripts,prosody/config,prosody/prosody-plugins-custom,jicofo,jvb,jigasi,jibri}
+
+$ docker-compose up
+
+EDIT CLOSE2.HTML PAGE
+
+https://localhost:8443/static/close2.html
+
+
+LOG
+
+docker-jitsi-meet-web-1      | generating self-signed keys in /config/keys
+docker-jitsi-meet-web-1      | writing new private key to '/config/keys/cert.key'
+docker-jitsi-meet-web-1      | [services.d] starting services
+
+DOCKER CONTAINER STOP, DELETE
+
+$ docker stop $(docker ps -a -q)
+
+$ docker rm $(docker ps -a -q)
+
+$ docker rmi $(docker images -q)
+
+DISPLAY OPEN PORTS
+
+# sudo lsof -i:8000
+
+$ sudo lsof -i:10000
+
+NGINX
+
+$ ls -la /etc/nginx/modules-enabled/60-jitsi-meet.conf
+
+
+DOCKER_HOST_ADDRESS SETTINGS .env FILE
+
+STUN servers can be specified with the JVB_STUN_SERVERS
+
+DOCKER_HOST_ADDRESS=192.168.50.39
+
+STUN
+
+$ ssh -v -p 443 meet-jit-si-turnrelay.jitsi.net
+
+
+FIREWALL
+
+
+$ ufw allow 10000/udp
+
+$ sudo ufw allow 443/udp
+
+$ sudo ufw allow 4443/tcp
+
+$ ufw enable
+
+https://dev.to/noandrea/self-hosted-jitsi-server-with-authentication-ie7
+
+
+CONNECT VIDEO MEETING
+
+http://localhost:8000/StatisticalConstructionsPhoneSame
+
+https://localhost:8443
+
+https://localhost:8443/ComplicatedCreditsPriceFree
+
+
+SOLUTION
+
+Delete your docker containers, and delete ~/.jitsi-meet-cfg
+
+$ git checkout stable-5076
+
+https://community.jitsi.org/t/you-have-been-disconnected-on-fresh-docker-installation/89121/6
+
+.env
+
+ENABLE_XMPP_WEBSOCKET=0
+
+
+PROBLEMS
+
+$ cat .env  | grep -i stun
+
+# STUN servers used to discover the server's public IP
+JVB_STUN_SERVERS=meet-jit-si-turnrelay.jitsi.net:443
+
+
+$ docker logs -f docker-jitsi-meet_jvb_1
+
+docker-jitsi-meet-jvb-1      | JVB 2022-03-17 06:35:34.975 SEVERE: [26] HealthChecker.run#175: Health check failed in PT0.000097S:
+docker-jitsi-meet-jvb-1      | java.lang.Exception: Address discovery through STUN failed
+
+docker-jitsi-meet-jvb-1      | java.lang.Exception: Address discovery through STUN failed
+
+Jitsi Video Bridge (JVB) to use port 4443 for webRTC Media traffic over TCP. To do that you have to add the following line to /etc/jitsi/videobridge/sip-communicator.properties in JVB.
+
+org.jitsi.videobridge.DISABLE_TCP_HARVESTER=false
+
+https://meetrix.io/blog/webrtc/jitsi/jitsi-meet-and-firewalls.html
+
+docker-jitsi-meet-jvb-1      | JVB 2022-03-17 07:15:44.148 INFO: [13] org.ice4j.ice.harvest.MappingCandidateHarvesters.initialize: Initialized mapping harvesters (delay=8349ms).  stunDiscoveryFailed=true
+docker-jitsi-meet-jvb-1      | JVB 2022-03-17 07:15:47.941 SEVERE: [25] HealthChecker.run#175: Health check failed in PT0.000348S:
+docker-jitsi-meet-jvb-1      | java.lang.Exception: Address discovery through STUN failed
+
+https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/?ref=https://githubhelp.com
+
+docker-jitsi-meet-jvb-1 STUN Address discovery through STUN failed error
+
+# STUN servers used to discover the server's public IP
+#JVB_STUN_SERVERS=meet-jit-si-turnrelay.jitsi.net:443
+JVB_STUN_SERVERS=none
+
+If your users are coming in over the Internet (and not over LAN), this will likely be your public IP address. If this is not set up correctly, calls will fail when more than two users join a meeting.
+
+DEBUG
+
+$ ssh -v -p 443 meet-jit-si-turnrelay.jitsi.net
+
+CUSTOMIZE DOCKER FILES
+
+docker-jitsi-meet_web_1
+
+https://www.root101.net/How-to-customize-docker-compose-based-Jitsi-installation
+
+$ docker exec 4b70410eb5f4 ls /usr/share/jitsi-meet/
+
+$ docker exec 4b70410eb5f4 ls /usr/share/jitsi-meet/static
+
+close.js
+close2.html
+
+$ docker cp 4b70410eb5f4:/usr/share/jitsi-meet/static/close2.html LOCAL/. 
+
+LOCAL VOLUME CONFIGURATION
+
+docker-compose file uses a local volume for these files, these configurations could easily be changed from the local file system.
+
+Interface file is located at ~/.jitsi-meet-cfg/web/interface_config.js
+
+docker-jitsi-meet/web/rootfs/etc/cont-init.d/10-config
+
+https://github.com/jitsi/docker-jitsi-meet/issues/768
+
+Both config files are located in the /config directory on the container. Copying over the files using docker container cp after the container was running worked fine.
+
+$ docker exec 4b70410eb5f4 ls /config
+config.js
+crontabs
+interface_config.js
+keys
+letsencrypt
+nginx
+
+https://github.com/jitsi/docker-jitsi-meet/issues/275
+
+COPY config.js FROM DOCKER CONTAINER
+
+$ docker cp 4b70410eb5f4:/config/config.js
+
+$ docker cp 4b70410eb5f4:/config/config.js/interface_config.js
+
+COPY config.js FROM LOCAL TO DOCKER CONTAINER
+
+$ docker cp config.js 4b70410eb5f4:/config/config.js
+
+
+PASSWORD
+
+https://community.jitsi.org/t/jitsi-users-how-to-remove-logo-name-of-window-and-protect-welcome-screen-with-a-password/11191
+
+SECURE DOMAIN
+
+https://jitsi.github.io/handbook/docs/devops-guide/secure-domain/
+
+https://github.com/jitsi/jicofo/blob/master/README.md
+REFERENCE
+
+https://www.scaleway.com/en/docs/tutorials/jitsi-docker/
+
+https://github.com/jitsi/docker-jitsi-meet/issues/275
+

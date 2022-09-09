@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record id="categ_meet6" model="calendar.event.type">
+            <field name="name">Video Meeting 2</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template id="assets_frontend" inherit_id="web.assets_frontend" name="Web Assets">
+            <xpath expr="//script[last()]" position="after"></xpath>
+        </template>
+
+        <template id="meet" inherit_id="portal.frontend_layout" name="Meet">
+            <xpath expr="//t[@t-raw='0']" position="after">
+                <t t-if="data">
+                    <div id="meet" name="meet"></div>
+                    <div id="name" t-att-name="data.name"></div>
+                    <div id="domain" t-att-name="data.domain"></div>
+                    <div id="hash" t-att-name="data.hash"></div>
+                    <div id="password" t-att-name="data.password"></div>
+                    <script type="text/javascript" src="/jitsi_meet/static/src/js/jquery.min.js"></script>
+                    <script type="text/javascript" src="/jitsi_meet/static/src/js/external_api.js"></script>
+                    <script>
+
+                        var domain = $('#domain').attr('name');
+
+                        var options = {
+                            roomName: $('#hash').attr('name'),
+                            height: 600,
+                            interfaceConfigOverwrite: { 
+                                filmStripOnly: false
+                            },
+                            parentNode: document.querySelector('#meet')
+                        };
+
+                        var api = new JitsiMeetExternalAPI(domain, options);
+
+                        var pass = $('#password').attr('name');
+
+                        console.log("1. PASSWORD:", pass);
+
+                        api.addEventListener('participantRoleChanged', function(event) {
+                            
+                            // when host has joined the video conference 
+                            if (event.role == 'moderator') {
+
+                                console.log("2. PASSWORD:", pass);
+
+                                api.executeCommand('password', pass);
+                            }
+                            else {
+                                setTimeout(() => {
+                        
+                                    // when local user is trying to enter in a locked room 
+                                    api.addEventListener('passwordRequired', () => {
+
+                                        console.log("3. PASSWORD:", pass);
+
+                                        api.executeCommand('password', pass);
+                                    });
+
+                                    // when local user has joined the video conference 
+                                    api.addEventListener('videoConferenceJoined', (response) => {
+                                        setTimeout(function(){ 
+
+                                            console.log("4. PASSWORD:", pass);
+
+                                            api.executeCommand('password', pass); }, 300);
+                                    });
+                                }, 10);
+                            }
+                        });
+                    </script>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="meet_closed" name="Closed">
+            <t t-call="portal.frontend_layout">
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <img src="/static/description/closed.jpg" style = "display:block; margin-left: auto; margin-right: auto;"/>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

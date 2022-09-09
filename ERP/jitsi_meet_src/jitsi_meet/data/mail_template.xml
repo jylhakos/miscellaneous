@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="email_template_edi_jitsi_meet" model="mail.template">
+            <field name="name">Video Meeting Invitation</field>
+            <field name="email_to">${object.name}</field>
+            <field name="subject">${object.name}</field>
+            <field name="model_id" ref="jitsi_meet.model_calendar_event"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+
+                <div>
+                    <p>You have been invited to Video Meeting by Jitsi Meet</p>
+                    <p>Please join us on ${object.date_formated} by clicking on the following link:</p>
+                    <p>
+                        <a href="${object.url_to_link}">JOIN VIDEO MEETING</a>
+                    </p>
+                    % if object.jitsi_meet_enabled:
+                    <p>Credentials</p>
+                    <p>User: ${object.user}</p>
+                    <p>Password: ${object.password}</p>
+                    <p>Thank you,</p>
+
+                    % endif
+                </div>
+
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_calendar_event_tree_1" model="ir.ui.view">
+            <field name="name">calendar.event.tree</field>
+            <field name="model">calendar.event</field>
+
+            <field name="arch" type="xml">
+                <tree string="Meetings" multi_edit="1">
+                    <field name="name" string="Subject" readonly="1"/>
+                    <field name="allday" invisible="True"/>
+                    <field name="start_time_str" string="Start Time"/>
+                    <field name="end_time" invisible="True"/>
+                    <field name="jitsi_meet_enabled" invisible="1" />
+                    <field name="closed" invisible="1" />
+                    <field name="create_uid" invisible="1" />
+                    <button name="open" 
+                        icon="fa-video-camera" 
+                        string="Join Meeting" type="object" class="oe_highlight"
+                        attrs="{'invisible':['!','&amp;',('jitsi_meet_enabled','=',True),('closed','=',False)]}"
+                        />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_calendar_event_inherit_form" model="ir.ui.view">
+            <field name="name">calendar.event.form.inherit</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='allday']" position="after">
+                     <field name="jitsi_meet_enabled" />
+                </xpath>
+
+                 <xpath expr="//sheet"  position="before">
+                    <header attrs="{'invisible': [('jitsi_meet_enabled', '=', False)]}">
+
+                        <field name="current_user" invisible="1"/>
+
+                        <field name="create_uid" invisible="1"/>
+
+                        <field name="closed" invisible="1"/>
+
+                        <field name="jitsi_meet_enabled" invisible="1" />
+
+                        <button name="open" 
+                                string="Join Meeting" 
+                                type="object" 
+                                class="oe_highlight" 
+                                icon="fa-video-camera" 
+                                attrs="{'invisible':['!','&amp;',('jitsi_meet_enabled','=',True),('closed','=',False)]}"/>
+
+                        <button name="action_reopen_meeting" string="Resume Meeting" type="object"
+                                    icon="fa-video-camera"
+                                    groups="base.group_user"
+                                    attrs="{'invisible':['!','&amp;',('jitsi_meet_enabled','=',True),('closed','=',True)]}"/>
+
+                        <button name="action_close_meeting" string="Leave Meeting" type="object"
+                                    groups="base.group_user"
+                                    attrs="{'invisible':['!','&amp;',('jitsi_meet_enabled','=',True),('closed','=',False)]}"/>
+
+                        <button name="send_mail" string="Send Invitation" type="object" class="oe_highlight"
+                                    attrs="{'invisible':['!','&amp;',('jitsi_meet_enabled','=',True),('closed','=',False)]}"/>
+                    </header>
+                </xpath>
+
+                <xpath expr="//page[@name='page_misc']" position="after">
+                    <page string="Video Meeting" attrs="{'invisible': [('jitsi_meet_enabled', '=', False)]}">
+                        <group>
+                            <field name="date_delay" widget="float_time"/>
+                            <field name="url" invisible="1"/>
+                            <field name="url_to_link" string="Share Link"/>
+                            <field name="password_required"/>
+                            <field name="user" attrs="{'invisible': [('password_required', '!=', True)]}"/>
+                            <field name="password" attrs="{'invisible': [('password_required', '!=', True)]}"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="calendar_event_view_kanban" model="ir.ui.view">
+            <field name="name">Calendar Event View Kanban</field>
+            <field name="model">calendar.event</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="id" />
+                    <field name="create_uid" />
+                    <field name="name" />
+                    <field name="closed" />
+                    <field name="start_time_str" />
+                    <field name="jitsi_meet_enabled" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <t t-set="meet_enabled" t-value="record.jitsi_meet_enabled.raw_value"/>
+                                <t t-set="meet_closed" t-value="record.closed.raw_value"/>
+                                <div class="o_dropdown_kanban dropdown" tabindex="-1">
+                                    <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <a type="edit" class="dropdown-item">Edit</a>
+                                        <a type="delete" class="dropdown-item">Delete</a>
+                                        <a t-if="meet_enabled and (! meet_closed)" name="open" type="object" role="menuitem" class="dropdown-item">Join Meeting</a>
+                                        <a t-if="meet_enabled and meet_closed" name="action_reopen_meeting" type="object" role="menuitem" class="dropdown-item">Resume Meeting</a>
+                                        <a t-if="meet_enabled and (! meet_closed)" name="action_close_meeting" type="object" role="menuitem" class="dropdown-item">Leave Meeting</a>
+                                        <a t-if="meet_enabled and (! meet_closed)" name="send_mail" type="object" role="menuitem" class="dropdown-item">Send Invitation</a>
+                                    </div>
+                                </div>
+                                <img class="oe_module_icon" alt="Icon" t-att-src="kanban_image('res.users', 'image_128', record.create_uid.raw_value)"/>
+                                <div class="oe_module_desc" t-att-title="record.name.value" >
+                                    <h4 class="o_kanban_record_title">
+                                        <strong><field name="name"/></strong>&amp;nbsp;
+                                    </h4>
+                                    <p>
+                                         <field name="start_time_str" /> 
+                                    </p>
+                                    <div class="oe_module_action" >
+                                        <a t-if="meet_enabled and (! meet_closed)" name="send_mail" type="object" role="button" class="btn btn-secondary btn-sm float-right" >Send Invitation</a>
+                                        <button t-if="meet_enabled and (! meet_closed)" name="open" type="object" class="btn btn-primary btn-sm" >Join Meeting</button>
+                                        
+                                    </div>
+                                </div>
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="meeting_action_calendar_event" model="ir.actions.act_window">
+            <field name="name">Meetings</field>
+            <field name="res_model">calendar.event</field>
+            <field name="view_mode">kanban,tree,calendar,form</field>
+            <field name="context">
+                {
+                    'kanban_view_ref':'jitsi_meet.calendar_event_view_kanban',
+                    'form_view_ref':'calendar.view_calendar_event_form',
+                    'tree_view_ref':'jitsi_meet.view_calendar_event_tree_1',
+                    'search_view_ref':'calendar.view_calendar_event_search'
+                }
+            </field>
+            <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Schedule a new meeting
+            </p><p>
+                The calendar is shared between employees and fully integrated with
+                other applications such as the employee leaves or the business
+                opportunities.
+            </p>
+            </field>
+        </record>
+
+        <menuitem id="jitsi_meet_base_menu" 
+                  name="Meetings" 
+                  web_icon="jitsi_meet,static/description/icon.png"
+                  sequence="50" 
+                  action="meeting_action_calendar_event" />
+    </data>
+</odoo>

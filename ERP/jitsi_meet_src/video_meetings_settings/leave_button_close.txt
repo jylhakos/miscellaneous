@@ -1,0 +1,56 @@
+
+EVENT jitsi-meet HANGUP or LEAVE MEETING from jits-meet video meeting
+
+EDIT close2.html
+
+$ ls -l /usr/share/jitsi-meet/static/close2.html
+
+$ sudo nano /usr/share/jitsi-meet/static/close2.html
+
+FOR EXAMPLE REDICRECT TO HOME PAGE
+
+<script>
+        window.parent.location.href = "http://meet.mysite.cn:8069"
+</script>
+    
+EDIT config.js
+
+$ sudo nano /etc/jitsi/meet/meet.mysite.cn-config.js
+
+// Enabling the close page will ignore the welcome page redirection when a call is hangup.
+
+//BEFORE
+//enableClosePage: false,
+
+//AFTER
+enableClosePage: true,
+    
+$ sudo cp meet.mysite.cn-config.js /etc/jitsi/meet/.
+ 
+CLOSE PAGE JAVASCRIPT window.close() NOT ALLOWED TO CLOSE PAGE FROM JAVASCRIPT
+
+window.open('', '_parent', '');
+window.close();
+
+OR
+
+window.open('','_self');
+window.close();
+
+RESTART NGINX (DOCKER)
+
+$ sudo systemctl restart nginx
+
+OPTIONAL, MODIFY close2.html and config.js AND BUILD JAVASCRIPT FOR DOCKER
+
+Build jitsi-meet Javascript code and create Docker image
+
+At first comment out maybeRedirectToWelcomePage state change in conference.js file, 
+
+then build jitsi-meet and create Dcoker image.
+
+REFERENCES
+
+https://community.jitsi.org/t/redirect-url-on-hangup/29948
+
+
