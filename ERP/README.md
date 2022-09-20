@@ -379,6 +379,12 @@ L.marker represents a marker object with determined coordinates (longitude and l
 
 The jitsi_meet module contains models implemented in the Python files, views for the user interface files, data for declaring the model metadata, controllers for the website controllers, static directory for all web assets, security defining access control lists, and i18n where Odoo will look for the translation.
 
+
+### Modules
+
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/ERP/odoo/INSTALL/README.png?raw=true)
+
+
 ### References
 
 https://www.odoo.com/documentation
