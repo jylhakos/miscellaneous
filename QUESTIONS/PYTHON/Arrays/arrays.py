@@ -16,14 +16,14 @@ def longest(s):
                 break
     return maxLen
 
-def nearest(array, value):
+def closest(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
     return array[idx]
 
 array = np.array([-4, -2, 1, 4, 8])
 
-print(nearest(array, value=0))
+print(closest(array, value=0))
 
 s = "abcabcbb"
 
