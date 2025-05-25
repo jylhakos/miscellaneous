@@ -18,6 +18,10 @@ Python, JavaScript, Keras, Tensorflow, LSTM, RNN, Redis, RedisTimeSeries, Timesc
 
 JavaScript, React, React Native, Python, HTML, XML, Docker, Nginx, PostgreSQL, SSL, HTTP, Android, Ubuntu
 
+## Extract, Transform, Load (ETL)
+
+Python, JSON, SQL, PostgreSQL, Dockerfile, docker-compose.yml, Docker container, Linux
+
 ## Smart Buildings
 
 Bluetooth mesh, C-language, Python, TCP/IP, MQTT, HTTP, gRPC, Raspberry Pi (ARM), nRF52 (MCU), Linux (x86)
