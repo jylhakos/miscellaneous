@@ -1,0 +1,50 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "dataset",
+  "dataset_name": "xlam-function-calling-60k",
+  "dataset_size": 85106120,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/Salesforce/xlam-function-calling-60k@1d5ae9b3285c9ab6ec147a2baba438a170ea7947/xlam_function_calling_60k.json": {
+      "num_bytes": 96116570,
+      "checksum": null
+    }
+  },
+  "download_size": 96116570,
+  "features": {
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "id": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "answers": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "tools": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 181222690,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 85106120,
+      "num_examples": 60000,
+      "dataset_name": "xlam-function-calling-60k"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

@@ -1,0 +1,86 @@
+# Kubernetes Job: deployment.yaml
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: extract-docker-images-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: extract-docker-images
+        image: python:3.8
+        command: ["python"]
+        args: ["extract_docker_images.py"]
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      restartPolicy: Never
+      volumes:
+      - name: script-volume
+        configMap:
+          name: extract-docker-images-script
+  backoffLimit: 4
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: extract-docker-images-script
+data:
+  extract_docker_images.py: |
+    import requests
+    import re
+    import json
+
+    def fetch_sources(url):
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.text.splitlines()
+
+    def fetch_dockerfiles(repo_url, commit_sha):
+        repo_name = repo_url.rstrip('/').split('/')[-1]
+        api_url = f"https://api.github.com/repos/{repo_name}/git/trees/{commit_sha}?recursive=1"
+        response = requests.get(api_url)
+        response.raise_for_status()
+        tree = response.json().get('tree', [])
+        dockerfiles = [item['path'] for item in tree if item['path'].endswith('Dockerfile')]
+        return dockerfiles
+
+    def fetch_file_content(repo_url, commit_sha, file_path):
+        repo_name = repo_url.rstrip('/').split('/')[-1]
+        raw_url = f"https://raw.githubusercontent.com/{repo_name}/{commit_sha}/{file_path}"
+        response = requests.get(raw_url)
+        response.raise_for_status()
+        return response.text
+
+    def extract_images_from_dockerfile_alternative((content):
+        return re.findall(r'FROM\s+([^\s]+)', content, re.IGNORECASE)
+
+    def main(input_url):
+        sources = fetch_sources(input_url)
+        data = {}
+        
+        for line in sources:
+            if not line.strip():
+                continue
+            repo_url, commit_sha = line.split()
+            try:
+                dockerfiles = fetch_dockerfiles(repo_url, commit_sha)
+                repo_key = f"{repo_url}:{commit_sha}"
+                data[repo_key] = {}
+                
+                for dockerfile in dockerfiles:
+                    content = fetch_file_content(repo_url, commit_sha, dockerfile)
+                    images = extract_images_from_dockerfile_alternative((content)
+                    data[repo_key][dockerfile] = images
+            except Exception as e:
+                print(f"Error processing {repo_url} at {commit_sha}: {e}")
+        
+        print(json.dumps({"data": data}, indent=4))
+
+    if __name__ == "__main__":
+        # Input is not null or empty
+        input_url = "https://gist.githubusercontent.com/jmelis/c60e61a893248244dc4fa12b946585c4/raw/25d39f67f2405330a6314cad64fac423a171162c/sources.txt"
+        main(input_url)
+
+

@@ -1,0 +1,50 @@
+{
+  "builder_name": "parquet",
+  "citation": "",
+  "config_name": "default",
+  "dataset_name": "coding-challenge-screening-dev",
+  "dataset_size": 19517,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/ellamind/coding-challenge-screening-dev@c815b9d0bca2970a2584705e34b77b701608b1c8/data/train-00000-of-00001.parquet": {
+      "num_bytes": 14826,
+      "checksum": null
+    }
+  },
+  "download_size": 14826,
+  "features": {
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "id": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "answers": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "tools": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 34343,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 19517,
+      "num_examples": 15,
+      "dataset_name": "coding-challenge-screening-dev"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
