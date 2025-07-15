@@ -4,6 +4,10 @@
 
 Industry Foundation Classes (IFC), JavaScript, Java, HTML, WebGL, HTTP, REST, Tomcat, Linux
 
+## Build a Chatbot
+
+Generative AI (Gen AI) with large language models (LLMs) and retrieval augmented generation (RAG).
+
 ## Data Analytics
 
 Golang (Go), Gin, JWT, HTTP, CORS, GORM, PostgreSQL, SQL, JSON, Linux, Docker
@@ -21,6 +25,10 @@ JavaScript, React, React Native, Python, HTML, XML, Docker, Nginx, PostgreSQL, S
 ## Extract, Transform, Load (ETL)
 
 Python, JSON, SQL, PostgreSQL, Dockerfile, docker-compose.yml, Docker container, Linux
+
+## Large language models (LLMs)
+
+Large language model (LLM) inference is the process of using a pre-trained LLM models to generate outputs based on user input.
 
 ## Smart Buildings
 

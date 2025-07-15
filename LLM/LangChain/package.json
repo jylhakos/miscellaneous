@@ -1,0 +1,30 @@
+{
+  "name": "langchain",
+  "version": "1.0.0",
+  "description": "## LangChain",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node src/index.js",
+    "example": "node example.js",
+    "setup:aws": "./scripts/setup-aws.sh",
+    "deploy": "./scripts/deploy.sh",
+    "deploy:prod": "./scripts/deploy.sh prod",
+    "test:local": "node local-server.js",
+    "test:api": "./scripts/test-api.sh",
+    "logs": "serverless logs -f transformText -t",
+    "remove": "serverless remove"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "langchain": "^0.3.29",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.0"
+  }
+}

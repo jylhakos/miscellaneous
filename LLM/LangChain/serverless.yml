@@ -1,0 +1,176 @@
+# serverless.yml
+# Serverless Framework configuration for LangChain.js AWS Lambda deployment
+
+service: langchain-text-transformer
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  memorySize: 512
+  timeout: 30
+  
+  # Environment variables
+  environment:
+    NODE_ENV: ${self:provider.stage}
+    SERVICE_NAME: ${self:service}
+    
+  # IAM role statements
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: 
+        - 'arn:aws:logs:${self:provider.region}:*:log-group:/aws/lambda/*:*:*'
+    - Effect: Allow
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+      Resource: '*'
+
+  # API Gateway configuration
+  apiGateway:
+    restApiId: ${opt:api-id, ''}
+    restApiRootResourceId: ${opt:api-root-id, ''}
+    description: 'LangChain Text Transformation API'
+    binaryMediaTypes:
+      - '*/*'
+
+  # Enable X-Ray tracing
+  tracing:
+    lambda: true
+    apiGateway: true
+
+# Package configuration
+package:
+  exclude:
+    - tests/**
+    - .git/**
+    - .gitignore
+    - README.md
+    - example.js
+    - .vscode/**
+    - coverage/**
+    - '*.log'
+
+# Functions
+functions:
+  transformText:
+    handler: lambda/handler.transformText
+    description: 'Transform text to uppercase using LangChain'
+    events:
+      - http:
+          path: /transform
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+      - http:
+          path: /transform
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+
+  healthCheck:
+    handler: lambda/handler.healthCheck
+    description: 'Health check endpoint for the LangChain service'
+    events:
+      - http:
+          path: /health
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+            allowCredentials: false
+
+# Resources (CloudFormation)
+resources:
+  Resources:
+    # API Gateway Custom Domain (optional)
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Name: ${self:service}-${self:provider.stage}
+        Description: LangChain Text Transformation REST API
+        EndpointConfiguration:
+          Types:
+            - REGIONAL
+        Policy:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: '*'
+              Action: 'execute-api:Invoke'
+              Resource: '*'
+
+    # CloudWatch Log Group
+    TransformTextLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: '/aws/lambda/${self:service}-${self:provider.stage}-transformText'
+        RetentionInDays: 14
+
+    HealthCheckLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: '/aws/lambda/${self:service}-${self:provider.stage}-healthCheck'
+        RetentionInDays: 14
+
+  Outputs:
+    ApiGatewayRestApiId:
+      Value:
+        Ref: ApiGatewayRestApi
+      Export:
+        Name: ${self:service}-${self:provider.stage}-restApiId
+    
+    ApiGatewayRestApiRootResourceId:
+      Value:
+        Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId
+      Export:
+        Name: ${self:service}-${self:provider.stage}-rootResourceId
+
+    ServiceEndpoint:
+      Description: URL of the service endpoint
+      Value:
+        Fn::Join:
+          - ''
+          - - 'https://'
+            - Ref: ApiGatewayRestApi
+            - '.execute-api.'
+            - ${self:provider.region}
+            - '.amazonaws.com/'
+            - ${self:provider.stage}
+
+# Plugins
+plugins:
+  - serverless-offline
+
+# Custom configuration
+custom:
+  serverless-offline:
+    httpPort: 3000
+    lambdaPort: 3002
+    printOutput: true
