@@ -510,7 +510,7 @@ graph TD
    - Loads dataset with queries, tools, answers
    - Validates JSON format for tools and answers
 
-2. **Rowvalidation** (`validate_dataset_row`)
+2. **Row validation** (`validate_dataset_row`)
    - Checks required fields: query, tools
    - Validates JSON format in tools field
    - Skips invalid rows for training
