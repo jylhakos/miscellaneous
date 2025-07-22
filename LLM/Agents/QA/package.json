@@ -1,0 +1,33 @@
+{
+  "name": "qa",
+  "version": "1.0.0",
+  "description": "Q&A Chat System with LangChain.js, Node.js, Express.js, Ollama, and Llama 4 (Scout)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "./test-system.sh",
+    "setup": "./verify-setup.sh",
+    "examples": "./examples.sh",
+    "docker:start": "./start-docker.sh",
+    "docker:stop": "./stop-docker.sh",
+    "system:start": "./startup.sh",
+    "system:stop": "./shutdown.sh"
+  },
+  "keywords": ["qa", "chat", "llm", "ollama", "langchain", "llama4"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/core": "^0.3.66",
+    "@langchain/ollama": "^0.1.1",
+    "@langchain/community": "^0.3.66",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "langchain": "^0.3.66",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
