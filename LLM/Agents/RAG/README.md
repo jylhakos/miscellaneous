@@ -1,4 +1,4 @@
-# Retrieval Augmented Generation (RAG) chat with LangChain.js
+# Retrieval Augmented Generation (RAG) with LangChain.js
 
 Questions and answers (QA) chat providing **Retrieval-Augmented Generation (RAG)** built with **LangChain.js**, **Ollama**, and **ChromaDB**. This application enables domain-specific question-answering by combining the power of large language models with your custom knowledge base.
 
