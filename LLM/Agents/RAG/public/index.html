@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chat Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .chat-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .send-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .send-button:hover {
+            background: #0056b3;
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .upload-section {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .upload-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .file-input {
+            margin-bottom: 10px;
+        }
+
+        .upload-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .upload-button:hover {
+            background: #218838;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .endpoints {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .endpoints h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .endpoints code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 RAG Chat Application</h1>
+            <p>Chat with AI using your custom knowledge base</p>
+        </div>
+
+        <div class="content">
+            <!-- Chat Interface -->
+            <div class="chat-container" id="chatContainer">
+                <div class="message bot-message">
+                    Hello! I'm your RAG-powered AI assistant. Ask me anything about the documents you've uploaded, or general questions. Upload documents below to enhance my knowledge base.
+                </div>
+            </div>
+
+            <div class="input-container">
+                <input type="text" id="messageInput" class="message-input" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()" class="send-button" id="sendButton">Send</button>
+            </div>
+
+            <div class="loading" id="loading">
+                <p>🤔 Thinking...</p>
+            </div>
+
+            <!-- Document Upload Section -->
+            <div class="upload-section">
+                <h3>📄 Upload Documents</h3>
+                <input type="file" id="fileInput" class="file-input" accept=".txt,.pdf,.md,.doc,.docx">
+                <button onclick="uploadDocument()" class="upload-button" id="uploadButton">Upload Document</button>
+                <div class="status" id="uploadStatus"></div>
+            </div>
+
+            <!-- API Endpoints Information -->
+            <div class="endpoints">
+                <h4>🔗 API Endpoints</h4>
+                <p><strong>Chat:</strong> <code>POST /api/chat</code></p>
+                <p><strong>Upload:</strong> <code>POST /api/documents/upload</code></p>
+                <p><strong>Health:</strong> <code>GET /api/health</code></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = generateSessionId();
+
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const chatContainer = document.getElementById('chatContainer');
+            const loading = document.getElementById('loading');
+
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            messageInput.value = '';
+            sendButton.disabled = true;
+            loading.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        sessionId: sessionId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    addMessage(data.data.answer, 'bot');
+                    
+                    // Show sources if available
+                    if (data.data.sources && data.data.sources.length > 0) {
+                        const sourcesText = "📚 Sources: " + data.data.sources.map(s => s.content.substring(0, 100) + "...").join(" | ");
+                        addMessage(sourcesText, 'bot', 'sources');
+                    }
+                } else {
+                    addMessage('Sorry, I encountered an error: ' + (data.message || data.error), 'bot');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('Sorry, I\'m having trouble connecting. Please check that all services are running.', 'bot');
+            } finally {
+                sendButton.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function addMessage(content, sender, type = 'normal') {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            if (type === 'sources') {
+                messageDiv.style.fontSize = '12px';
+                messageDiv.style.opacity = '0.8';
+                messageDiv.style.fontStyle = 'italic';
+            }
+            
+            messageDiv.textContent = content;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function uploadDocument() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadButton = document.getElementById('uploadButton');
+            const status = document.getElementById('uploadStatus');
+
+            if (!fileInput.files[0]) {
+                showStatus('Please select a file first.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('document', fileInput.files[0]);
+
+            uploadButton.disabled = true;
+            uploadButton.textContent = 'Uploading...';
+
+            try {
+                const response = await fetch('/api/documents/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus(`Document uploaded successfully! Created ${data.data.chunksCreated} chunks.`, 'success');
+                    fileInput.value = '';
+                    addMessage(`📄 Document "${data.data.originalName}" has been added to my knowledge base!`, 'bot');
+                } else {
+                    showStatus('Upload failed: ' + (data.message || data.error), 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showStatus('Upload failed: Network error', 'error');
+            } finally {
+                uploadButton.disabled = false;
+                uploadButton.textContent = 'Upload Document';
+            }
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('uploadStatus');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
+
+        // Check system health on page load
+        async function checkHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (data.status !== 'healthy') {
+                    addMessage('⚠️ Some services may not be fully operational. Check the logs for details.', 'bot');
+                }
+            } catch (error) {
+                addMessage('⚠️ Unable to check system health. Please ensure all services are running.', 'bot');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkHealth();
+        });
+    </script>
+</body>
+</html>
