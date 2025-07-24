@@ -1,4 +1,4 @@
-# Questions and answers chat (RAG) with LangChain.js
+# Retrieval Augmented Generation (RAG) chat with LangChain.js
 
 Questions and answers (QA) chat providing **Retrieval-Augmented Generation (RAG)** built with **LangChain.js**, **Ollama**, and **ChromaDB**. This application enables domain-specific question-answering by combining the power of large language models with your custom knowledge base.
 
@@ -553,6 +553,7 @@ This project is licensed under the ISC License - see the LICENSE file for detail
 ## References
 
 - [LangChain.js Documentation](https://js.langchain.com/docs/tutorials/chatbot/)
+- [Build a Retrieval Augmented Generation (RAG) App](https://js.langchain.com/docs/tutorials/qa_chat_history/)
 - [Meta Llama 4 Documentation](https://www.llama.com/docs/model-cards-and-prompt-formats/llama4/)
 - [Ollama Documentation](https://ollama.ai/docs)
 - [ChromaDB Documentation](https://docs.trychroma.com/)
