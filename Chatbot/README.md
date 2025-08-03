@@ -1,12 +1,16 @@
 # Chatbot (AI)
 
-##  Recurrent sequence-to-sequence models
+![alt text](https://github.com/jylhakos/miscellaneous/blob/main/Chatbot/How_to_make_a_Chatbot.png?raw=true)
 
-References
+*Figure: How to make a Chatbot?*
 
-Chatbot Tutorial
+## How does Amazon AWS help with building chatbots?
 
-https://docs.pytorch.org/tutorials/beginner/chatbot_tutorial.html
+
+### References
+
+[Chatbot Tutorial](https://docs.pytorch.org/tutorials/beginner/chatbot_tutorial.html)
+[What is a chatbot?](https://aws.amazon.com/what-is/chatbot/)
 
 
 
