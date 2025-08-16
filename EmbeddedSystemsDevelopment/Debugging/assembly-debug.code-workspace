@@ -1,0 +1,219 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.associations": {
+      "*.s": "x86_64",
+      "*.asm": "x86_64", 
+      "*.inc": "x86_64",
+      "*.S": "x86_64"
+    },
+    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.intelliSenseEngine": "Default",
+    "terminal.integrated.cwd": "${workspaceFolder}/src",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.rulers": [80],
+    "files.trimTrailingWhitespace": true,
+    "debug.console.fontSize": 12,
+    "debug.console.fontFamily": "monospace",
+    "workbench.colorCustomizations": {
+      "debugConsole.infoForeground": "#00ff00",
+      "debugConsole.warningForeground": "#ffff00",
+      "debugConsole.errorForeground": "#ff0000"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.cpptools",
+      "13xforever.language-x86-64-assembly",
+      "maziac.asm-code-lens",
+      "webfreak.debug"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build Assembly (Debug)",
+        "type": "shell",
+        "command": "as",
+        "args": [
+          "--64",
+          "--gstabs+",
+          "--gdwarf-4",
+          "${file}",
+          "-o",
+          "${fileDirname}/${fileBasenameNoExtension}.o"
+        ],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Link Assembly",
+        "type": "shell", 
+        "command": "ld",
+        "args": [
+          "${fileDirname}/${fileBasenameNoExtension}.o",
+          "-o",
+          "${fileDirname}/${fileBasenameNoExtension}"
+        ],
+        "group": "build",
+        "dependsOn": "Build Assembly (Debug)",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Build and Link Assembly",
+        "dependsOrder": "sequence",
+        "dependsOn": [
+          "Build Assembly (Debug)",
+          "Link Assembly"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      },
+      {
+        "label": "Run Assembly Program",
+        "type": "shell",
+        "command": "${fileDirname}/${fileBasenameNoExtension}",
+        "group": "test",
+        "dependsOn": "Build and Link Assembly",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Disassemble Binary",
+        "type": "shell",
+        "command": "objdump",
+        "args": [
+          "-d",
+          "${fileDirname}/${fileBasenameNoExtension}"
+        ],
+        "group": "test",
+        "dependsOn": "Build and Link Assembly",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Analyze with Strace",
+        "type": "shell",
+        "command": "strace",
+        "args": [
+          "${fileDirname}/${fileBasenameNoExtension}"
+        ],
+        "group": "test",
+        "dependsOn": "Build and Link Assembly",
+        "presentation": {
+          "echo": true,
+          "reveal": "always", 
+          "focus": false,
+          "panel": "shared"
+        }
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug Assembly (hello.s)",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/src/hello",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}/src",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          },
+          {
+            "description": "Set disassembly flavor to Intel",
+            "text": "-gdb-set disassembly-flavor intel",
+            "ignoreFailures": true
+          },
+          {
+            "description": "Show registers in hex",
+            "text": "-gdb-set output-radix 16", 
+            "ignoreFailures": true
+          }
+        ],
+        "preLaunchTask": "Build and Link Assembly",
+        "logging": {
+          "engineLogging": false,
+          "trace": false,
+          "traceResponse": false
+        }
+      },
+      {
+        "name": "Debug Assembly (Current File)",
+        "type": "cppdbg",
+        "request": "launch", 
+        "program": "${fileDirname}/${fileBasenameNoExtension}",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          },
+          {
+            "description": "Set disassembly flavor to Intel",
+            "text": "-gdb-set disassembly-flavor intel",
+            "ignoreFailures": true
+          },
+          {
+            "description": "Show registers in hex",
+            "text": "-gdb-set output-radix 16",
+            "ignoreFailures": true
+          },
+          {
+            "description": "Custom assembly debugging setup",
+            "text": "-gdb-set confirm off",
+            "ignoreFailures": true
+          }
+        ],
+        "preLaunchTask": "Build and Link Assembly",
+        "logging": {
+          "engineLogging": false
+        }
+      }
+    ]
+  }
+}

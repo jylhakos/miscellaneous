@@ -1,0 +1,99 @@
+# Git ignore file for Embedded Systems Development - Debugging
+# This file excludes build artifacts while preserving source code
+
+# SOURCE FILES TO INCLUDE (not ignored):
+# *.c, *.cpp, *.h, *.hpp - C/C++ source files
+# *.s, *.S - Assembly source files
+# *.asm - Assembly source files (NASM/MASM)
+# Makefile, CMakeLists.txt - Build configuration files
+# *.md - Documentation files
+
+# Binaries and executables
+*.out
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.bin
+*.elf
+*.hex
+*.map
+
+# Object files
+*.o
+*.obj
+*.ko
+*.os
+
+# Debug files
+*.pdb
+*.dSYM/
+*.su
+*.tmp
+
+# Build directories
+build/
+dist/
+target/
+bin/
+obj/
+
+# IDE and editor files (exclude settings but keep workspace files if needed)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Keep specific VS Code files that are part of the project
+!.vscode/
+!*.code-workspace
+
+# Compiler and linker files (exclude generated files but keep source)
+*.d
+*.lst
+*.i
+# *.s  # Commented out - we want to include assembly source files (.s, .S)
+*.ii
+
+# Cross-compilation toolchain
+arm-none-eabi-*
+*.ld
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Package files
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# Configuration files (optional, comment out if needed)
+# .config
+# Makefile.local
+
+# EXPLICITLY INCLUDE SOURCE FILES (override any exclusions above)
+!*.c
+!*.cpp
+!*.h
+!*.hpp
+!*.s
+!*.S
+!*.asm
+!*.inc
+!Makefile
+!CMakeLists.txt
+!*.md
+!*.txt
+!*.sh
