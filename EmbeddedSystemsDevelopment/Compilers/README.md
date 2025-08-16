@@ -523,11 +523,11 @@ rm -f test_c99.c test_c99 test_cpp17.cpp test_cpp17
 
 Clang is a C and C++ frontend for LLVM. As part of the LLVM project, Clang can integrate with various components traditionally associated with the GNU toolchain, such as GNU linkers (e.g., ld, gold) and standard libraries (e.g., libstdc++ from GCC, or libc++ from LLVM).
 
-#### Clang and LLVM Architecture
+#### Clang and LLVM
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     LLVM Toolchain Architecture                 │
+│                     LLVM Toolchain                              │
 ├─────────────────────────────────────────────────────────────────┤
 │  Frontend (Clang)   │  Middle-end (LLVM)  │  Backend (LLVM)     │
 │  ┌──────────────┐   │  ┌───────────────┐  │  ┌───────────────┐  │
@@ -840,7 +840,7 @@ The Yocto Project consists of:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     Yocto Project                │
+│                     Yocto Project                               │
 ├─────────────────────────────────────────────────────────────────┤
 │  BitBake Build Engine                                           │
 │  ┌────────────┐  ┌─────────────┐  ┌────────────┐                │
@@ -1398,22 +1398,22 @@ Source Code → Frontend → LLVM IR → Optimizer → Backend → Machine Code
 
 ## Compilation Process Flow
 
-### Complete Compilation Pipeline
+### Compilation Pipeline
 
 ```mermaid
 graph TB
-    A[Source Code<br/>(.c/.cpp)] --> B[Preprocessor<br/>cpp/clang -E]
-    B --> C[Preprocessed Code<br/>(.i/.ii)]
-    C --> D[Compiler<br/>gcc -S/clang -S]
-    D --> E[Assembly Code<br/>(.s)]
-    E --> F[Assembler<br/>as/clang -c]
-    F --> G[Object Code<br/>(.o)]
-    G --> H[Linker<br/>ld/lld]
-    H --> I[Executable<br/>(a.out/binary)]
+    A[Source Code(.c/.cpp)] --> B[Preprocessor(cpp/clang) -E]
+    B --> C[Preprocessed Code(.i/.ii)]
+    C --> D[Compilergcc -S/clang -S]
+    D --> E[Assembly Code(.s)]
+    E --> F[Assembleras/clang -c]
+    F --> G[Object Code(.o)]
+    G --> H[Linkerld/lld]
+    H --> I[Executable(a.out/binary)]
     
-    J[Headers<br/>(.h/.hpp)] --> B
-    K[Libraries<br/>(.a/.so)] --> H
-    L[Startup Code<br/>(crt0.o)] --> H
+    J[Headers(.h/.hpp)] --> B
+    K[Libraries(.a/.so)] --> H
+    L[Startup Code(crt0.o)] --> H
     
     style A fill:#e1f5fe
     style I fill:#c8e6c9
