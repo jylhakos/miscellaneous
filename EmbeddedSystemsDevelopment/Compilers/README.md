@@ -1402,18 +1402,18 @@ Source Code → Frontend → LLVM IR → Optimizer → Backend → Machine Code
 
 ```mermaid
 graph TB
-    A[Source Code(.c/.cpp)] --> B[Preprocessor(cpp/clang) -E]
-    B --> C[Preprocessed Code(.i/.ii)]
-    C --> D[Compilergcc -S/clang -S]
-    D --> E[Assembly Code(.s)]
-    E --> F[Assembleras/clang -c]
-    F --> G[Object Code(.o)]
-    G --> H[Linkerld/lld]
-    H --> I[Executable(a.out/binary)]
+    A["Source Code<br/>(.c/.cpp)"] --> B["Preprocessor<br/>(cpp/clang -E)"]
+    B --> C["Preprocessed Code<br/>(.i/.ii)"]
+    C --> D["Compiler<br/>(gcc -S/clang -S)"]
+    D --> E["Assembly Code<br/>(.s)"]
+    E --> F["Assembler<br/>(as/clang -c)"]
+    F --> G["Object Code<br/>(.o)"]
+    G --> H["Linker<br/>(ld/lld)"]
+    H --> I["Executable<br/>(a.out/binary)"]
     
-    J[Headers(.h/.hpp)] --> B
-    K[Libraries(.a/.so)] --> H
-    L[Startup Code(crt0.o)] --> H
+    J["Headers<br/>(.h/.hpp)"] --> B
+    K["Libraries<br/>(.a/.so)"] --> H
+    L["Startup Code<br/>(crt0.o)"] --> H
     
     style A fill:#e1f5fe
     style I fill:#c8e6c9
