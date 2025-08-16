@@ -1,0 +1,391 @@
+# ===================================================================
+# .gitignore for Embedded Systems Development / Compilers Project
+# ===================================================================
+
+# ===================
+# Build Artifacts
+# ===================
+
+# Build directories
+build/
+build-*/
+build_*/
+bin/
+obj/
+lib/
+dist/
+out/
+
+# Compiled binaries and executables
+*.exe
+*.out
+*.app
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+*.o
+*.obj
+*.elf
+*.bin
+*.hex
+*.map
+
+# Specific build artifacts from our project
+hello_c
+hello_cpp
+c99-demo
+cpp17-demo
+cpp-alt-demo
+c99-demo-*
+cpp17-demo-*
+*-debug
+*-release
+
+# Assembly files (generated)
+*.s
+*.S
+*.asm
+
+# LLVM IR files (generated)
+*.ll
+*.bc
+
+# ===================
+# Dependencies & Packages
+# ===================
+
+# Package manager directories
+node_modules/
+.npm/
+.pnpm-store/
+vendor/
+.vendor/
+
+# Yocto Project build artifacts
+yocto-workspace/poky/
+yocto-workspace/meta-openembedded/
+yocto-workspace/meta-clang/
+yocto-workspace/build-demo/tmp/
+yocto-workspace/build-demo/sstate-cache/
+yocto-workspace/build-demo/downloads/
+yocto-workspace/build-demo/cache/
+
+# Keep only our custom layer and configurations
+!yocto-workspace/meta-compilers-demo/
+!yocto-workspace/build-demo/conf/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+CTestTestfile.cmake
+*.cmake
+!CMakeLists.txt
+!toolchains/*.cmake
+
+# Autotools generated files
+autom4te.cache/
+config.log
+config.status
+configure
+Makefile.in
+aclocal.m4
+config.h
+config.h.in
+stamp-h1
+
+# ===================
+# IDE & Editor Files
+# ===================
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json.example
+!.vscode/tasks.json.example
+!.vscode/launch.json.example
+!.vscode/c_cpp_properties.json.example
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+.vimrc.local
+
+# Emacs
+*~
+\#*\#
+.\#*
+.emacs.desktop
+.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# Eclipse
+.metadata/
+.classpath
+.project
+.settings/
+
+# Code::Blocks
+*.cbp
+*.layout
+*.depend
+
+# Dev-C++
+*.dev
+*.exe
+
+# ===================
+# Operating System Files
+# ===================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Linux
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===================
+# Temporary & Log Files
+# ===================
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.#*
+\#*#
+*.pid
+*.log
+*.logs
+log/
+logs/
+
+# Core dumps
+core
+core.*
+*.core
+*.stackdump
+
+# Test outputs
+test-results/
+*.test
+test_*
+*_test
+
+# Coverage files
+*.gcov
+*.gcda
+*.gcno
+coverage/
+*.coverage
+.nyc_output/
+
+# ===================
+# Archives & Compressed Files
+# ===================
+
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.tar.bz2
+*.tar.xz
+*.rar
+*.7z
+*.gz
+*.bz2
+*.xz
+
+# ===================
+# Documentation Build Artifacts
+# ===================
+
+# Doxygen
+html/
+latex/
+docs/html/
+docs/latex/
+
+# Sphinx
+_build/
+.doctrees/
+
+# ===================
+# Security & Credentials
+# ===================
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.test
+
+# API keys and secrets
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.txt
+credentials.txt
+
+# ===================
+# What to KEEP (Negated patterns)
+# ===================
+
+# Source code files
+!*.c
+!*.cpp
+!*.cc
+!*.cxx
+!*.c++
+!*.C
+!*.h
+!*.hpp
+!*.hxx
+!*.h++
+!*.H
+
+# Configuration files
+!*.conf
+!*.config
+!*.cfg
+!*.ini
+!*.properties
+!*.toml
+!*.yaml
+!*.yml
+!*.json
+!*.xml
+
+# Build system files
+!Makefile
+!makefile
+!CMakeLists.txt
+!*.cmake
+!configure.ac
+!configure.in
+!Makefile.am
+!*.mk
+!*.make
+
+# BitBake recipes and configurations
+!*.bb
+!*.bbappend
+!*.bbclass
+!layer.conf
+!bblayers.conf
+!local.conf
+!site.conf
+
+# Scripts
+!*.sh
+!*.bash
+!*.zsh
+!*.fish
+!*.py
+!*.pl
+!*.rb
+
+# Documentation
+!README*
+!CHANGELOG*
+!LICENSE*
+!COPYING*
+!INSTALL*
+!AUTHORS*
+!CONTRIBUTORS*
+!*.md
+!*.rst
+!*.txt
+!docs/*.md
+!docs/*.rst
+
+# Project metadata
+!.gitignore
+!.gitattributes
+!.clang-format
+!.clang-tidy
+!.editorconfig
+
+# Examples and tests (source only)
+!examples/
+!tests/
+!test/
+examples/**/*.o
+examples/**/*.exe
+examples/**/*.out
+tests/**/*.o
+tests/**/*.exe
+tests/**/*.out
+test/**/*.o
+test/**/*.exe
+test/**/*.out
+
+# ===================
+# Project-Specific
+# ===================
+
+# Yocto specific ignores (keep sources and configs)
+tmp/
+sstate-cache/
+downloads/
+cache/
+
+# Keep our source files and essential configurations
+!src/
+!scripts/
+!toolchains/
+!yocto-workspace/meta-compilers-demo/
+!yocto-workspace/build-demo/conf/
+
+# Keep validation and summary files
+!VALIDATION_SUMMARY.md
+!PROJECT.md
+
+# ===================
+# End of .gitignore
+# ===================
