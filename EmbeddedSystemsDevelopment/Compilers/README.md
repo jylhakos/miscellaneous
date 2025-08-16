@@ -1998,7 +1998,7 @@ ninja -C build/cross/cmake
 ### What is Yocto?
 **Yocto Project** is an open-source collaboration project providing tools and methods to create custom Linux distributions for embedded systems, regardless of hardware architecture.
 
-### Yocto Architecture Overview:
+### Yocto Overview
 
 ```mermaid
 graph TB
@@ -2028,7 +2028,7 @@ graph TB
     M --> S
 ```
 
-### Yocto Components:
+### Yocto Components
 
 #### 1. BitBake
 - **Task executor and scheduler**
