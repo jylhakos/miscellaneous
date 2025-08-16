@@ -1134,7 +1134,7 @@ arm-none-eabi-gdb hello.elf
 
 For a comprehensive quick reference guide to assembly debugging commands, tools, and workflows, see:
 
-📋 **[ASSEMBLY_DEBUG.md](ASSEMBLY_DEBUG.md)** - Complete quick reference card covering:
+ **[ASSEMBLY_DEBUG.md](ASSEMBLY_DEBUG.md)** - Complete quick reference card covering:
 - DevOps setup commands
 - Essential assembly build commands  
 - GDB assembly debugging commands
