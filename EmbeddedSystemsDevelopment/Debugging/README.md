@@ -1,24 +1,5 @@
 # Embedded Software Development - Debugging
 
-## What is Cross Compilation?
-
-Cross compilation is the process of compiling code on one architecture (the **host**) to run on a different architecture (the **target**).
-
-- **Host System**: Your development machine (x86/x64 Linux, Windows, or macOS)
-- **Target System**: The embedded device (ARM Cortex-M, RISC-V, etc.)
-
-Cross compilation is necessary because embedded targets have:
-- Limited computational power
-- Different instruction set architectures (ISA)
-- No operating system or a real-time OS
-- Resource constraints (memory, storage)
-
-The cross-compiler toolchain includes:
-- **Cross-compiler**: Generates target-specific machine code
-- **Cross-assembler**: Converts assembly to object files
-- **Cross-linker**: Links object files and libraries
-- **Cross-debugger**: Debugs applications on target hardware
-
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
@@ -34,7 +15,8 @@ The cross-compiler toolchain includes:
 11. [Advanced Debugging Techniques](#advanced-debugging-techniques)
 12. [Conclusion: Assembly Debugging](#conclusion-assembly-debugging)
 13. [Inter-Process Communication (IPC) Debugging](#inter-process-communication-ipc-debugging)
-14. [Troubleshooting](#troubleshooting)
+14. [What is Cross Compilation?](#what-is-cross-compilation)
+15. [Troubleshooting](#troubleshooting)
 
 ## Prerequisites
 
@@ -2154,6 +2136,25 @@ for pid in $(ps -eo pid --no-headers); do
     fi
 done
 ```
+
+### What is Cross Compilation?
+
+Cross compilation is the process of compiling code on one architecture (the **host**) to run on a different architecture (the **target**).
+
+- **Host System**: Your development machine (x86/x64 Linux, Windows, or macOS)
+- **Target System**: The embedded device (ARM Cortex-M, RISC-V, etc.)
+
+Cross compilation is necessary because embedded targets have:
+- Limited computational power
+- Different instruction set architectures (ISA)
+- No operating system or a real-time OS
+- Resource constraints (memory, storage)
+
+The cross-compiler toolchain includes:
+- **Cross-compiler**: Generates target-specific machine code
+- **Cross-assembler**: Converts assembly to object files
+- **Cross-linker**: Links object files and libraries
+- **Cross-debugger**: Debugs applications on target hardware
 
 ### Troubleshooting
 
