@@ -33,7 +33,8 @@ The cross-compiler toolchain includes:
 10. [Yocto Project Debugging](#yocto-project-debugging)
 11. [Advanced Debugging Techniques](#advanced-debugging-techniques)
 12. [Conclusion: Assembly Debugging](#conclusion-assembly-debugging)
-13. [Troubleshooting](#troubleshooting)
+13. [Inter-Process Communication (IPC) Debugging](#inter-process-communication-ipc-debugging)
+14. [Troubleshooting](#troubleshooting)
 
 ## Prerequisites
 
@@ -1388,7 +1389,773 @@ The debugging techniques work across multiple architectures:
 - Performance regression detection
 - Cross-platform compatibility testing
 
-## Troubleshooting
+## Inter-Process Communication (IPC) Debugging
+
+Inter-Process Communication (IPC) debugging on Linux involves understanding the various IPC mechanisms and utilizing appropriate tools to inspect their behavior. Embedded systems often rely heavily on IPC for communication between processes, drivers, and system components.
+
+### IPC Mechanisms Overview
+
+Linux provides several IPC mechanisms, each with specific debugging approaches:
+
+1. **Pipes and FIFOs (Named Pipes)**
+2. **Signals**
+3. **Shared Memory**
+4. **Message Queues**
+5. **Semaphores**
+6. **Unix Domain Sockets**
+7. **Network Sockets**
+
+### Debugging Pipes and FIFOs
+
+#### Anonymous Pipes
+```bash
+# Create test pipe program
+cat > pipe_test.c << 'EOF'
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    int pipefd[2];
+    pid_t cpid;
+    char buf;
+    
+    if (pipe(pipefd) == -1) {
+        perror("pipe");
+        return 1;
+    }
+    
+    cpid = fork();
+    if (cpid == -1) {
+        perror("fork");
+        return 1;
+    }
+    
+    if (cpid == 0) {    // Child writes to pipe
+        close(pipefd[0]);
+        write(pipefd[1], "Hello from child\n", 17);
+        close(pipefd[1]);
+    } else {            // Parent reads from pipe
+        close(pipefd[1]);
+        while (read(pipefd[0], &buf, 1) > 0)
+            write(STDOUT_FILENO, &buf, 1);
+        close(pipefd[0]);
+        wait(NULL);
+    }
+    return 0;
+}
+EOF
+
+# Compile and debug
+gcc -g -o pipe_test pipe_test.c
+
+# Debug pipe operations with strace
+strace -e trace=pipe,fork,read,write ./pipe_test
+
+# Debug with GDB
+gdb ./pipe_test
+(gdb) break main
+(gdb) run
+(gdb) next
+(gdb) print pipefd[0]
+(gdb) print pipefd[1]
+```
+
+#### Named Pipes (FIFOs)
+```bash
+# Create FIFO for testing
+mkfifo test_fifo
+
+# Monitor FIFO operations
+strace -e trace=open,read,write,mkfifo -f sh -c 'echo "test message" > test_fifo & cat test_fifo'
+
+# List open FIFOs
+lsof | grep FIFO
+
+# Debug FIFO permissions and usage
+ls -la test_fifo
+stat test_fifo
+```
+
+### Signal Debugging
+
+#### Signal Handling Analysis
+```bash
+# Create signal test program
+cat > signal_test.c << 'EOF'
+#include <signal.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/wait.h>
+
+void signal_handler(int sig) {
+    printf("Received signal %d\n", sig);
+}
+
+int main() {
+    signal(SIGUSR1, signal_handler);
+    printf("PID: %d\n", getpid());
+    
+    if (fork() == 0) {
+        sleep(2);
+        kill(getppid(), SIGUSR1);
+        return 0;
+    }
+    
+    sleep(5);
+    wait(NULL);
+    return 0;
+}
+EOF
+
+gcc -g -o signal_test signal_test.c
+
+# Debug signal delivery
+strace -e trace=signal,kill,rt_sigaction ./signal_test
+
+# Monitor signal handling in GDB
+gdb ./signal_test
+(gdb) break signal_handler
+(gdb) run
+# In another terminal: kill -USR1 <PID>
+```
+
+#### Signal Analysis Tools
+```bash
+# List process signal handlers
+cat /proc/<PID>/status | grep Sig
+
+# Monitor signal masks
+strace -e trace=rt_sigprocmask <command>
+
+# Debug signal delivery issues
+kill -l                    # List all signals
+pgrep -l <process_name>   # Find process PID
+kill -USR1 <PID>         # Send test signal
+```
+
+### Shared Memory Debugging
+
+#### System V Shared Memory
+```bash
+# Create shared memory test
+cat > shm_test.c << 'EOF'
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    key_t key = ftok("/tmp", 'A');
+    int shmid = shmget(key, 1024, IPC_CREAT | 0666);
+    
+    if (fork() == 0) {
+        // Child process
+        char *data = shmat(shmid, NULL, 0);
+        strcpy(data, "Hello from child");
+        shmdt(data);
+        return 0;
+    } else {
+        // Parent process
+        wait(NULL);
+        char *data = shmat(shmid, NULL, 0);
+        printf("Received: %s\n", data);
+        shmdt(data);
+        shmctl(shmid, IPC_RMID, NULL);
+        return 0;
+    }
+}
+EOF
+
+gcc -g -o shm_test shm_test.c
+
+# Debug shared memory operations
+strace -e trace=shmget,shmat,shmdt,shmctl ./shm_test
+
+# Monitor shared memory usage
+ipcs -m                   # List shared memory segments
+ipcs -m -p                # Show process information
+ipcs -m -t                # Show access times
+ipcs -m -u                # Show usage information
+```
+
+#### POSIX Shared Memory
+```bash
+# Create POSIX shared memory test
+cat > posix_shm_test.c << 'EOF'
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    const char *name = "/test_shm";
+    int fd = shm_open(name, O_CREAT | O_RDWR, 0666);
+    ftruncate(fd, 1024);
+    
+    void *ptr = mmap(NULL, 1024, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    strcpy((char *)ptr, "Hello POSIX SHM");
+    printf("Written: %s\n", (char *)ptr);
+    
+    munmap(ptr, 1024);
+    close(fd);
+    shm_unlink(name);
+    return 0;
+}
+EOF
+
+gcc -g -o posix_shm_test posix_shm_test.c -lrt
+
+# Debug POSIX shared memory
+strace -e trace=shm_open,mmap,munmap,shm_unlink ./posix_shm_test
+
+# Monitor POSIX shared memory
+ls /dev/shm/              # List POSIX shared memory objects
+```
+
+### Message Queue Debugging
+
+#### System V Message Queues
+```bash
+# Create message queue test
+cat > msgq_test.c << 'EOF'
+#include <sys/msg.h>
+#include <sys/ipc.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+struct msg_buffer {
+    long msg_type;
+    char msg_text[100];
+};
+
+int main() {
+    key_t key = ftok("/tmp", 'B');
+    int msgid = msgget(key, 0666 | IPC_CREAT);
+    
+    if (fork() == 0) {
+        // Child - sender
+        struct msg_buffer message;
+        message.msg_type = 1;
+        strcpy(message.msg_text, "Hello from message queue");
+        msgsnd(msgid, &message, sizeof(message.msg_text), 0);
+        return 0;
+    } else {
+        // Parent - receiver
+        wait(NULL);
+        struct msg_buffer message;
+        msgrcv(msgid, &message, sizeof(message.msg_text), 1, 0);
+        printf("Received: %s\n", message.msg_text);
+        msgctl(msgid, IPC_RMID, NULL);
+        return 0;
+    }
+}
+EOF
+
+gcc -g -o msgq_test msgq_test.c
+
+# Debug message queue operations
+strace -e trace=msgget,msgsnd,msgrcv,msgctl ./msgq_test
+
+# Monitor message queues
+ipcs -q                   # List message queues
+ipcs -q -p                # Show process information
+ipcs -q -t                # Show access times
+```
+
+#### POSIX Message Queues
+```bash
+# Create POSIX message queue test
+cat > posix_mq_test.c << 'EOF'
+#include <mqueue.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+int main() {
+    const char *queue_name = "/test_queue";
+    struct mq_attr attr;
+    attr.mq_flags = 0;
+    attr.mq_maxmsg = 10;
+    attr.mq_msgsize = 256;
+    
+    mqd_t mq = mq_open(queue_name, O_CREAT | O_WRONLY, 0644, &attr);
+    mq_send(mq, "Hello POSIX MQ", 14, 0);
+    mq_close(mq);
+    
+    mq = mq_open(queue_name, O_RDONLY);
+    char buffer[256];
+    mq_receive(mq, buffer, 256, NULL);
+    printf("Received: %s\n", buffer);
+    
+    mq_close(mq);
+    mq_unlink(queue_name);
+    return 0;
+}
+EOF
+
+gcc -g -o posix_mq_test posix_mq_test.c -lrt
+
+# Debug POSIX message queues
+strace -e trace=mq_open,mq_send,mq_receive,mq_unlink ./posix_mq_test
+
+# Monitor POSIX message queues
+ls /dev/mqueue/           # List POSIX message queues
+```
+
+### Semaphore Debugging
+
+#### System V Semaphores
+```bash
+# Create semaphore test
+cat > sem_test.c << 'EOF'
+#include <sys/sem.h>
+#include <sys/ipc.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+
+union semun {
+    int val;
+    struct semid_ds *buf;
+    unsigned short *array;
+};
+
+int main() {
+    key_t key = ftok("/tmp", 'C');
+    int semid = semget(key, 1, IPC_CREAT | 0666);
+    
+    // Initialize semaphore
+    union semun sem_union;
+    sem_union.val = 1;
+    semctl(semid, 0, SETVAL, sem_union);
+    
+    if (fork() == 0) {
+        // Child process
+        struct sembuf sb = {0, -1, 0};  // Wait (P operation)
+        semop(semid, &sb, 1);
+        printf("Child acquired semaphore\n");
+        sleep(2);
+        sb.sem_op = 1;  // Signal (V operation)
+        semop(semid, &sb, 1);
+        printf("Child released semaphore\n");
+        return 0;
+    } else {
+        // Parent process
+        sleep(1);
+        struct sembuf sb = {0, -1, 0};
+        printf("Parent waiting for semaphore...\n");
+        semop(semid, &sb, 1);
+        printf("Parent acquired semaphore\n");
+        sb.sem_op = 1;
+        semop(semid, &sb, 1);
+        wait(NULL);
+        semctl(semid, 0, IPC_RMID, 0);
+        return 0;
+    }
+}
+EOF
+
+gcc -g -o sem_test sem_test.c
+
+# Debug semaphore operations
+strace -e trace=semget,semctl,semop ./sem_test
+
+# Monitor semaphores
+ipcs -s                   # List semaphores
+ipcs -s -p                # Show process information
+ipcs -s -t                # Show access times
+```
+
+### Unix Domain Socket Debugging
+
+#### Unix Domain Socket Communication
+```bash
+# Create Unix socket test
+cat > unix_socket_test.c << 'EOF'
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/wait.h>
+
+int main() {
+    int server_fd, client_fd;
+    struct sockaddr_un addr;
+    char *socket_path = "/tmp/test_socket";
+    
+    if (fork() == 0) {
+        // Child - server
+        server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+        memset(&addr, 0, sizeof(addr));
+        addr.sun_family = AF_UNIX;
+        strcpy(addr.sun_path, socket_path);
+        unlink(socket_path);
+        
+        bind(server_fd, (struct sockaddr*)&addr, sizeof(addr));
+        listen(server_fd, 5);
+        
+        client_fd = accept(server_fd, NULL, NULL);
+        char buffer[256];
+        read(client_fd, buffer, sizeof(buffer));
+        printf("Server received: %s\n", buffer);
+        
+        close(client_fd);
+        close(server_fd);
+        unlink(socket_path);
+        return 0;
+    } else {
+        // Parent - client
+        sleep(1);
+        client_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+        memset(&addr, 0, sizeof(addr));
+        addr.sun_family = AF_UNIX;
+        strcpy(addr.sun_path, socket_path);
+        
+        connect(client_fd, (struct sockaddr*)&addr, sizeof(addr));
+        write(client_fd, "Hello Unix Socket", 17);
+        
+        close(client_fd);
+        wait(NULL);
+        return 0;
+    }
+}
+EOF
+
+gcc -g -o unix_socket_test unix_socket_test.c
+
+# Debug Unix socket operations
+strace -e trace=socket,bind,listen,accept,connect,read,write ./unix_socket_test
+
+# Monitor Unix sockets
+lsof -U                   # List Unix domain sockets
+netstat -x                # Show Unix domain socket statistics
+```
+
+### IPC Debugging Tools and Techniques
+
+#### System-wide IPC Monitoring
+```bash
+# List all IPC objects
+ipcs -a                   # All IPC objects
+ipcs -q -m -s             # All queues, memory, semaphores
+
+# Remove IPC objects (cleanup)
+ipcrm -Q <key>            # Remove message queue
+ipcrm -M <key>            # Remove shared memory
+ipcrm -S <key>            # Remove semaphore set
+
+# Monitor IPC usage
+watch -n 1 'ipcs -u'      # Monitor IPC usage in real-time
+```
+
+#### Process-specific IPC Analysis
+```bash
+# Find IPC usage by process
+lsof -p <PID> | grep -E "(pipe|socket|FIFO)"
+
+# Monitor process system calls
+strace -e trace=ipc -p <PID>
+
+# Monitor file descriptor usage
+ls -la /proc/<PID>/fd/
+
+# Check process signal information
+cat /proc/<PID>/status | grep -A 20 "Sig"
+```
+
+#### Advanced IPC Debugging with BPF/BCC
+
+BCC (BPF Compiler Collection) provides powerful tools for advanced IPC monitoring:
+
+```bash
+# Install BCC tools (Ubuntu/Debian)
+sudo apt-get install bpfcc-tools linux-headers-$(uname -r)
+
+# Trace IPC system calls
+sudo trace-bpfcc 'p:sys_msgget'
+sudo trace-bpfcc 'p:sys_shmget'
+sudo trace-bpfcc 'p:sys_semget'
+
+# Monitor inter-process communication patterns
+sudo execsnoop-bpfcc | grep -E "(pipe|socket)"
+
+# Trace socket operations
+sudo tcptracer-bpfcc        # TCP connections
+sudo sofdsnoop-bpfcc        # Socket file descriptor operations
+
+# Monitor shared memory access patterns
+sudo vfsstat-bpfcc 1        # VFS statistics including shared memory
+```
+
+#### Custom BPF Script for IPC Monitoring
+```python
+#!/usr/bin/env python3
+# ipc_monitor.py - Custom BPF script for IPC monitoring
+
+from bcc import BPF
+
+bpf_program = """
+#include <uapi/linux/ptrace.h>
+#include <linux/sched.h>
+
+BPF_PERF_OUTPUT(events);
+
+struct data_t {
+    u32 pid;
+    u32 uid;
+    char comm[TASK_COMM_LEN];
+    char syscall[16];
+};
+
+int trace_ipc_syscalls(struct pt_regs *ctx) {
+    struct data_t data = {};
+    u64 id = bpf_get_current_pid_tgid();
+    data.pid = id >> 32;
+    data.uid = bpf_get_current_uid_gid();
+    bpf_get_current_comm(&data.comm, sizeof(data.comm));
+    
+    // Get syscall name from probe name
+    bpf_probe_read_str(&data.syscall, sizeof(data.syscall), "ipc_call");
+    
+    events.perf_submit(ctx, &data, sizeof(data));
+    return 0;
+}
+"""
+
+# Usage example - would require full BPF setup
+```
+
+### VS Code IPC Debugging Configuration
+
+#### Enhanced launch.json for IPC Debugging
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug IPC Application",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/${fileBasenameNoExtension}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set environment for IPC debugging",
+          "text": "-gdb-set environment MALLOC_CHECK_=3",
+          "ignoreFailures": true
+        }
+      ],
+      "logging": {
+        "engineLogging": true,
+        "trace": true,
+        "traceResponse": true
+      }
+    },
+    {
+      "name": "Attach to IPC Process",
+      "type": "cppdbg",
+      "request": "attach",
+      "program": "${workspaceFolder}/build/${input:processName}",
+      "processId": "${input:processId}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "processId",
+      "description": "Process ID to attach to",
+      "type": "promptString"
+    },
+    {
+      "id": "processName",
+      "description": "Process name",
+      "type": "promptString"
+    }
+  ]
+}
+```
+
+#### IPC Debugging Tasks
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build IPC Test",
+      "type": "shell",
+      "command": "gcc",
+      "args": [
+        "-g", "-Wall", "-pthread", "-lrt",
+        "${file}",
+        "-o", "${fileDirname}/${fileBasenameNoExtension}"
+      ],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Trace IPC System Calls",
+      "type": "shell",
+      "command": "strace",
+      "args": [
+        "-e", "trace=ipc,signal,pipe,socket",
+        "-f", "-o", "ipc_trace.log",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
+      "group": "test",
+      "dependsOn": "Build IPC Test"
+    },
+    {
+      "label": "Monitor IPC Objects",
+      "type": "shell",
+      "command": "watch",
+      "args": ["-n", "1", "ipcs", "-a"],
+      "group": "test",
+      "isBackground": true
+    },
+    {
+      "label": "Clean IPC Objects",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "for id in $(ipcs -q | awk 'NR>3 {print $2}'); do ipcrm -q $id; done; for id in $(ipcs -m | awk 'NR>3 {print $2}'); do ipcrm -m $id; done; for id in $(ipcs -s | awk 'NR>3 {print $2}'); do ipcrm -s $id; done"
+      ],
+      "group": "test"
+    }
+  ]
+}
+```
+
+### IPC Performance and Security Debugging
+
+#### Performance Analysis
+```bash
+# Benchmark IPC mechanisms
+time ./pipe_test
+time ./shm_test
+time ./msgq_test
+time ./unix_socket_test
+
+# Memory usage analysis
+valgrind --tool=massif ./shm_test
+ms_print massif.out.*
+
+# IPC throughput testing
+dd if=/dev/zero bs=1M count=100 | ./pipe_test
+```
+
+#### Security Analysis
+```bash
+# Check IPC permissions
+ipcs -a -p                # Process ownership
+ipcs -a -c                # Creation info
+ipcs -a -t                # Time information
+
+# Monitor IPC access attempts
+sudo auditctl -w /tmp -p wa -k ipc_access
+sudo ausearch -k ipc_access
+
+# SELinux context analysis (if enabled)
+ls -Z /tmp/test_*
+ps -eZ | grep <process_name>
+```
+
+### IPC Debugging Issues and Solutions
+
+#### Deadlocks in IPC
+```bash
+# Detect deadlocks in applications
+gdb -batch -ex "thread apply all bt" -p <PID>
+
+# Monitor waiting processes
+ps aux | grep " D "       # Processes in uninterruptible sleep
+
+# Check semaphore values
+ipcs -s -i <semid>        # Detailed semaphore info
+```
+
+#### Resource Leaks
+```bash
+# Monitor growing IPC usage
+while true; do
+  date; ipcs -u | grep -E "(messages|bytes|segments)"
+  sleep 5
+done
+
+# Find processes with open file descriptors
+lsof | grep <process_name> | wc -l
+
+# Check for orphaned IPC objects
+ipcs -a | grep -v $(ps -eo pid --no-headers | tr '\n' '|' | sed 's/|$//')
+```
+
+#### Permission Issues
+```bash
+# Debug permission denied errors
+strace -e trace=ipc <command> 2>&1 | grep EACCES
+
+# Check umask settings
+umask
+
+# Verify user/group membership
+id <username>
+groups <username>
+```
+
+### DevOps IPC Monitoring and Automation
+
+#### Automated IPC Health Checks
+```bash
+#!/bin/bash
+# ipc_health_check.sh - Monitor IPC health
+
+echo "=== IPC Health Check $(date) ==="
+
+# Check for excessive IPC usage
+IPC_COUNT=$(ipcs -a | grep -c "^0x")
+if [ "$IPC_COUNT" -gt 100 ]; then
+    echo "WARNING: High IPC object count: $IPC_COUNT"
+fi
+
+# Check for old IPC objects
+ipcs -a -t | awk 'NR>3 && $6 < (systime() - 86400) {print "OLD IPC:", $0}'
+
+# Monitor IPC memory usage
+ipcs -m -u | grep -E "(bytes allocated|segments allocated)"
+
+# Check process IPC usage
+for pid in $(ps -eo pid --no-headers); do
+    ipc_fds=$(lsof -p $pid 2>/dev/null | grep -c -E "(pipe|socket|FIFO)")
+    if [ "$ipc_fds" -gt 50 ]; then
+        echo "High IPC usage - PID: $pid, FDs: $ipc_fds"
+    fi
+done
+```
+
+### Troubleshooting
 
 ### GDB Permission Issues
 ```bash
