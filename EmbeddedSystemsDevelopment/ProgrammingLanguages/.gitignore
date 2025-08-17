@@ -1,0 +1,87 @@
+# Build artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+
+# Binary files
+c_hello_world
+c_hello_world_arm
+c_hello_world_static
+cpp_hello_world
+cpp_hello_world_arm
+cpp_hello_world_static
+QtHelloWorld
+
+# Assembly binaries
+assembler/hello_world
+assembler/hello_world_debug
+assembler/*.bin
+assembler/*.elf
+
+# Debug files
+*.pdb
+*.map
+*.sym
+gmon.out
+callgrind.out.*
+massif.out.*
+*.gcda
+*.gcno
+*.gcov
+
+# Build directories
+build/
+build-*/
+cmake-build-*/
+.cmake/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile.bak
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+
+# Package files
+*.tar.gz
+*.zip
+*.7z
+
+# Results and output
+results/*.txt
+results/*.json
+results/*.csv
+results/*.xml
+
+# Core dumps
+core
+core.*
+
+# System files
+.directory
+*.desktop
+
+# Profiling data
+perf.data*
+*.prof
+
+# Static analysis
+cppcheck-results.xml
+scan-build-*
