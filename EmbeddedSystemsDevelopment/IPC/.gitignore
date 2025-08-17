@@ -1,0 +1,296 @@
+# Qt and C++ Build Artifacts
+# ==========================
+
+# Qt-specific files
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+
+# Qt Creator
+.qtc_clangd/
+*.creator
+*.creator.user*
+*.pro.user*
+*.pri.user*
+
+# Qt Build directories
+build/
+build-*/
+debug/
+release/
+Debug/
+Release/
+profile/
+Profile/
+
+# qmake generated files
+Makefile*
+!Makefile.am
+*.Makefile
+*.mk
+*.make
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+cmake_uninstall.cmake
+CMakeOutput.log
+CMakeError.log
+CTestTestfile.cmake
+_deps/
+*.cmake
+!CMakeLists.txt
+
+# C++ Build Artifacts
+# ===================
+
+# Compiled Object files
+*.o
+*.obj
+*.lo
+*.slo
+
+# Compiled Dynamic libraries
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.a
+*.lib
+*.la
+*.lai
+
+# Executables
+*.exe
+*.out
+*.app
+qt_ipc_server
+qt_ipc_client
+
+# Generated binary files in src folder
+src/server/qt_ipc_server
+src/client/qt_ipc_client
+src/server/*.exe
+src/client/*.exe
+src/server/*.out
+src/client/*.out
+
+# Build directories in src folder
+src/*/build/
+src/*/build-*/
+src/*/debug/
+src/*/release/
+src/*/Debug/
+src/*/Release/
+
+# System and Editor Files
+# =======================
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# Windows
+*.lnk
+*.stackdump
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.vs/
+*.vcxproj*
+*.sln
+*.suo
+*.user
+*.ncb
+*.aps
+*.plg
+*.opt
+*.clw
+*.pdb
+*.idb
+*.ilk
+*.pch
+*.res
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.rsp
+*.pgc
+*.pgd
+*.meta
+*.tlog
+*.manifest
+*.intermediate
+*.cache
+*.ipch
+
+# IDEs
+.idea/
+*.pro.user*
+*.autosave
+
+# Debugging and Profiling
+# =======================
+
+# GDB files
+.gdb_history
+gdb.txt
+core
+core.*
+vgcore.*
+
+# Valgrind
+*.memcheck
+*.callgrind
+*.cachegrind
+*.helgrind
+*.drd
+
+# Profiling
+*.gcno
+*.gcda
+*.gcov
+gmon.out
+*.prof
+
+# Qt and Development Logs
+# =======================
+
+# Qt logs
+*.log
+*.qlog
+
+# Compilation logs
+compile_commands.json
+.compile_commands.json
+
+# Test results
+test-results/
+*.tap
+*.junit
+
+# Coverage reports
+coverage/
+*.coverage
+htmlcov/
+.coverage*
+
+# Package files
+# =============
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.bz2
+*.xz
+
+# Package management
+conandata.yml
+conanfile.txt
+vcpkg.json
+
+# Temporary and Cache Files
+# ========================
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+
+# Cache
+*.cache
+.cache/
+
+# Lock files
+*.lock
+
+# Documentation generated files
+# =============================
+
+# Doxygen
+doc/html/
+doc/latex/
+doc/man/
+doc/rtf/
+Doxyfile.bak
+
+# Sphinx
+docs/_build/
+docs/build/
+
+# Custom Project Exclusions
+# =========================
+
+# Ignore any large binary assets
+assets/binaries/
+assets/libs/
+
+# Ignore distribution packages
+dist/
+*.egg-info/
+
+# Ignore local configuration
+.env
+.env.local
+config.local.*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bck
+*.backup
+
+# IDE workspace files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# Qt Designer files (if not part of project)
+# Uncomment if you don't want to track .ui files
+# *.ui
+
+# Translation files (uncomment if generated)
+# *.qm
+
+# End of .gitignore
