@@ -1529,22 +1529,28 @@ gcc build/t.o -lmath -lpthread -o build/hello_c
 The **assembler** is a crucial component that converts human-readable assembly language into machine code object files. In the GNU toolchain, `as` (GNU Assembler) handles this conversion.
 
 ```mermaid
-graph LR
-    A[Assembly Source<br/>(.s/.S)] --> B[GNU Assembler<br/>(as)]
-    B --> C[Object File<br/>(.o)]
-    C --> D[GNU Linker<br/>(ld)]
-    D --> E[Executable<br/>(ELF)]
+graph TD
+    A["Assembly Source<br/>(.s/.S)"] --> B["GNU Assembler<br/>(as)"]
+    B --> C["Object File<br/>(.o)"]
+    C --> D["GNU Linker<br/>(ld)"]
+    D --> E["Executable<br/>(ELF)"]
     
-    F[C Source] --> G[GCC Frontend]
-    G --> H[Assembly<br/>Generation]
+    F["C Source<br/>(.c)"] --> G["GCC Frontend<br/>(gcc -S)"]
+    G --> H["Assembly<br/>Generation"]
     H --> A
     
-    I[Directives] --> B
-    J[Symbols] --> B
-    K[Macros] --> B
+    I["Directives<br/>(.section, .global)"] --> B
+    J["Symbols<br/>(labels, variables)"] --> B
+    K["Macros<br/>(.macro, .endm)"] --> B
+    
+    L["Static Libraries<br/>(.a)"] --> D
+    M["Dynamic Libraries<br/>(.so)"] --> D
+    N["Startup Code<br/>(crt0.o)"] --> D
     
     style A fill:#fff3e0
+    style B fill:#fce4ec
     style C fill:#e8f5e8
+    style D fill:#f3e5f5
     style E fill:#e3f2fd
 ```
 
@@ -2649,19 +2655,44 @@ chmod +x scripts/compare_compilers.sh
 
 ```mermaid
 graph TB
-    A[Power On] --> B[ROM Bootloader]
-    B --> C[U-Boot SPL<br/>(Secondary Program Loader)]
-    C --> D[U-Boot Main<br/>(Full Bootloader)]
-    D --> E[Linux Kernel]
-    E --> F[Root Filesystem]
+    A["Power On"] --> B["ROM Bootloader"]
+    B --> C["U-Boot SPL<br/>(Secondary Program Loader)"]
+    C --> D["U-Boot Main<br/>(Full Bootloader)"]
+    D --> E["Linux Kernel"]
+    E --> F["Root Filesystem"]
     
-    G[Hardware Init] --> D
-    H[Device Tree] --> E
-    I[Boot Scripts] --> D
+    G["Hardware Init"] --> D
+    H["Device Tree"] --> E
+    I["Boot Scripts"] --> D
+    J["Environment Variables"] --> D
+    K["Network Config"] --> D
     
+    subgraph "Boot Process Flow"
+        A --> B --> C --> D --> E --> F
+    end
+    
+    subgraph "U-Boot Configuration"
+        G --> D
+        I --> D
+        J --> D
+        K --> D
+    end
+    
+    subgraph "Kernel Loading"
+        H --> E
+    end
+    
+    style A fill:#ffcdd2
+    style B fill:#f8bbd9
     style C fill:#fff3e0
     style D fill:#e3f2fd
     style E fill:#c8e6c9
+    style F fill:#dcedc8
+    style G fill:#f3e5f5
+    style H fill:#e8f5e8
+    style I fill:#fff8e1
+    style J fill:#e0f2f1
+    style K fill:#fce4ec
 ```
 
 ### U-Boot Architecture and Components
