@@ -21,6 +21,7 @@ out/
 *.out
 *.app
 *.so
+*.so.*
 *.dylib
 *.dll
 *.a
@@ -32,9 +33,20 @@ out/
 *.hex
 *.map
 
+# Assembly binaries (compiled executables from .s files)
+hello_asm
+hello_asm_*
+*_asm
+asm_*
+t_x86*
+t_arm*
+t_aarch64*
+
 # Specific build artifacts from our project
 hello_c
 hello_cpp
+hello_c_*
+hello_cpp_*
 c99-demo
 cpp17-demo
 cpp-alt-demo
@@ -42,18 +54,66 @@ c99-demo-*
 cpp17-demo-*
 *-debug
 *-release
+*_debug
+*_release
 
-# Assembly files (generated)
+# Cross-compilation binaries (various architectures)
+*_x86_64
+*_arm32
+*_arm64
+*_cortex_*
+*_clang
+*_gcc
+*_lto
+*_lld
+
+# Assembly files (generated - exclude)
+# But keep our manually written assembly sources
 *.s
-*.S
+*.S  
 *.asm
+
+# Keep our manually written assembly source files
+!ASSEMBLER/*.s
+!ASSEMBLER/*.S
+!src/**/*.s
+!src/**/*.S
+!examples/**/*.s
 
 # LLVM IR files (generated)
 *.ll
 *.bc
 
+# Cross-compilation and LLVM specific artifacts
+*.ll.s
+*.opt
+*.bc.o
+llvm-link-*
+llc-*
+clang-*-tmp*
+
+# U-Boot related binaries
+u-boot
+u-boot.bin  
+u-boot.img
+u-boot.elf
+u-boot.map
+*.dtb
+*.dtbo
+boot.scr
+System.map
+
+# Embedded systems binaries
+firmware.*
+*.srec
+*.ihex
+initramfs*
+rootfs/
+*.cpio
+*.cpio.gz
+
 # ===================
-# Dependencies & Packages
+# Dependencies & Libraries
 # ===================
 
 # Package manager directories
@@ -62,6 +122,37 @@ node_modules/
 .pnpm-store/
 vendor/
 .vendor/
+
+# Dynamic libraries and shared objects
+*.so
+*.so.*
+*.dylib
+*.dll
+libc.so*
+libgcc*
+libstdc++*
+libm.so*
+libpthread*
+
+# Cross-compilation library directories  
+/usr/arm-linux-gnueabihf/
+/usr/aarch64-linux-gnu/
+/usr/*/lib/
+sysroot/
+toolchain/
+cross-tools/
+
+# Linker files
+*.ld
+*.lds
+!**/linker_script.ld
+
+# Static libraries (keep essential ones)
+libclang_rt*
+libcompiler-rt*
+crt*.o
+crti.o
+crtn.o
 
 # Yocto Project build artifacts
 yocto-workspace/poky/
@@ -377,10 +468,29 @@ cache/
 
 # Keep our source files and essential configurations
 !src/
+!ASSEMBLER/
 !scripts/
 !toolchains/
 !yocto-workspace/meta-compilers-demo/
 !yocto-workspace/build-demo/conf/
+
+# But exclude binaries in ASSEMBLER directory
+ASSEMBLER/*.o
+ASSEMBLER/*.out
+ASSEMBLER/*.elf
+ASSEMBLER/hello_*
+ASSEMBLER/*_test
+ASSEMBLER/*_debug
+ASSEMBLER/*_release
+
+# Keep only source files in ASSEMBLER
+!ASSEMBLER/*.s
+!ASSEMBLER/*.S
+!ASSEMBLER/*.c
+!ASSEMBLER/*.cpp
+!ASSEMBLER/*.h
+!ASSEMBLER/README*
+!ASSEMBLER/Makefile
 
 # Keep validation and summary files
 !VALIDATION_SUMMARY.md
