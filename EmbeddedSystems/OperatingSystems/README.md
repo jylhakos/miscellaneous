@@ -209,13 +209,13 @@ Linux provides mechanisms for processes to communicate through shared memory:
 ## References and Further Reading
 
 ### Official Documentation
-- [FreeRTOS Documentation](https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals) - Comprehensive guide to RTOS fundamentals
+- [FreeRTOS Documentation](https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals) - RTOS fundamentals
 - [Wind River RTOS Learning Center](https://www.windriver.com/solutions/learning/rtos) - Industrial RTOS concepts and applications
 - [TI MCU+ SDK Documentation](https://software-dl.ti.com/mcu-plus-sdk/esd/AM64X/08_00_00_21/exports/docs/api_guide_am64x/index.html) - Real-time system development
 
 ### Technical Articles
 - [Interprocess Communication in Linux](https://opensource.com/article/19/4/interprocess-communication-linux-storage) - Detailed guide to Linux IPC mechanisms
-- [Popular Real-Time Operating Systems](https://www.lynx.com/blog/most-popular-real-time-operating-systems-rtos) - Comprehensive comparison of RTOS options
+- [Popular Real-Time Operating Systems](https://www.lynx.com/blog/most-popular-real-time-operating-systems-rtos) - Comparison of RTOS options
 
 ### Academic Resources
 - Real-Time Systems Design and Analysis (Phillip A. Laplante)
