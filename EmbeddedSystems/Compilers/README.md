@@ -20,7 +20,7 @@ This repository contains information about C/C++ compilation, standards, embedde
 
 ```
 EmbeddedSystemsDevelopment/Compilers/
-├── README.md                    # This comprehensive guide
+├── README.md                    # This document
 ├── src/
 │   ├── C/
 │   │   └── t.c                 # Sample C program with vector operations
@@ -35,7 +35,7 @@ EmbeddedSystemsDevelopment/Compilers/
 │   ├── release/                # Release builds
 │   └── cross/                  # Cross-compilation outputs
 ├── scripts/                     # Build and utility scripts
-│   ├── compiler_check.sh       # Comprehensive compiler validation
+│   ├── compiler_check.sh       # Compiler validation
 │   └── compare_compilers.sh    # GCC vs Clang comparison
 ├── .vscode/                     # VS Code configuration
 │   ├── tasks.json              # Build tasks
@@ -164,7 +164,7 @@ This section provides detailed instructions for setting up GCC, Clang/LLVM, and 
 
 ### � Compiler Validation and Detection
 
-Before installing or configuring compilers, it's essential to validate what's already available on your system. Here are comprehensive commands to detect and validate C, C++, and Clang compilers on Linux.
+Before installing or configuring compilers, it's essential to validate what's already available on your system. Here are commands to detect and validate C, C++, and Clang compilers on Linux.
 
 #### Essential Compiler Detection Commands
 
@@ -190,7 +190,7 @@ arm-linux-gnueabihf-gcc --version 2>/dev/null && echo "  ARM GCC cross-compiler 
 
 ```bash
 #!/bin/bash
-# compiler_check.sh - Comprehensive compiler detection and validation
+# compiler_check.sh - Compiler detection and validation
 
 echo " Compiler Detection and Validation Report"
 echo "==========================================="
@@ -834,7 +834,7 @@ echo "Setup complete!"
 
 ## Yocto Project Integration with Clang/LLVM
 
-The Yocto Project is a build system for creating custom embedded Linux distributions. This section provides comprehensive integration with both GCC and Clang/LLVM toolchains.
+The Yocto Project is a build system for creating custom embedded Linux distributions. This section provides  integration with both GCC and Clang/LLVM toolchains.
 
 ### Overview of Yocto Components
 
@@ -877,7 +877,7 @@ The Yocto Project consists of:
 
 ### Automated Setup
 
-We've created a comprehensive setup script that handles the entire Yocto + Clang integration:
+We've created a setup script that handles the entire Yocto + Clang integration:
 
 ```bash
 # Run the automated setup
@@ -963,7 +963,7 @@ cp ../src/C/t.c meta-compilers-demo/recipes-examples/c99-demo/files/
 # Create BitBake recipe
 cat > meta-compilers-demo/recipes-examples/c99-demo/c99-demo_1.0.bb << 'EOF'
 SUMMARY = "C99 Compiler Features Demonstration"
-DESCRIPTION = "Comprehensive C99 features demo for embedded systems with support for GCC and Clang"
+DESCRIPTION = "C99 features demo for embedded systems with support for GCC and Clang"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
@@ -1017,7 +1017,7 @@ cp ../src/C++/t.cpp meta-compilers-demo/recipes-examples/cpp17-demo/files/
 # Create BitBake recipe
 cat > meta-compilers-demo/recipes-examples/cpp17-demo/cpp17-demo_1.0.bb << 'EOF'
 SUMMARY = "C++17 Compiler Features Demonstration"
-DESCRIPTION = "Comprehensive C++17 features demo with support for GCC, Clang, and different C++ runtime libraries"
+DESCRIPTION = "C++17 features demo with support for GCC, Clang, and different C++ runtime libraries"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
@@ -1399,7 +1399,7 @@ Source Code → Frontend → LLVM IR → Optimizer → Backend → Machine Code
 | Compilation Speed | Generally faster | Varies by code |
 | Memory Usage | Lower | Higher |
 | Optimization | Excellent | Excellent, more mature |
-| Standards Support | Early adopter | Comprehensive |
+| Standards Support | Early adopter | Complete |
 | Platform Support | Excellent | Broader embedded support |
 | Static Analysis | Built-in | External tools |
 | License | Apache/LLVM | GPL |
@@ -2134,7 +2134,7 @@ ninja -C build/cross/cmake
 
 ### LLVM Toolchain Architecture for Cross-Compilation
 
-LLVM provides a comprehensive cross-compilation environment that differs from traditional GCC-based approaches. The LLVM architecture separates the frontend (Clang) from the backend, making cross-compilation more flexible and modular.
+LLVM provides a cross-compilation environment that differs from traditional GCC-based approaches. The LLVM architecture separates the frontend (Clang) from the backend, making cross-compilation more flexible and modular.
 
 ```mermaid
 graph TB
@@ -2433,11 +2433,11 @@ clang --target=arm-none-eabi -mcpu=cortex-m4 -mthumb \
 llvm-objcopy -O binary firmware.elf firmware.bin
 ```
 
-This comprehensive LLVM/Clang cross-compilation setup provides modern, flexible alternatives to traditional GCC-based cross-compilation, with better optimization capabilities and unified toolchain management.
+This LLVM/Clang cross-compilation setup provides modern, flexible alternatives to traditional GCC-based cross-compilation, with better optimization capabilities and unified toolchain management.
 
 ## Compiling Examples
 
-Let's create comprehensive compilation examples for the source files in this repository.
+Let's create compilation examples for the source files in this repository.
 
 ### Compiling the C Program (src/C/t.c)
 
@@ -3309,7 +3309,7 @@ clang++ --version && echo "  Clang++ available" || echo "❌ Clang++ not found"
 echo 'int main(){return 0;}' | gcc -x c - -o /tmp/gcc_test && echo "  GCC works" || echo "❌ GCC failed"
 echo 'int main(){return 0;}' | g++ -x c++ - -o /tmp/gpp_test && echo "  G++ works" || echo "❌ G++ failed"
 
-# Run our comprehensive validation script
+# Run the validation script
 ./scripts/compiler_check.sh
 ```
 
