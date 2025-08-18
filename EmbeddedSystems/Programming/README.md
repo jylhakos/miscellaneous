@@ -511,7 +511,7 @@ See individual README files in each language directory for specific compilation 
 - [Qt for MCUs Performance Guide](https://doc.qt.io/QtForMCUs/performance-guide-application-performance.html) - Optimization techniques for embedded systems
 
 ### RTOS Performance Analysis
-- [FreeRTOS Performance Analysis](https://mcuoneclipse.com/2018/02/25/performance-and-runtime-analysis-with-freertos/) - Comprehensive guide to FreeRTOS performance measurement
+- [FreeRTOS Performance Analysis](https://mcuoneclipse.com/2018/02/25/performance-and-runtime-analysis-with-freertos/)
 
 ### Development Tools
 - [CMake Documentation](https://cmake.org/cmake/help/latest/) - Build system configuration
@@ -523,7 +523,7 @@ See individual README files in each language directory for specific compilation 
 - [Real-Time Systems Design Principles](https://www.embedded.com/) - Embedded systems development resources
 
 ### Assembly Language
-- [x86 Assembly Guide - University of Virginia](https://www.cs.virginia.edu/~evans/cs216/guides/x86.html) - Comprehensive x86 assembly programming guide
+- [x86 Assembly Guide - University of Virginia](https://www.cs.virginia.edu/~evans/cs216/guides/x86.html) -  x86 assembly programming
 - [Intel 64 and IA-32 Software Developer's Manual](https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html) - Official processor documentation
 - [NASM Documentation](https://nasm.us/docs.php) - NASM assembler reference
 - [Linux System Call Reference](https://filippo.io/linux-syscall-table/) - System call interface documentation
