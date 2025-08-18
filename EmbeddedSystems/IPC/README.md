@@ -90,7 +90,7 @@ ZeroMQ is an asynchronous messaging library that provides various socket types f
 
 ## QNX IPC
 
-QNX provides a comprehensive set of IPC mechanisms optimized for real-time embedded systems:
+QNX provides a set of IPC mechanisms optimized for real-time embedded systems:
 
 ### Message Passing
 - Native QNX message passing with guaranteed delivery
@@ -349,7 +349,7 @@ Plugin Architecture → D-Bus or shared libraries
 - Design for **graceful degradation** when IPC mechanisms fail
 
 ### Debugging and Monitoring
-- Implement comprehensive **logging and tracing** for IPC operations
+- Implements **logging and tracing** for IPC operations
 - Use system tools (e.g., `ipcs`, `lsof`, `netstat`) for monitoring IPC resources
 - Design **health check mechanisms** for critical IPC channels
 - Consider **message versioning** for protocol evolution
@@ -358,7 +358,7 @@ Plugin Architecture → D-Bus or shared libraries
 
 ### Overview
 
-Qt provides several comprehensive ways to implement Inter-Process Communication (IPC) in Qt applications. The Qt framework offers both low-level and high-level IPC mechanisms that integrate seamlessly with Qt's signal-slot system and event-driven architecture.
+Qt provides several ways to implement Inter-Process Communication (IPC) in Qt applications. The Qt framework offers both low-level and high-level IPC mechanisms that integrate seamlessly with Qt's signal-slot system and event-driven architecture.
 
 ### Qt IPC Mechanisms
 
