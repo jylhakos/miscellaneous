@@ -1,0 +1,2 @@
+# No external dependencies required for this project
+# The script uses only Python standard library
