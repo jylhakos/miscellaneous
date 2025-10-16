@@ -1,0 +1,21 @@
+# BIM OCR Requirements
+# For processing Building Information Modeling images and blueprints
+
+# OCR engines
+pytesseract==0.3.13
+easyocr==1.7.1
+
+# Image processing
+Pillow==10.4.0
+opencv-python==4.10.0.84
+numpy==1.26.4
+
+# PDF/Drawing processing
+PyMuPDF==1.24.10
+
+# Deep learning
+torch==2.4.1
+torchvision==0.19.1
+
+# Utilities
+python-dotenv==1.0.1

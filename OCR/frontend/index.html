@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Vision - Image Recognition with LLM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .upload-section {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9ff;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-section.drag-over {
+            border-color: #764ba2;
+            background: #e8ebff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .file-input-label:active {
+            transform: translateY(0);
+        }
+
+        .prompt-section {
+            margin-bottom: 30px;
+        }
+
+        .prompt-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .prompt-section textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .prompt-section textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .preview-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .preview-section img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .preview-section img.show {
+            display: inline-block;
+        }
+
+        .analyze-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .analyze-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .result-content {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.05em;
+        }
+
+        .error {
+            background: #ffe8e8;
+            border-left-color: #dc3545;
+        }
+
+        .error h3 {
+            color: #dc3545;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .setting-item {
+            margin-bottom: 15px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .setting-item input,
+        .setting-item select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .setting-item input:focus,
+        .setting-item select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            color: #1976d2;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .upload-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 OCR Vision - Image Recognition</h1>
+            <p>Upload an image and let AI describe what it sees using LLM Vision Models</p>
+        </header>
+
+        <div class="main-content">
+            <div class="info-box">
+                <p><strong>⚡ Powered by:</strong> FastAPI + Ollama + Llama 3.2 Vision</p>
+                <p><strong>📝 How it works:</strong> Upload an image, optionally customize the prompt, and click Analyze</p>
+            </div>
+
+            <div class="settings-section">
+                <h3>⚙️ Settings</h3>
+                <div class="setting-item">
+                    <label for="apiUrl">FastAPI Server URL:</label>
+                    <input type="text" id="apiUrl" value="http://localhost:8000" placeholder="http://localhost:8000">
+                </div>
+                <div class="setting-item">
+                    <label for="modelName">LLM Model:</label>
+                    <select id="modelName">
+                        <option value="llama3.2-vision:11b">Llama 3.2 Vision 11B (Recommended)</option>
+                        <option value="llama3.2-vision:90b">Llama 3.2 Vision 90B (High Quality)</option>
+                        <option value="llama3.2-vision">Llama 3.2 Vision (Latest)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="upload-section" id="dropZone">
+                <div class="upload-icon">📤</div>
+                <h2>Upload an Image</h2>
+                <p>Drag and drop an image here or click to browse</p>
+                <div class="file-input-wrapper">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <label for="imageInput" class="file-input-label">Choose Image File</label>
+                </div>
+                <p style="color: #999; font-size: 0.9em; margin-top: 10px;">
+                    Supported formats: JPG, PNG, BMP, GIF, TIFF
+                </p>
+                <div class="file-info" id="fileInfo"></div>
+            </div>
+
+            <div class="preview-section">
+                <img id="imagePreview" alt="Image preview">
+            </div>
+
+            <div class="prompt-section">
+                <label for="promptInput">Custom Prompt (Optional):</label>
+                <textarea 
+                    id="promptInput" 
+                    placeholder="Enter your custom prompt here, or leave blank for default analysis...&#10;&#10;Examples:&#10;- Describe this image in detail&#10;- Extract all visible text from this image&#10;- What objects are in this image?&#10;- Identify the type of document">Describe this image in detail and extract any visible text.</textarea>
+            </div>
+
+            <button class="analyze-btn" id="analyzeBtn" disabled>
+                Analyze Image with AI
+            </button>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing image with LLM Vision Model...</p>
+                <p style="color: #999; font-size: 0.9em;">This may take 10-30 seconds depending on image complexity</p>
+            </div>
+
+            <div class="result-section" id="resultSection">
+                <h3>Analysis Result:</h3>
+                <div class="result-content" id="resultContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const promptInput = document.getElementById('promptInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const resultSection = document.getElementById('resultSection');
+        const resultContent = document.getElementById('resultContent');
+        const dropZone = document.getElementById('dropZone');
+        const fileInfo = document.getElementById('fileInfo');
+        const apiUrl = document.getElementById('apiUrl');
+        const modelName = document.getElementById('modelName');
+
+        let selectedFile = null;
+
+        // File input change handler
+        imageInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    handleFile(file);
+                } else {
+                    alert('Please drop an image file');
+                }
+            }
+        });
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        // Process selected file
+        function handleFile(file) {
+            selectedFile = file;
+            
+            // Display file info
+            fileInfo.innerHTML = `
+                <p><strong>File:</strong> ${file.name}</p>
+                <p><strong>Size:</strong> ${(file.size / 1024).toFixed(2)} KB</p>
+                <p><strong>Type:</strong> ${file.type}</p>
+            `;
+            fileInfo.classList.add('show');
+
+            // Preview image
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.add('show');
+                analyzeBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+
+            // Hide previous results
+            resultSection.classList.remove('show');
+        }
+
+        // Analyze button click handler
+        analyzeBtn.addEventListener('click', analyzeImage);
+
+        async function analyzeImage() {
+            if (!selectedFile) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const prompt = promptInput.value.trim() || 'Describe this image in detail and extract any visible text.';
+            const apiBaseUrl = apiUrl.value.trim() || 'http://localhost:8000';
+            const model = modelName.value;
+
+            // Show loading
+            loading.classList.add('show');
+            resultSection.classList.remove('show');
+            analyzeBtn.disabled = true;
+
+            try {
+                // Create form data
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('prompt', prompt);
+                formData.append('model', model);
+                formData.append('ollama_url', 'http://localhost:11434');
+
+                // Send request to FastAPI
+                const response = await fetch(`${apiBaseUrl}/api/ocr/llm`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // Display result
+                if (data.success) {
+                    resultContent.textContent = data.text;
+                    resultSection.classList.remove('error');
+                    resultSection.classList.add('show');
+                } else {
+                    throw new Error(data.detail || 'Analysis failed');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultContent.textContent = `Error: ${error.message}\n\nTroubleshooting:\n1. Make sure FastAPI server is running (python fastapi_ocr_service.py)\n2. Ensure Ollama is running (ollama serve)\n3. Check that the Llama 3.2 Vision model is installed (ollama pull llama3.2-vision:11b)\n4. Verify the API URL is correct: ${apiBaseUrl}`;
+                resultSection.classList.add('error');
+                resultSection.classList.add('show');
+            } finally {
+                loading.classList.remove('show');
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        // Keyboard shortcut: Enter to analyze (when button is enabled)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey && !analyzeBtn.disabled) {
+                analyzeImage();
+            }
+        });
+
+        // Add tooltip
+        analyzeBtn.title = 'Click to analyze image with AI (Ctrl+Enter)';
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# PDF OCR Requirements
+# For processing PDF files and extracting text
+
+# PDF to Image conversion
+pdf2image==1.17.0
+Pillow==10.4.0
+
+# OCR engines
+pytesseract==0.3.13
+
+# PDF processing
+PyMuPDF==1.24.10
+PyPDF2==3.0.1
+ocrmypdf==16.5.0
+
+# Image processing
+opencv-python==4.10.0.84
+numpy==1.26.4
+
+# Utilities
+python-dotenv==1.0.1

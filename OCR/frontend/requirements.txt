@@ -1,0 +1,8 @@
+# Frontend Requirements
+# No additional Python packages needed - uses built-in http.server
+# The frontend is pure HTML/CSS/JavaScript
+
+# However, to run the complete system you need:
+# 1. FastAPI backend (install from root requirements.txt)
+# 2. Ollama (install separately from https://ollama.com)
+# 3. Llama 3.2 Vision model (ollama pull llama3.2-vision:11b)

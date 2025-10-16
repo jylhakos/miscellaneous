@@ -1,0 +1,25 @@
+# FastAPI OCR Service Requirements
+
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+
+# PDF OCR
+pdf2image==1.17.0
+pytesseract==0.3.13
+PyMuPDF==1.24.10
+
+# BIM OCR
+easyocr==1.7.1
+
+# LLM OCR
+requests==2.32.3
+
+# Image processing
+Pillow==10.4.0
+opencv-python==4.10.0.84
+numpy==1.26.4
+
+# Utilities
+python-dotenv==1.0.1
+aiofiles==24.1.0
