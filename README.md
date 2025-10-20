@@ -4,7 +4,7 @@
 
 Industry Foundation Classes (IFC), JavaScript, Java, HTML, WebGL, HTTP, REST, Tomcat, Linux
 
-## Build a Chatbot
+## Build a Chat Bot
 
 Generative AI (Gen AI) with large language models (LLMs) and retrieval augmented generation (RAG).
 
