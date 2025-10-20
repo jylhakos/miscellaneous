@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  chatservice:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DATABASE=chatservice
+      - MONGODB_COLLECTION=messages
+      - SERVER_PORT=8080
+      - SERVER_HOST=0.0.0.0
+      - JWT_SECRET_KEY=your-secret-key-change-in-production
+      - JWT_ISSUER=chatservice
+      - JWT_EXPIRY_HOURS=24
+      - RATE_LIMIT_RPM=100
+      - RATE_LIMIT_BURST=10
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - chat-network
+
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=chatservice
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    restart: unless-stopped
+    networks:
+      - chat-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  chat-network:
+    driver: bridge
