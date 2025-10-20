@@ -8,6 +8,10 @@ Industry Foundation Classes (IFC), JavaScript, Java, HTML, WebGL, HTTP, REST, To
 
 Generative AI (Gen AI) with large language models (LLMs) and retrieval augmented generation (RAG).
 
+## Chat Service
+
+Golang (Go), Gin Framework, MongoDB, JWT Authentication, REST API, CORS, Rate Limiting, Docker, Docker Compose, Kubernetes, Google Cloud Platform (GCP), Cloud Run, Anomaly Detection, Middleware, JSON, HTTP, SSL/TLS, Git, Alpine Linux
+
 ## Data Analytics
 
 Golang (Go), Gin, JWT, HTTP, CORS, GORM, PostgreSQL, SQL, JSON, Linux, Docker
