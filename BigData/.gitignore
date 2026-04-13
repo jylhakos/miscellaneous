@@ -1,0 +1,51 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# PySpark
+metastore_db/
+derby.log
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data files (exclude large datasets)
+*.data
+*.csv
+*.parquet
+*.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Binary libraries
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.tgz
+
+# Spark temp directories
+spark-warehouse/
+checkpoint/
