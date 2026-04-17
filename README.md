@@ -1,10 +1,39 @@
-# Projects
+# Miscellaneous Projects
+
+## Folder Structure
+
+```
+📁 miscellaneous/
+├── 📁 BigData/
+├── 📁 BIM/
+├── 📁 ChatBot/
+├── 📁 ChatService/
+├── 📁 DataAnalytics/
+├── 📁 DataStructures/
+├── 📁 DeepLearning/
+├── 📁 DigitRecognizer/
+├── 📁 EmbeddedSystems/
+├── 📁 ERP/
+├── 📁 ETL/
+├── 📁 LLM/
+├── 📁 OCR/
+├── 📁 Patterns/
+├── 📁 QUESTIONS/
+├── 📁 SmartBuildings/
+└── 📁 SupplyChain/
+```
+
+## Big Data
+
+Machine learning pipeline with PySpark for customer analysis and prediction using Apache Spark MLlib, featuring data transformation, feature engineering, and logistic regression for binary classification of paid subscribers.
+
+**Technologies:** Python, PySpark, Apache Spark, MLlib, Logistic Regression, Machine Learning, Jupyter Notebook, Data Processing
 
 ## Building Information Model (BIM)
 
 Industry Foundation Classes (IFC), JavaScript, Java, HTML, WebGL, HTTP, REST, Tomcat, Linux
 
-## Build a Chat Bot
+## Chat Bot
 
 Generative AI (Gen AI) with large language models (LLMs) and retrieval augmented generation (RAG).
 
@@ -42,7 +71,7 @@ JavaScript, React, React Native, Python, HTML, XML, Docker, Nginx, PostgreSQL, S
 
 Python, JSON, SQL, PostgreSQL, Dockerfile, docker-compose.yml, Docker container, Linux
 
-## Large language models (LLMs)
+## Large Language Models (LLM)
 
 Large language model (LLM) inference is the process of using a pre-trained LLM models to generate outputs based on user input.
 
@@ -50,10 +79,22 @@ Large language model (LLM) inference is the process of using a pre-trained LLM m
 
 Python, FastAPI, Tesseract, EasyOCR, OpenCV, TensorFlow, PyTorch, Machine Learning, Deep Learning, Large Language Models (LLMs), Computer Vision, PDF Processing, Image Processing, REST API, PyMuPDF, pdf2image, Pillow, NumPy, Uvicorn
 
+## Patterns
+
+Software design patterns demonstrating best practices for solving common programming problems, including the Visitor pattern for adding new behaviors to class hierarchies without modifying existing code.
+
+**Technologies:** Design Patterns, Object-Oriented Programming, Visitor Pattern, Software Architecture
+
+## QUESTIONS
+
+Questions and answers organized by technology domains including Artificial Intelligence, Golang, Python, and React.
+
+**Categories:** ARTIFICIALINTELLIGENCE, GOLANG, PYTHON, REACT
+
 ## Smart Buildings
 
 Bluetooth mesh, C-language, Python, TCP/IP, MQTT, HTTP, gRPC, Raspberry Pi (ARM), nRF52 (MCU), Linux (x86)
 
-## Blockchain For Supply Chain
+## Supply Chain
 
 Hyperledger Sawtooth, JavaScript, Python, Rust, Angular, React, HTML, CSS, JSON, Google Maps, OpenStreetMap, RethinkDB, Flask, Node.js, Express, Apache, Nginx, ZMQ, MQTT, HTTP, Mosquitto, HTTP, gRPC, BSON, SSL, iptables, Docker, Dockerfile, Docker Compose, Linux, Ubuntu
