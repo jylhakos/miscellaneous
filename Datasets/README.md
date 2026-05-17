@@ -39,7 +39,7 @@
     - [Correlation Heat Map by Pearson r](#correlation-heat-map-by-pearson-r)
     - [Lasso Regularisation Path — Coefficients to Zero as Alpha Increases](#lasso-regularisation-path--coefficients-to-zero-as-alpha-increases)
     - [Feature Consensus — Ranked by Method Agreement](#feature-consensus--ranked-by-method-agreement)
-    - [Mutual Information Regression](#mutual-information-regression)
+    - [Mutual Information Regression for COL\_134](#mutual-information-regression-for-col_134)
     - [Random Forest Importances](#random-forest-importances)
   - [Regression Plots](#regression-plots)
     - [Regression Model Comparison — Best Model Selection](#regression-model-comparison--best-model-selection)
@@ -927,17 +927,19 @@ out redundancies, and determining final consensus via a metric-based threshold
 
 ---
 
-#### Mutual Information Regression
+#### Mutual Information Regression for COL\_134
 
 ![Mutual Information Scores](plots/fs_mutual_info.png)
 
-**Mutual Information Regression**
+**Mutual Information Regression for COL\_134**
 
-Mutual Information (MI) measures the **statistical dependence** between two
-continuous variables.  Unlike Pearson correlation — which only captures linear
-relationships — MI captures **any** dependency (linear or non-linear) by
-quantifying the reduction in uncertainty about the target $Y$ given knowledge
-of feature $X$:
+Mutual Information (MI) ranks each input variable by its statistical dependence
+with `COL_134` — the continuous physical property of an elevator component —
+to identify which variables are relevant for modelling `COL_134` as a function
+of the measured input features.  Unlike Pearson correlation, which only
+captures linear relationships, MI captures **any** dependency (linear or
+non-linear) by quantifying the reduction in uncertainty about `COL_134` given
+knowledge of a candidate feature $X$:
 
 $$I(X; Y) = \int\!\int p(x,y)\,\log\frac{p(x,y)}{p(x)\,p(y)}\,dx\,dy$$
 
