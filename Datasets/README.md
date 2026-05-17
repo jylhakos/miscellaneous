@@ -1533,7 +1533,7 @@ Because the dataset is anonymous, the mathematical form of the relationship
 between the input columns and `COL_134` is unknown in advance — it may be
 linear, non-linear, or involve complex interaction effects.  Evaluating a
 spectrum of algorithms lets the empirical results determine which modelling
-assumption fits the data best.  Ten algorithms were chosen to span this full
+assumption fits the data best.  Eight algorithms were chosen to span this full
 spectrum — from simple interpretable linear baselines to powerful non-linear
 ensemble methods — covering the main algorithmic families used in structured
 tabular regression:
@@ -1548,8 +1548,6 @@ tabular regression:
 | XGBoost | Ensemble (boosting) | Optimised gradient boosting with regularisation; state-of-the-art on tabular data |
 | LightGBM | Ensemble (boosting) | Leaf-wise tree growth; fast and memory-efficient on wide datasets |
 | SVR (RBF kernel) | Kernel method | Kernel trick maps features to non-linear space; useful for complex decision boundaries |
-| CatBoost | Ensemble (boosting, native categorical) | Natively handles hash-encoded categorical columns; recommended next algorithm for this dataset |
-| Elastic Net | Regularised linear (L1 + L2) | Combines Lasso sparsity with Ridge grouping; robust when correlated feature groups are present |
 
 ### Results Summary
 
