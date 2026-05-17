@@ -442,7 +442,7 @@ the interval [0, 1] by the data provider.  The regression task is to estimate
 this property from the other 134 measured (but anonymous) columns: the model
 learns a mapping
 
-$$\hat{y}_{\text{COL\_134}} = f(\text{COL\_000},\, \text{COL\_001},\, \ldots,\, \text{COL\_133};\, \theta)$$
+$$\hat{y}_{\mathrm{COL}_{134}} = f(\mathrm{COL}_{000},\, \mathrm{COL}_{001},\, \ldots,\, \mathrm{COL}_{133};\, \theta)$$
 
 so that, given a new set of measurements from the same component type, the
 model can **predict the value of the target property without directly
