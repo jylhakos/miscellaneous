@@ -831,7 +831,7 @@ defined by the penalty:
 
 | Feature | Lasso (L1 Regularisation) | Ridge (L2 Regularisation) |
 |---|---|---|
-| Penalty type | Sum of absolute values $\sum|\beta_j|$ | Sum of squared values $\sum\beta_j^2$ |
+| Penalty type | Sum of absolute values $\sum\vert\beta_j\vert$ | Sum of squared values $\sum\beta_j^2$ |
 | Effect of high $\alpha$ | Shrinks coefficients **exactly to zero** | Shrinks coefficients **very close** to zero |
 | Feature selection | **Yes** — effectively removes features | **No** — retains all features |
 
@@ -1321,8 +1321,13 @@ This approach:
 
 ### Stage 6 — Evaluation and Monitoring
 
-After training on unknown data:
+After completing the tokenise and feed step, the trained or prompted model is
+evaluated on the held-out test split:
 
+- **LLM training** — Tokenised feature sequences produced in Stage 3 are fed
+  to the LLM: as pre-training corpora, as supervised fine-tuning examples with
+  a regression head predicting `COL_134`, or as few-shot prompts.  The model
+  is then evaluated against the held-out test split using the metrics below.
 - **Regression metrics** — R², MAE, RMSE remain valid for evaluating continuous
   prediction heads attached to LLMs.
 - **Feature attribution** — Use SHAP (SHapley Additive exPlanations) or
