@@ -727,7 +727,7 @@ They are saved in the `plots/` sub-folder.
 
 ![Correlation Heat Map](plots/fs_correlation_heatmap.png)
 
-**Concept — What is a Pearson Correlation Heat Map?**
+**What is a Pearson Correlation Heat Map?**
 
 A Pearson correlation heat map is a colour-coded visual representation of a
 correlation matrix used to display the strength and direction of **linear
@@ -792,7 +792,7 @@ as a colour-coded grid.
 
 ![Lasso Path](plots/fs_lasso_path.png)
 
-**Concept — What is Lasso Regularisation?**
+**What is Lasso Regularisation?**
 
 Lasso (**L**east **A**bsolute **S**hrinkage and **S**election **O**perator) is a
 linear regression technique that prevents overfitting by adding an **L1 penalty**
@@ -868,7 +868,7 @@ features and recording each feature's coefficient at each $\alpha$.
 
 ![Feature Consensus](plots/fs_method_overlap.png)
 
-**Concept — What is Feature Consensus?**
+**What is Feature Consensus?**
 
 Feature Consensus refers to selecting optimal input variables by **aggregating
 the results of multiple independent feature-ranking techniques**.  When
@@ -931,7 +931,7 @@ out redundancies, and determining final consensus via a metric-based threshold
 
 ![Mutual Information Scores](plots/fs_mutual_info.png)
 
-**Concept — Mutual Information Regression**
+**Mutual Information Regression**
 
 Mutual Information (MI) measures the **statistical dependence** between two
 continuous variables.  Unlike Pearson correlation — which only captures linear
@@ -975,7 +975,7 @@ unknown dataset where the relationship structure is undisclosed.
 
 ![Random Forest Importances](plots/fs_random_forest_importances.png)
 
-**Concept — Random Forest Feature Importances**
+**Random Forest Feature Importances**
 
 Random Forest computes **Mean Decrease in Impurity (MDI)** for each feature:
 for every split in every tree, the reduction in node variance attributable to
@@ -1017,7 +1017,7 @@ fitting; MDI is an embedded measure computed from the trained model itself.
 
 ![Model Comparison](plots/regression_model_comparison.png)
 
-**Concept — Random Forest Regression and Supervised Learning**
+**Random Forest Regression and Supervised Learning**
 
 Random Forest is a **supervised machine learning** algorithm used for both
 classification (predicting categories) and regression (predicting continuous
@@ -1103,7 +1103,7 @@ cv_scores = cross_val_score(best["pipeline"], X_train, y_train,
 
 ![Actual vs Predicted](plots/regression_predictions.png)
 
-**Concept — Evaluating Regression with Actual vs Predicted**
+**Evaluating Regression with Actual vs Predicted**
 
 After training the best model (Random Forest), plotting **Actual vs Predicted**
 values gives a visual understanding of performance, while the metrics $R^2$,
@@ -1154,7 +1154,7 @@ For the Random Forest on this dataset:
 
 ![Residuals](plots/regression_residuals.png)
 
-**Concept — What is a Residual?**
+**What is a Residual?**
 
 A **residual** is the vertical distance between an actual data point and the
 value predicted by the model.  It measures the unexplained error for each
@@ -1170,7 +1170,7 @@ $$e_i = y_i - \hat{y}_i$$
 | **Negative** ($e_i < 0$, i.e. $y_i < \hat{y}_i$) | The model *overpredicted*. The actual value is lower than expected (point sits below the line). |
 | **Zero** ($e_i = 0$) | A perfect prediction. The model accurately matched the exact outcome. |
 
-**Concept — Residual Analysis for Random Forest**
+**Residual Analysis for Random Forest**
 
 Plotting residuals — with residuals on the $y$-axis and predicted values on
 the $x$-axis — allows evaluation of model accuracy and diagnostic checks for
