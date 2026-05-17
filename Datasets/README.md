@@ -1113,7 +1113,7 @@ RMSE, and MAE provide exact numerical accuracy.
 |---|---|---|
 | **$R^2$ (Coefficient of Determination)** | $1 - \dfrac{\sum(y_i-\hat{y}_i)^2}{\sum(y_i-\bar{y})^2}$ | Proportion of variance explained. Closer to $1.0$ is better. |
 | **RMSE (Root Mean Square Error)** | $\sqrt{\dfrac{1}{n}\sum(y_i-\hat{y}_i)^2}$ | Typical error magnitude in the same units as the target. Heavily penalises large errors. |
-| **MAE (Mean Absolute Error)** | $\dfrac{1}{n}\sum|y_i - \hat{y}_i|$ | Average absolute difference between actual and predicted. Robust to outliers. |
+| **MAE (Mean Absolute Error)** | $\dfrac{1}{n}\sum\vert y_i - \hat{y}_i\vert$ | Average absolute difference between actual and predicted. Robust to outliers. |
 
 For the Random Forest on this dataset:
 
