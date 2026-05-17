@@ -102,7 +102,7 @@ All instructions below assume Linux / macOS with Python 3.8+.
 ### Step 1 — Navigate to the Datasets folder
 
 ```bash
-cd /home/laptop/EXERCISES/DATA-ANALYSIS/GIT/DataAnalysis/Datasets
+cd Datasets
 ```
 
 ### Step 2 — Create the virtual environment
