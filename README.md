@@ -11,7 +11,8 @@ miscellaneous/
 ├── 💬 ChatBot/             # AI Conversational Agents
 ├── 🔧 ChatService/         # Real-time Messaging API
 ├── 📈 DataAnalytics/       # Full-Stack Analytics Platform
-├── 🔢 DataStructures/      # Data Manipulation & Processing
+├── � Datasets/            # Feature Selection & Regression ML
+├── �🔢 DataStructures/      # Data Manipulation & Processing
 ├── 🧠 DeepLearning/        # Neural Networks & Time Series
 ├── 🖼️ DigitRecognizer/     # Computer Vision & CNNs
 ├── ⚙️ EmbeddedSystems/     # Low-Level System Programming
@@ -97,7 +98,23 @@ miscellaneous/
 
 ---
 
-## 🔢 DataStructures
+## � Datasets
+
+**Overview:** Anonymised dataset (`dataset.csv`) with 135 unlabelled columns (`COL_000`–`COL_134`) and a hashed `ID`, likely sourced from elevator component measurements. The project demonstrates feature selection and regression ML workflows on an unknown dataset where column semantics are not disclosed — mirroring privacy-constrained, third-party, or pre-processed feature-store scenarios. Python scripts generate and save diagnostic plots to the `plots/` directory.
+
+> **Note:** `dataset.csv` is potentially synthetic or privacy-masked data. All 135 feature columns are anonymised; the target `COL_134` is a normalised continuous value in `[0, 1]` inferred to represent a physical or performance property (e.g., wear index, efficiency ratio). The true domain, units, and column meanings are not disclosed — a pattern common in data received under privacy constraints or from automated feature-engineering pipelines.
+
+**Key Insights:**
+- `dataset.csv` contains 135 anonymised columns (`COL_000`–`COL_134`) plus a hashed `ID`; the dataset is likely synthetic or privacy-masked, with columns consistent with elevator component sensor measurements
+- Feature selection applies four complementary methods — Pearson correlation heatmap, Lasso regularisation path, Mutual Information regression, and Random Forest importances — to rank predictors of target column `COL_134`
+- Regression pipeline compares multiple algorithms (Random Forest, Linear Regression, and others) using R², RMSE, and MAE metrics for best-model selection and residual analysis
+- Running `feature_selection.py` and `regression_ml.py` automatically generates and saves all diagnostic plots (heatmaps, regularisation paths, model comparisons, actual-vs-predicted, residual charts) to the `plots/` directory
+
+**Technologies:** Python, Pandas, NumPy, scikit-learn, Matplotlib, Seaborn, Feature Selection (Pearson Correlation, Lasso Regularisation, Mutual Information, Random Forest Importances), Regression (Random Forest, Linear Regression), Machine Learning, Data Visualization
+
+---
+
+## �🔢 DataStructures
 
 **Overview:** Python-based data manipulation utilities demonstrating efficient file I/O operations and JSON processing with Pandas for structured data transformation and analysis.
 
