@@ -1517,7 +1517,7 @@ is to predict a continuous numerical output.
 **The modelling objective.**
 The aim is to learn a predictive function
 
-$$\hat{y}_{\text{COL\_134}} = f(\text{COL\_000},\, \ldots,\, \text{COL\_133};\, \theta)$$
+$$\hat{y}_{\mathrm{COL}_{134}} = f(\mathrm{COL}_{000},\, \ldots,\, \mathrm{COL}_{133};\, \theta)$$
 
 that models this elevator component property **as a function of the relevant
 input variables** — so that for a new observation (a new component
