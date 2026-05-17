@@ -36,14 +36,15 @@
   - [Regression in a Machine Learning Pipeline](#regression-in-a-machine-learning-pipeline)
 - [Diagrams and Plots](#diagrams-and-plots)
   - [Feature Selection Plots](#feature-selection-plots)
-    - [A) Correlation Heat Map by Pearson r](#a-correlation-heat-map-by-pearson-r)
-    - [B) Lasso Regularisation Path — Coefficients to Zero as Alpha Increases](#b-lasso-regularisation-path--coefficients-to-zero-as-alpha-increases)
-    - [C) Feature Consensus — Ranked by Method Agreement](#c-feature-consensus--ranked-by-method-agreement)
-    - [D) Mutual Information Regression and Random Forest Importances](#d-mutual-information-regression-and-random-forest-importances)
+    - [Correlation Heat Map by Pearson r](#correlation-heat-map-by-pearson-r)
+    - [Lasso Regularisation Path — Coefficients to Zero as Alpha Increases](#lasso-regularisation-path--coefficients-to-zero-as-alpha-increases)
+    - [Feature Consensus — Ranked by Method Agreement](#feature-consensus--ranked-by-method-agreement)
+    - [Mutual Information Regression](#mutual-information-regression)
+    - [Random Forest Importances](#random-forest-importances)
   - [Regression Plots](#regression-plots)
-    - [E) Regression Model Comparison — Best Model Selection](#e-regression-model-comparison--best-model-selection)
-    - [F1) Actual vs Predicted — R², RMSE and MAE](#f1-actual-vs-predicted--r-rmse-and-mae)
-    - [F2) Residual Analysis — Random Forest](#f2-residual-analysis--random-forest)
+    - [Regression Model Comparison — Best Model Selection](#regression-model-comparison--best-model-selection)
+    - [Actual vs Predicted — R², RMSE and MAE](#actual-vs-predicted--r-rmse-and-mae)
+    - [Residual Analysis — Random Forest](#residual-analysis--random-forest)
 - [Processing Unknown Datasets for Training Large Language Models](#processing-unknown-datasets-for-training-large-language-models)
 - [Conclusion](#conclusion)
   - [Dataset: Known or Unknown?](#dataset-known-or-unknown)
@@ -722,7 +723,7 @@ They are saved in the `plots/` sub-folder.
 
 ### Feature Selection Plots
 
-#### A) Correlation Heat Map by Pearson r
+#### Correlation Heat Map by Pearson r
 
 ![Correlation Heat Map](plots/fs_correlation_heatmap.png)
 
@@ -787,7 +788,7 @@ as a colour-coded grid.
 
 ---
 
-#### B) Lasso Regularisation Path — Coefficients to Zero as Alpha Increases
+#### Lasso Regularisation Path — Coefficients to Zero as Alpha Increases
 
 ![Lasso Path](plots/fs_lasso_path.png)
 
@@ -863,7 +864,7 @@ features and recording each feature's coefficient at each $\alpha$.
 
 ---
 
-#### C) Feature Consensus — Ranked by Method Agreement
+#### Feature Consensus — Ranked by Method Agreement
 
 ![Feature Consensus](plots/fs_method_overlap.png)
 
@@ -926,11 +927,9 @@ out redundancies, and determining final consensus via a metric-based threshold
 
 ---
 
-#### D), E) Mutual Information Regression and Random Forest Importances
+#### Mutual Information Regression
 
 ![Mutual Information Scores](plots/fs_mutual_info.png)
-
-![Random Forest Importances](plots/fs_random_forest_importances.png)
 
 **Concept — Mutual Information Regression**
 
@@ -952,22 +951,6 @@ approach to estimate entropy-based probability distributions — no assumption
 of linearity is required.  This makes it the primary filter tool for an
 unknown dataset where the relationship structure is undisclosed.
 
-**Concept — Random Forest Feature Importances**
-
-Random Forest computes **Mean Decrease in Impurity (MDI)** for each feature:
-for every split in every tree, the reduction in node variance attributable to
-that feature is recorded and averaged across all 200 trees, then normalised so
-all importances sum to 1.0.  A higher MDI value means the feature is
-responsible for more of the model's prediction accuracy:
-
-$$\text{Importance}(f) = \frac{1}{T}\sum_{t=1}^{T}\sum_{j:\,\text{split on }f} \Delta\text{impurity}(j,\,t)$$
-
-Because Random Forest is a non-linear ensemble, MDI importances capture
-complex, interaction-level dependencies that Pearson correlation misses.
-Random Forest and Mutual Information are therefore **complementary
-non-parametric methods**: MI is a filter that ranks features before model
-fitting; MDI is an embedded measure computed from the trained model itself.
-
 **How to read the Mutual Information plot
 ([plots/fs_mutual_info.png](plots/fs_mutual_info.png)):**
 
@@ -985,6 +968,28 @@ fitting; MDI is an embedded measure computed from the trained model itself.
   It explains why linear models achieve R² ≈ 0.13 while Random Forest reaches
   R² ≈ 0.48 — the dominant signal in the data simply cannot be captured by a
   hyperplane.
+
+---
+
+#### Random Forest Importances
+
+![Random Forest Importances](plots/fs_random_forest_importances.png)
+
+**Concept — Random Forest Feature Importances**
+
+Random Forest computes **Mean Decrease in Impurity (MDI)** for each feature:
+for every split in every tree, the reduction in node variance attributable to
+that feature is recorded and averaged across all 200 trees, then normalised so
+all importances sum to 1.0.  A higher MDI value means the feature is
+responsible for more of the model's prediction accuracy:
+
+$$\text{Importance}(f) = \frac{1}{T}\sum_{t=1}^{T}\sum_{j:\,\text{split on }f} \Delta\text{impurity}(j,\,t)$$
+
+Because Random Forest is a non-linear ensemble, MDI importances capture
+complex, interaction-level dependencies that Pearson correlation misses.
+Random Forest and Mutual Information are therefore **complementary
+non-parametric methods**: MI is a filter that ranks features before model
+fitting; MDI is an embedded measure computed from the trained model itself.
 
 **How to read the Random Forest Importances plot
 ([plots/fs_random_forest_importances.png](plots/fs_random_forest_importances.png)):**
@@ -1008,7 +1013,7 @@ fitting; MDI is an embedded measure computed from the trained model itself.
 
 ### Regression Plots
 
-#### F), G) Regression Model Comparison — Best Model Selection
+#### Regression Model Comparison — Best Model Selection
 
 ![Model Comparison](plots/regression_model_comparison.png)
 
@@ -1094,7 +1099,7 @@ cv_scores = cross_val_score(best["pipeline"], X_train, y_train,
 
 ---
 
-#### F) Actual vs Predicted — R², RMSE and MAE
+#### Actual vs Predicted — R², RMSE and MAE
 
 ![Actual vs Predicted](plots/regression_predictions.png)
 
@@ -1145,7 +1150,7 @@ For the Random Forest on this dataset:
 
 ---
 
-#### G) Residual Analysis — Random Forest
+#### Residual Analysis — Random Forest
 
 ![Residuals](plots/regression_residuals.png)
 
