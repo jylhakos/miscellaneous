@@ -1,4 +1,4 @@
-# Unknown Dataset: Feature Selection and Regression
+# Exploratory Data Analysis for Unknown Datasets
 
 > **Why "Unknown Dataset"?**
 > The file `dataset.csv` physically exists in this folder — it is *present* and *analysable*.
