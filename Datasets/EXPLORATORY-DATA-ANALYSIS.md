@@ -324,7 +324,7 @@ or an **unknown dataset** (anonymous columns, blind data, or unlabelled source).
 | **Techniques** | PCA, Laplacian Score, VarianceThreshold, clustering-based metrics | Filter (F-regression, MI), Wrapper (RFE), Embedded (Lasso, RF importances) |
 | **Risk** | Removing structure that could be important later | Data leakage if selection is done on the full dataset instead of training split only |
 
-> **Critical rule:** Always perform feature selection **exclusively on the
+> **Essential rule:** Always perform feature selection **exclusively on the
 > training split**.  Using the entire dataset — known or unknown — to select
 > features constitutes **data leakage**, which inflates apparent validation
 > accuracy and produces models that fail on new data.
@@ -557,7 +557,7 @@ Extreme Gradient Boosting — a highly optimised, regularised gradient boosting
 framework with histogram-based tree construction, parallel computation, and
 built-in handling of missing values.
 
-- **When to use:** Medium to large datasets where performance is critical.
+- **When to use:** Medium to large datasets where performance is important.
 
 **Library:** `xgboost.XGBRegressor`
 **Reference:** [XGBoost Documentation](https://xgboost.readthedocs.io/en/stable/)
