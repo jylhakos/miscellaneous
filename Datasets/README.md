@@ -12,7 +12,7 @@
   - [Correlation Heatmap — Pearson r](#correlation-heatmap--pearson-r)
   - [Actual vs Predicted — Regression Quality](#actual-vs-predicted--regression-quality)
   - [Residual Analysis — Model Diagnostics](#residual-analysis--model-diagnostics)
-  - [Why These Four Plots Are the Most Relevant](#why-these-four-plots-are-the-most-relevant)
+  - [Why These Plots Are the Most Relevant?](#why-these-plots-are-the-most-relevant)
 - [EDA Workflow Diagram](#eda-workflow-diagram)
   - [Workflow Stage Descriptions](#workflow-stage-descriptions)
 - [Project Structure](#project-structure)
