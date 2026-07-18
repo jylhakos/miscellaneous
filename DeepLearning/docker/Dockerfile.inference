@@ -1,0 +1,36 @@
+FROM tensorflow/tensorflow:2.15.0-gpu
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    librdkafka-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Create virtual environment and install dependencies
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy application code and models
+COPY src/ /app/src/
+COPY models/ /app/models/
+COPY .env.example /app/.env
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Configure TensorFlow to use less GPU memory
+ENV TF_FORCE_GPU_ALLOW_GROWTH=true
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import tensorflow as tf; tf.config.list_physical_devices(); import sys; sys.exit(0)"
+
+# Run inference service
+CMD ["python", "-u", "src/inference_service/kafka_ml_inference.py"]

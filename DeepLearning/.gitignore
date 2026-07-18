@@ -1,0 +1,70 @@
+# .gitignore for Deep Learning ETL Pipeline
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Environment Variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# MacOS
+.DS_Store
+
+# Models (large files)
+models/*.h5
+models/*.keras
+models/*.ckpt
+models/*.pb
+!models/.gitkeep
+
+# Data (can be large)
+data/*.csv
+data/*.parquet
+data/*.json
+!data/sample_timeseries.csv
+
+# Logs
+*.log
+logs/
+
+# Docker
+docker-compose.override.yml
+
+# TensorFlow
+*.ckpt.*
+checkpoint
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temporary files
+tmp/
+temp/
+*.tmp

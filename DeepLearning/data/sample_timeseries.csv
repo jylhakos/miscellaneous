@@ -1,0 +1,28 @@
+# Deep Learning ETL Pipeline - Sample Time Series Data
+# Generated on: 2026-07-18
+
+timestamp,device_id,value,sensor_type
+2026-07-18T00:00:00,sensor-001,45.2,temperature
+2026-07-18T01:00:00,sensor-001,46.1,temperature
+2026-07-18T02:00:00,sensor-001,44.8,temperature
+2026-07-18T03:00:00,sensor-001,43.5,temperature
+2026-07-18T04:00:00,sensor-001,42.9,temperature
+2026-07-18T05:00:00,sensor-001,43.7,temperature
+2026-07-18T06:00:00,sensor-001,45.3,temperature
+2026-07-18T07:00:00,sensor-001,47.8,temperature
+2026-07-18T08:00:00,sensor-001,50.2,temperature
+2026-07-18T09:00:00,sensor-001,52.6,temperature
+2026-07-18T10:00:00,sensor-001,54.8,temperature
+2026-07-18T11:00:00,sensor-001,56.3,temperature
+2026-07-18T12:00:00,sensor-001,57.1,temperature
+2026-07-18T13:00:00,sensor-001,56.9,temperature
+2026-07-18T14:00:00,sensor-001,55.4,temperature
+2026-07-18T15:00:00,sensor-001,53.2,temperature
+2026-07-18T16:00:00,sensor-001,51.5,temperature
+2026-07-18T17:00:00,sensor-001,49.8,temperature
+2026-07-18T18:00:00,sensor-001,48.3,temperature
+2026-07-18T19:00:00,sensor-001,47.1,temperature
+2026-07-18T20:00:00,sensor-001,46.5,temperature
+2026-07-18T21:00:00,sensor-001,45.8,temperature
+2026-07-18T22:00:00,sensor-001,45.3,temperature
+2026-07-18T23:00:00,sensor-001,44.9,temperature
