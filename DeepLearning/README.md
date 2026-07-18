@@ -1,6 +1,6 @@
 # Deep Learning in Microservices
 
-A document to explore phases in implementing Deep Learning (DL) applications for time-series analysis with event-driven ETL pipelines, deployable on-premises or on cloud platforms like Amazon AWS. The content focuses on RNNs (Recurrent Neural Networks) and LSTMs (Long Short-Term Memory networks), which are deep learning architectures with multiple layers.
+This document presents an end-to-end workflow for building deep learning applications for time-series analysis. It explores event-driven ETL pipelines, recurrent neural networks (RNNs), and long short-term memory (LSTM) architectures, together with deployment strategies for on-premises environments and cloud platforms such as Amazon Web Services (AWS).
 
 ## Table of Contents
 
