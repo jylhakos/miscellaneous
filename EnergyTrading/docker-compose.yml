@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: energytrading_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: energytrading_kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: energytrading_timescaledb
+    environment:
+      POSTGRES_DB: energy_trading
+      POSTGRES_USER: trading_user
+      POSTGRES_PASSWORD: secure_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
+
+  ingestion-service:
+    build:
+      context: ./services/ingestion_service
+      dockerfile: Dockerfile
+    container_name: energytrading_ingestion
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKERS: kafka:9092
+    restart: unless-stopped
+
+  lstm-service:
+    build:
+      context: ./services/lstm_service
+      dockerfile: Dockerfile
+    container_name: energytrading_lstm
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      MODEL_PATH: /models/lstm_demand_model.h5
+    volumes:
+      - ./models:/models:ro
+    restart: unless-stopped
+
+  trading-engine:
+    build:
+      context: ./services/trading_engine
+      dockerfile: Dockerfile
+    container_name: energytrading_trading
+    depends_on:
+      - kafka
+      - lstm-service
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      TRADING_THRESHOLD_MW: 2.5
+    restart: unless-stopped
+
+volumes:
+  timescaledb-data:

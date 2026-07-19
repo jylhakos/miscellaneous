@@ -1,0 +1,101 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+
+# Docker
+*.log
+
+# MacOS
+.DS_Store
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Models
+*.h5
+*.pkl
+*.joblib
+*.ckpt
+
+# Data files
+*.csv
+*.parquet
+*.json
+data/raw/
+data/processed/
+
+# Kafka & Zookeeper data
+kafka-data/
+zookeeper-data/
+
+# TimescaleDB data
+timescaledb-data/
+postgres-data/
+
+# MLflow tracking
+mlruns/
+mlartifacts/
+
+# Airflow
+airflow/logs/
+airflow/dags/__pycache__/
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
