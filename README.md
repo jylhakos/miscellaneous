@@ -16,6 +16,7 @@ miscellaneous/
 ├── 📈 DeepLearning/        # Neural Networks & Time Series
 ├── 🖼️ DigitRecognizer/     # Computer Vision & CNNs
 ├── ⚙️ EmbeddedSystems/     # Low-Level System Programming
+├── ⚡ EnergyTrading/       # Renewable Energy Trading Platform
 ├── 🏢 ERP/                 # Enterprise Resource Planning
 ├── 🔄 ETL/                 # Data Pipeline Processing
 ├── 🤖 LLM/                 # Large Language Model Integration
@@ -166,6 +167,22 @@ miscellaneous/
 - Includes CMake and Make build systems with performance benchmarking scripts
 
 **Technologies:** C, C++, Assembly (ARM, x86_64), Qt, GCC, Clang, CMake, Make, ARM, x86_64, Yocto Linux, RTOS, Cross-compilation, GDB, LLDB, IPC, Linux
+
+---
+
+## ⚡ EnergyTrading
+
+**Overview:** Microservices-based electronic trading platform for renewable energy derivatives leveraging LSTM deep learning models to predict electrical grid consumption and solar/wind generation patterns. Enables automated trading decisions for energy futures, options, and forward contracts based on real-time forecasts and market analytics, addressing price volatility caused by the intermittent nature of renewable energy sources.
+
+**Key Insights:**
+- Implements event-driven microservices architecture for scalable time-series data processing and ML inference
+- Uses stacked LSTM neural networks for multi-step energy forecasting (15-minute to 24-hour horizons) with dropout regularization
+- Addresses renewable energy imbalance risk with derivatives hedging strategies for overproduction and underproduction scenarios
+- Demonstrates complete trading workflow from data ingestion → feature engineering → forecasting → derivatives pricing → execution
+- Features Docker-based containerized deployment with isolated services for data pipeline, model training, inference, and analytics
+- Handles negative electricity prices common in European power markets during renewable oversupply periods
+
+**Technologies:** Python, TensorFlow, Keras, LSTM, RNN, Deep Learning, Time-Series Forecasting, Docker, Docker Compose, NumPy, Pandas, scikit-learn, Microservices Architecture, Event-Driven Processing, Financial Derivatives, Energy Markets, Machine Learning, Jupyter Notebook
 
 ---
 
