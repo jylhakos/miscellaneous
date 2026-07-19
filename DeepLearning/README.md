@@ -1,6 +1,6 @@
-# Deep Learning in Microservices
+# Scalable Software Architecture for Streaming Data Processing and Time Series Forecasting
 
-This document presents an end-to-end workflow for building deep learning applications for time-series analysis. It explores event-driven ETL pipelines, recurrent neural networks (RNNs), and long short-term memory (LSTM) architectures, together with deployment strategies for on-premises environments and cloud platforms such as Amazon Web Services (AWS).
+This document presents the design and implementation of an end-to-end microservice architecture integrating streaming data processing, ETL pipelines, and deep learning models for time series forecasting (TSF). It explores event-driven ETL pipelines, recurrent neural networks (RNNs), and long short-term memory (LSTM) architectures, together with deployment strategies for on-premises environments and cloud platforms such as Amazon Web Services (AWS).
 
 ## Table of Contents
 
@@ -184,7 +184,7 @@ pip install seaborn==0.12.2
 
 ## Time Series Forecasting
 
-Time series forecasting is the process of predicting future values based on previously observed values over time intervals. The sequence of values is critically important with time-series data, as temporal dependencies carry predictive information.
+Time series represents a continuous collection of data points either discrete or continuous recorded at regular or irregular time intervals. Time series forecasting (TSF) is the process of predicting future values based on previously observed historical values over time intervals and is widely used in domains such as energy and finance to forecast future trends. The sequence of values is important with time-series data, as temporal dependencies carry predictive information.
 
 **Key Concepts:**
 
