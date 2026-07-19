@@ -13,7 +13,7 @@ miscellaneous/
 ├── 📈 DataAnalytics/       # Full-Stack Analytics Platform
 ├── � Datasets/            # Feature Selection & Regression ML
 ├── �🔢 DataStructures/      # Data Manipulation & Processing
-├── 🧠 DeepLearning/        # Neural Networks & Time Series
+├── 📈 DeepLearning/        # Neural Networks & Time Series
 ├── 🖼️ DigitRecognizer/     # Computer Vision & CNNs
 ├── ⚙️ EmbeddedSystems/     # Low-Level System Programming
 ├── 🏢 ERP/                 # Enterprise Resource Planning
@@ -34,7 +34,7 @@ miscellaneous/
 
 **Key Insights:**
 - Implements proper data transformation pipeline with type casting for MLlib compatibility
-- Solved critical issue with DoubleType label column requirement for LogisticRegression
+- Solved issue with DoubleType label column requirement for LogisticRegression
 - Demonstrates feature engineering by renaming and encoding categorical variables
 - Uses gaming customer data to predict paid subscriber likelihood with 5-iteration logistic regression
 
@@ -127,17 +127,18 @@ miscellaneous/
 
 ---
 
-## 🧠 DeepLearning
+## 📈 DeepLearning
 
-**Overview:** Microservices-based deep learning system implementing LSTM Recurrent Neural Networks for time series forecasting. Features event-driven messaging architecture with multiple communication protocols and time-series database integration.
+**Overview:** Scalable microservices-based deep learning system implementing Recurrent Neural Networks with LSTM for time series forecasting. Implements complete event-driven ETL pipeline with Apache Kafka for real-time data ingestion, transformation, and model inference. Features comprehensive deployment strategies for both on-premises and AWS cloud environments with Docker containerization and Kubernetes orchestration.
 
 **Key Insights:**
-- Implements LSTM for sequence prediction with backpropagation through time
-- Demonstrates normalization and windowing techniques for time series data preparation
-- Uses microservices architecture with MQTT, ZMQ, and WebSockets for inter-service communication
-- Integrates Redis TimeSeries and TimescaleDB for efficient time-series data storage
+- Implements end-to-end ETL pipeline: Extract from Kafka → Transform with normalization/windowing → Load to feature store for ML inference
+- Demonstrates event-driven microservices architecture with separate ETL and inference workers consuming from Kafka topics
+- Uses LSTM neural networks for sequence prediction with backpropagation through time on streaming time-series data
+- Provides dual deployment strategies: on-premises with local Kafka clusters and AWS deployment with MSK, ECS/EKS, and SageMaker integration
+- Features real-time data processing with moving averages, rolling statistics, and temporal feature engineering for time-series forecasting
 
-**Technologies:** Python, JavaScript, TensorFlow, Keras, LSTM, RNN, Redis, RedisTimeSeries, TimescaleDB, ZMQ, MQTT, WebSockets, Node.js, Mosquitto, CUDA, NVIDIA GPU, Docker, Linux, Deep Learning, Time Series Forecasting
+**Technologies:** **Core ML:** Python, TensorFlow, Keras, LSTM, RNN, NumPy, Pandas, scikit-learn | **Event-Driven Messaging:** Apache Kafka, Confluent Kafka (Python Client), Pika (RabbitMQ), Azure Service Bus, Paho MQTT (Eclipse Mosquitto), ZMQ, WebSockets | **Time-Series Storage:** Redis TimeSeries, TimescaleDB, PostgreSQL | **Infrastructure:** Docker, Docker Compose, Kubernetes, AWS (MSK, ECS, EKS, SageMaker), CUDA, NVIDIA GPU | **Monitoring:** Prometheus Client | **Utilities:** python-dotenv, Requests, Jupyter Notebook, Matplotlib, Seaborn | **Deployment:** Linux, Node.js (for frontend/dashboard), Uvicorn, Deep Learning, Streaming Data Processing, ETL Pipelines
 
 ---
 
@@ -281,4 +282,4 @@ miscellaneous/
 
 ## Summary
 
-This repository demonstrates practical implementation of modern technologies with production-ready architecture patterns, comprehensive documentation, and deployment configurations.
+This repository demonstrates practical implementation of modern technologies with production-ready architecture patterns, documentation, and deployment configurations.
