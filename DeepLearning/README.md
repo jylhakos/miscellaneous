@@ -527,7 +527,7 @@ graph TB
 
 1. **Ingestion Layer**: Raw time-series metrics from IoT sensors, servers, and applications are pushed to the event broker as lightweight JSON or Protobuf payloads.
 
-2. **Stream Processing & Feature Engineering**: 
+2. **Stream Processing & Feature Engineering**:
    - Kafka Connect continuously sinks incoming data into Apache Flink or Spark Streaming
    - Time-series data is cleaned, aligned, and converted into features
    - Processing happens in windows (tumbling, sliding, or session windows)
@@ -538,7 +538,7 @@ graph TB
    - **Offline Feature Store** (S3/Parquet): Historical features for batch training
    - **Model Registry**: Stores trained models in versioned format (.keras, .onnx)
 
-4. **ML Inference**: 
+4. **ML Inference**:
    - Consumes features from online store
    - Loads pre-compiled model from registry
    - Publishes predictions back to event broker
@@ -596,7 +596,7 @@ Where:
 | Scenario | Recommendation |
 |----------|----------------|
 | **Strict Historical Windows** | Use SMA when ML models require exact historical windows (e.g., exact 1-hour rolling average) |
-| **High-Throughput Streams** | Use EMA for high-throughput anomaly detection where memory footprint and fast state updates are critical |
+| **High-Throughput Streams** | Use EMA for high-throughput anomaly detection where memory footprint and fast state updates are essential |
 | **Memory Constraints** | EMA requires only 2 values in memory; SMA requires N values |
 | **Responsiveness** | EMA responds faster to recent changes; SMA treats all window values equally |
 
@@ -850,8 +850,8 @@ kafka:
 
 **ETL Workers**:
 
-**Server Type**: Compute-optimized instances  
-**AWS**: `c6i.4xlarge`, `c7i.8xlarge`  
+**Server Type**: Compute-optimized instances
+**AWS**: `c6i.4xlarge`, `c7i.8xlarge`
 **On-Premises**: CPU-heavy servers with 16+ cores
 
 **Specifications**:
@@ -862,7 +862,7 @@ kafka:
 
 **ML Inference Workers**:
 
-**Server Type**: GPU-accelerated instances  
+**Server Type**: GPU-accelerated instances
 **AWS**: `g5.xlarge` (NVIDIA A10G), `g4dn.xlarge` (NVIDIA T4), `inf2.xlarge` (AWS Inferentia2)  
 **On-Premises**: Servers with NVIDIA T4, A10G, L4, or A100 GPUs
 
@@ -1743,5 +1743,5 @@ The Mean Squared Error (MSE) and Mean Absolute Error (MAE) metrics quantify the 
 
 **License**: MIT
 
-**Last Updated**: July 18, 2026
+**Last Updated**: July 19, 2026
 
