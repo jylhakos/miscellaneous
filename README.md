@@ -6,25 +6,25 @@ A collection of software development projects demonstrating multiple domains inc
 
 ```
 miscellaneous/
-├── 📊 BigData/              # Machine Learning & Data Processing
-├── 🏗️ BIM/                 # Building Information Modeling
-├── 💬 ChatBot/             # AI Conversational Agents
-├── 🔧 ChatService/         # Real-time Messaging API
-├── 📈 DataAnalytics/       # Full-Stack Analytics Platform
-├── � Datasets/            # Feature Selection & Regression ML
-├── �🔢 DataStructures/      # Data Manipulation & Processing
-├── 📈 DeepLearning/        # Neural Networks & Time Series
-├── 🖼️ DigitRecognizer/     # Computer Vision & CNNs
-├── ⚙️ EmbeddedSystems/     # Low-Level System Programming
-├── ⚡ EnergyTrading/       # Renewable Energy Trading Platform
-├── 🏢 ERP/                 # Enterprise Resource Planning
-├── 🔄 ETL/                 # Data Pipeline Processing
-├── 🤖 LLM/                 # Large Language Model Integration
-├── 📄 OCR/                 # Optical Character Recognition
-├── 🎯 Patterns/            # Software Design Patterns
-├── ❓ QUESTIONS/           # Technical Interview Q&A
-├── 🏠 SmartBuildings/      # IoT & Building Automation
-└── ⛓️ SupplyChain/         # Blockchain Distribution Network
+├── 📊 BigData/                   # Machine Learning & Data Processing
+├── 🏗️ BIM/                       # Building Information Modeling
+├── 💬 ChatBot/                   # AI Conversational Agents
+├── 🔧 ChatService/               # Real-time Messaging API
+├── 📈 DataAnalytics/             # Full-Stack Analytics Platform
+├── � Datasets/                   # Feature Selection & Regression ML
+├── �🔢 DataStructures/           # Data Manipulation & Processing
+├── 🕸️ DeepLearning/              # Neural Networks & Time Series
+├── 🖼️ DigitRecognizer/           # Computer Vision & CNNs
+├── ⚙️ EmbeddedSystems/           # Low-Level System Programming
+├── ⚡ DerivativesTradingPlatform/ # Renewable Energy Trading Platform
+├── 🏢 ERP/                       # Enterprise Resource Planning
+├── 🔄 ETL/                       # Data Pipeline Processing
+├── 🤖 LLM/                       # Large Language Model Integration
+├── 📄 OCR/                       # Optical Character Recognition
+├── 🎯 Patterns/                  # Software Design Patterns
+├── ❓ QUESTIONS/                 # Technical Interview Q&A
+├── 🏠 SmartBuildings/            # IoT & Building Automation
+└── ⛓️ SupplyChain/               # Blockchain Distribution Network
 ```
 
 ---
@@ -170,7 +170,7 @@ miscellaneous/
 
 ---
 
-## ⚡ EnergyTrading
+## ⚡ DerivativesTradingPlatform
 
 **Overview:** Microservices-based electronic trading platform for renewable energy derivatives leveraging LSTM deep learning models to predict electrical grid consumption and solar/wind generation patterns. Enables automated trading decisions for energy futures, options, and forward contracts based on real-time forecasts and market analytics, addressing price volatility caused by the intermittent nature of renewable energy sources.
 
