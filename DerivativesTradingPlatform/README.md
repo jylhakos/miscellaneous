@@ -6,6 +6,7 @@ A microservices-based electronic trading platform for renewable energy derivativ
 
 - [Introduction](#introduction)
 - [Energy Derivatives Background](#energy-derivatives-background)
+- [SCADA Systems in Energy Derivatives Trading](#scada-systems-in-energy-derivatives-trading)
 - [Time-Series Algorithm Comparison](#time-series-algorithm-comparison)
 - [System Architecture](#system-architecture)
 - [Event-Driven Processing Architecture](#event-driven-processing-architecture)
@@ -52,6 +53,129 @@ For renewable energy producers, derivatives hedge against two primary scenarios:
 
 1. **Overproduction Risk**: Wind or solar generation exceeds day-ahead commitments, forcing sales at depressed or negative intraday prices
 2. **Underproduction Risk**: Generation shortfalls require purchasing expensive balancing energy from spot markets to fulfill delivery obligations
+
+## SCADA Systems in Energy Derivatives Trading
+
+### What is SCADA and Why Does it Matter in Renewable Energy?
+
+A **SCADA (Supervisory Control and Data Acquisition)** system is a software and hardware solution that enables real-time monitoring, control and data acquisition in industrial and energy infrastructures. Through sensors, controllers and digital platforms, these systems collect and process key information, facilitating decision-making and optimising the operation of complex installations such as power grids, generation plants and power distribution systems.
+
+SCADA systems make it possible to monitor and control infrastructures such as electricity grids, wind farms or hydroelectric power plants in real time. For more information about SCADA technology and industrial applications, see [Iberdrola's guide to SCADA systems](https://www.iberdrola.com/about-us/our-innovation-model/scada-systems).
+
+### SCADA as the Physical-to-Digital Bridge
+
+In energy derivatives trading, a SCADA system serves as the foundational physical-to-digital bridge. It monitors and controls real-world power assets (like wind farms or power plants), providing the real-time data and remote execution needed to validate energy output and execute financial or physical derivatives contracts.
+
+### How SCADA Supports the Derivatives Market
+
+SCADA systems support the derivatives market by acting as the primary source of truth for the physical assets underlying the trades:
+
+**1. Verifying Contract Deliverables**
+
+Derivative contracts (such as futures, forwards, or swaps) rely on the physical generation or consumption of energy. SCADA provides continuous, real-time tracking of megawatt (MW) output, ensuring that a trading party is actually producing or consuming the energy they promised to deliver.
+
+**2. Executing Algorithmic & Automated Trades**
+
+Advanced SCADA systems integrate with algorithmic trading and Energy Trading Risk Management (ETRM) platforms. This allows operators to automatically adjust physical generation to capitalize on spot prices, capacity markets, and ancillary service bids.
+
+**3. Compliance and Settlement**
+
+Energy markets require strict, continuous data reporting to grid operators. SCADA logs provide the precise historical and real-time data necessary for auditing trades, verifying regulatory compliance, and executing financial settlement.
+
+### How SCADA Operates
+
+SCADA operates through a combination of hardware and software to manage the physical flow of energy:
+
+**Data Acquisition**: Sensors measure real-time variables like voltage, active power, and wind speed.
+
+**Supervisory Control**: Centralized systems allow operators or automated algorithms to remotely adjust equipment setpoints, manage circuit breakers, or alter energy direction.
+
+**Alarming and Analytics**: SCADA immediately flags deviations from standard parameters, helping to avoid costly downtime that would cause a trader to breach a supply contract.
+
+### The Link to ETRM Software
+
+In modern energy trading, standalone SCADA data is piped directly into Energy Trading and Risk Management (ETRM) platforms. While SCADA manages the physical turbine, solar array, or battery, the ETRM system prices the trade, manages market risks, and handles the financial invoicing. SCADA acts as the "eyes and ears" that feed the ETRM platform the exact generation figures.
+
+### Platform Integration Architecture
+
+The following diagram maps out how this microservices architecture integrates the physical SCADA system with the data pipeline, machine learning models, and client-facing API:
+
+```
+        [ PHYSICAL ASSETS ]
+    (Solar Arrays / Wind Farms)
+                 │
+                 ▼
+       ┌──────────────────┐
+       │   SCADA System   │ ──(Sensors: MW, Voltage, Weather)
+       └──────────────────┘
+                 │
+                 ▼ (MQTT / Kafka Stream)
+ ┌────────────────────────────────┐
+ │     ETL Pipeline Service       │
+ │  • Extract: Real-time Streams  │
+ │  • Transform: Clean, Impute    │
+ │  • Load: Time-Series Database  │
+ └────────────────────────────────┘
+                 │
+                 ├─────────────────────────┐
+                 ▼                         ▼
+ ┌────────────────────────────────┐  ┌─────────────────────────────┐
+ │    ML Forecasting Service      │  │  Client-Facing REST API     │
+ │  • RNN / LSTM Sequences        │  │  • GET /predictions         │
+ │  • Predicts Future Generation  │─▶│  • POST /hedging-signals    │
+ └────────────────────────────────┘  └─────────────────────────────┘
+                                                   │
+                                                   ▼
+                                       ┌──────────────────────┐
+                                       │   Derivatives Desk   │
+                                       │ (Solar/Wind Futures) │
+                                       └──────────────────────┘
+```
+
+### Key Components
+
+#### 1. Real-time ETL Pipeline
+
+The ETL (Extract, Transform, Load) service processes high-velocity SCADA tags from fields into a usable format:
+
+**Extract**: Ingests protocol streams (like MQTT, Kafka, or OPC UA) tracking target metrics:
+- **Solar**: Irradiance, panel temperature, inverter DC/AC efficiency, and grid voltage
+- **Wind**: Wind speed, wind direction, nacelle orientation, blade pitch, and ambient temperature
+
+**Transform**: Cleans bad or missing sensor records through statistical imputation. It normalizes distinct time horizons into standardized 5-minute, 15-minute, or hourly intervals required by the deep learning network.
+
+**Load**: Pipelines structured, time-stamped parameters into dedicated time-series databases (such as InfluxDB or TimescaleDB).
+
+#### 2. Hybrid RNN + LSTM Forecasting Service
+
+Physical weather and asset degradation introduce severe volatility into renewable generation. This service applies sequential deep learning to forecast future energy volumes:
+
+**Sequence Processing**: Recurrent Neural Networks (RNN) and Long Short-Term Memory (LSTM) layers ingest the sequential historical SCADA data. They capture time-dependent features like solar diurnal patterns (day/night cycles) and wind ramp events (sudden changes in wind velocity).
+
+**Generation Forecast**: Output layers project a rolling curve of expected asset capacity (MW) over standard futures delivery windows (e.g., Day-Ahead, Balance-of-Month).
+
+**Trading Edge**: Accurate load and generation predictions minimize the basis risk of being under-hedged or paying grid imbalance penalties.
+
+#### 3. Client-Facing REST API
+
+This microservice serves as the digital interface for proprietary traders, risk managers, and external ETRM systems:
+
+**Endpoints Offered**: Provides reliable access to predictions and underlying asset state:
+- `GET /v1/assets/{id}/telemetry` – Fetch current SCADA state (e.g., current wind speed, active generation)
+- `GET /v1/predictions/generation` – Retrieve rolling RNN/LSTM capacity forecasts (MWh)
+- `POST /v1/trading/signals` – Evaluates forecast variances to trigger automated market buy/sell actions for solar/wind futures
+
+**Performance**: Relies on caching layers (like Redis) to handle high-frequency requests from automated execution algorithms without straining the deep learning backend.
+
+### Monetizing the Stack
+
+This architecture directly optimizes how you trade financial and physical contracts:
+
+| Contract Type | SCADA + Pipeline Action | ML Model Benefit | API / Trading Execution |
+|---------------|------------------------|------------------|------------------------|
+| **Day-Ahead Futures** | Tracks physical asset health and immediate baseline generation | Forecasts exact solar/wind curves for the next day's settlement | Automatically locks in prices to clear tomorrow's position |
+| **Intraday / Spot Market** | Detects real-time deviations (e.g., sudden drop in wind speed) | Predicts how long a generation deficit will last | API alerts the desk to purchase spot energy to prevent delivery penalties |
+| **Virtual PPA Swaps** | Aggregates precise multi-asset generation across regions | Projects long-term generation capacity over weeks | Simplifies financial settlement calculations against index prices |
 
 ## Time-Series Algorithm Comparison
 
@@ -2197,4 +2321,4 @@ pytest tests/ -v
 
 **License**: MIT
 
-**Last Updated**: 2026-07-19
+**Last Updated**: July 20, 2026
