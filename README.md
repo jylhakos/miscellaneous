@@ -128,7 +128,7 @@ miscellaneous/
 
 ---
 
-## 📈 DeepLearning
+## 🕸️ DeepLearning
 
 **Overview:** Scalable microservices-based deep learning system implementing Recurrent Neural Networks with LSTM for time series forecasting. Implements complete event-driven ETL pipeline with Apache Kafka for real-time data ingestion, transformation, and model inference. Features comprehensive deployment strategies for both on-premises and AWS cloud environments with Docker containerization and Kubernetes orchestration.
 
