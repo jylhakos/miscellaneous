@@ -16,7 +16,7 @@ miscellaneous/
 ├── 🕸️ DeepLearning/              # Neural Networks & Time Series
 ├── 🖼️ DigitRecognizer/           # Computer Vision & CNNs
 ├── ⚙️ EmbeddedSystems/           # Low-Level System Programming
-├── ⚡ DerivativesTradingPlatform/ # Renewable Energy Trading Platform
+├── ⚡ DerivativesTrading/        # Renewable Energy Trading Platform
 ├── 🏢 ERP/                       # Enterprise Resource Planning
 ├── 🔄 ETL/                       # Data Pipeline Processing
 ├── 🤖 LLM/                       # Large Language Model Integration
@@ -170,7 +170,7 @@ miscellaneous/
 
 ---
 
-## ⚡ DerivativesTradingPlatform
+## ⚡ DerivativesTrading
 
 **Overview:** Microservices-based electronic trading platform for renewable energy derivatives leveraging LSTM deep learning models to predict electrical grid consumption and solar/wind generation patterns. Enables automated trading decisions for energy futures, options, and forward contracts based on real-time forecasts and market analytics, addressing price volatility caused by the intermittent nature of renewable energy sources.
 
