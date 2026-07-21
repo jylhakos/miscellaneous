@@ -233,10 +233,6 @@ The platform implements a three-tier architecture optimized for high-throughput 
 
 ## 3. Power Purchase Agreements (PPAs)
 
----
-
-## 3. Power Purchase Agreements (PPAs)
-
 ### 3.1 Definition and Purpose
 
 A Power Purchase Agreement (PPA) is a legal contract between an electricity generator and a buyer (referred to as the offtaker) to sell and purchase electric power at a pre-agreed tariff for a specified period. PPAs serve multiple strategic purposes in modern energy markets:
@@ -2086,7 +2082,6 @@ docker-compose exec timeseries-db psql -U trader_admin -d power_db -f /docker-en
 ---
 
 *Document prepared as an academic resource for understanding power markets, PPAs, and intraday trading mechanisms. Data and examples focus on Nordic markets (Sweden, Norway, Finland, Denmark) for the period 2024-2026.*
-
 
 **License**: MIT (for source code) | CC BY 4.0 (for documentation)
 
