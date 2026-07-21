@@ -66,7 +66,7 @@
 
 ## 1. Introduction
 
-Contemporary power markets are experiencing significant uncertainty due to the transition towards renewable energy sources, increased market volatility, and evolving regulatory frameworks. Power Purchase Agreements (PPAs) have emerged as an important financial instruments that provide stability and predictability in an otherwise volatile energy landscape. This document examines the structure and function of PPAs, with particular emphasis on intraday trading mechanisms that enable market participants to manage renewable energy intermittency and optimize their positions.
+Today's power markets are experiencing uncertainty due to the transition to renewable energy sources, increased market volatility, and evolving regulatory frameworks. Power Purchase Agreements (PPAs) have emerged as an important financial instruments that provide stability and predictability in an otherwise volatile energy landscape. This document examines the structure and function of PPAs, with particular emphasis on intraday trading mechanisms that enable market participants to manage renewable energy intermittency and optimize their positions.
 
 The integration of variable renewable energy sources such as solar and wind power has fundamentally altered electricity market dynamics. Traditional power systems relied on dispatchable generation that could be scheduled with high certainty. In contrast, renewable generation exhibits inherent variability that necessitates more sophisticated trading mechanisms and risk management strategies. Intraday markets have evolved to address these challenges by providing continuous trading opportunities up to minutes before physical delivery.
 
@@ -122,59 +122,59 @@ EnergyMarkets/
 The platform implements a three-tier architecture optimized for high-throughput time-series data processing:
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        External Data Sources                        │
+┌────────────────────────────────────────────────────────────────────┐
+│                        External Data Sources                       │
 │  ┌──────────────────────┐          ┌──────────────────────┐        │
 │  │   ENTSO-E Platform   │          │   Nord Pool Exchange │        │
 │  │  (Transparency API)  │          │    (Market Data API) │        │
-│  └──────────┬───────────┘          └──────────┬───────────┘        │
-└─────────────┼──────────────────────────────────┼──────────────────────┘
+│  └──────────┬───────────┘          └───────────┬──────────┘        │
+└─────────────┼──────────────────────────────────┼───────────────────┘
               │                                  │
               │ REST API (15-min polling)        │
               ▼                                  ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                      Application Layer (FastAPI)                    │
+┌────────────────────────────────────────────────────────────────────┐
+│                      Application Layer (FastAPI)                   │
 │  ┌──────────────────────────────────────────────────────────────┐  │
 │  │  Background Schedulers (APScheduler)                         │  │
-│  │  ├─ ENTSO-E Scraper Task (every 15 min)                     │  │
-│  │  └─ Nord Pool Scraper Task (every 15 min, offset +1min)     │  │
+│  │  ├─ ENTSO-E Scraper Task (every 15 min)                      │  │
+│  │  └─ Nord Pool Scraper Task (every 15 min, offset +1min)      │  │
 │  └──────────────────────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────────────────┐  │
 │  │  REST API Endpoints                                          │  │
-│  │  ├─ /api/v1/market-data/fetch (Nord Pool on-demand)         │  │
-│  │  ├─ /api/v1/prices/latest (Query stored prices)             │  │
-│  │  ├─ /api/v1/entsoe/latest (Query grid data)                 │  │
-│  │  └─ /api/v1/health (Health check)                           │  │
+│  │  ├─ /api/v1/market-data/fetch (Nord Pool on-demand)          │  │
+│  │  ├─ /api/v1/prices/latest (Query stored prices)              │  │
+│  │  ├─ /api/v1/entsoe/latest (Query grid data)                  │  │
+│  │  └─ /api/v1/health (Health check)                            │  │
 │  └──────────────────────────────────────────────────────────────┘  │
-└─────────────────────┬───────────────────────────────────────────────┘
+└─────────────────────┬──────────────────────────────────────────────┘
                       │ SQLAlchemy ORM (async)
                       ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Data Layer (TimescaleDB)                         │
+┌────────────────────────────────────────────────────────────────────┐
+│                    Data Layer (TimescaleDB)                        │
 │  ┌──────────────────────┐      ┌──────────────────────┐            │
 │  │ intraday_prices      │      │ entsoe_grid_data     │            │
 │  │ (Hypertable)         │      │ (Hypertable)         │            │
 │  │ - 7-day chunks       │      │ - 7-day chunks       │            │
 │  │ - Composite indexes  │      │ - Composite indexes  │            │
 │  └──────────────────────┘      └──────────────────────┘            │
-└─────────────────────┬───────────────────────────────────────────────┘
+└─────────────────────┬──────────────────────────────────────────────┘
                       │ PostgreSQL Protocol
                       ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│              Visualization Layer (Grafana)                          │
+┌────────────────────────────────────────────────────────────────────┐
+│              Visualization Layer (Grafana)                         │
 │  ┌──────────────────────────────────────────────────────────────┐  │
 │  │  Dashboards                                                  │  │
-│  │  ├─ Real-time Price Monitoring                              │  │
-│  │  ├─ Multi-Zone Comparison Charts                            │  │
-│  │  ├─ Volatility Analysis                                     │  │
-│  │  └─ Data Pipeline Health Metrics                            │  │
+│  │  ├─ Real-time Price Monitoring                               │  │
+│  │  ├─ Multi-Zone Comparison Charts                             │  │
+│  │  ├─ Volatility Analysis                                      │  │
+│  │  └─ Data Pipeline Health Metrics                             │  │
 │  └──────────────────────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────────────────┐  │
 │  │  Alerting System                                             │  │
-│  │  ├─ Price Spike Alerts (>€250/MWh)                          │  │
-│  │  └─ Data Ingestion Failure Alerts                           │  │
+│  │  ├─ Price Spike Alerts (>€250/MWh)                           │  │
+│  │  └─ Data Ingestion Failure Alerts                            │  │
 │  └──────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 2.3 Data Flow Diagram
@@ -290,14 +290,14 @@ The relationship between PPA parties involves distinct physical and financial fl
                │ Electricity                                          │
                │                                                      │
                ▼                                                      │ Fixed Revenue
-      ┌────────────────┐                                             │ (Contract Price)
+      ┌────────────────┐                                              │ (Contract Price)
       │     Fees       │                                              │
       │ - - - X - - -  │                                              │
       │  (Bypassed)    │                                              │
       ▼                │                                              │
 ┌─────────────────────────────┐                          ◄────────────┘
 │                             │    Floating Revenue      
-│        Offtaker             │- - - - - X - - - - - - - 
+│         Offtaker            │- - - - - X - - - - - - - 
 │   (PPA Counterparty)        │      (Bypassed)          
 │                             │                          
 │  [Industrial/Commercial]    │                          
@@ -446,7 +446,7 @@ Exchanges such as Nord Pool and EPEX SPOT apply the following aggregation method
 
 **Transaction Volume**: The sum of volumes for all executed transactions within the delivery hour, measured in megawatt-hours (MWh). This metric indicates market liquidity and trading activity.
 
-**Time-Specific Statistics**: 
+**Time-Specific Statistics**:
 - Timestamp of the first trade for the delivery hour
 - Timestamp of the last trade for the delivery hour
 - Opening trade price (price of the first transaction)
@@ -507,7 +507,7 @@ Balancing prices are almost universally more expensive (for deficits) or less fa
 
 4. **Gate Closure**: Positions must be corrected before the intraday market closes for each delivery period (gate closure time varies by market but is typically 5-60 minutes before delivery).
 
-**Who Employs This Strategy**: 
+**Who Employs This Strategy**:
 
 Every Balance Responsible Party managing renewable generation, conventional power plants, or industrial consumption portfolios utilizes imbalance arbitrage. It constitutes the baseline activity underpinning all other intraday strategies and is essential for operational risk management.
 
@@ -967,8 +967,8 @@ Fetches intraday hourly statistics including VWAP, high/low prices, volumes, and
 **Command-Line Interface**:
 
 ```
-usage: nordpool_client.py [-h] --areas AREAS --date DATE 
-                          [--api-key API_KEY] [--format {csv,json,both}] 
+usage: nordpool_client.py [-h] --areas AREAS --date DATE
+                          [--api-key API_KEY] [--format {csv,json,both}]
                           [--output OUTPUT]
 
 arguments:
@@ -994,7 +994,7 @@ This module defines scheduled background jobs executed by APScheduler within the
 
 **Task**: `auto_fetch_nordpool_job()`
 
-**Schedule**: Every 15 minutes  
+**Schedule**: Every 15 minutes
 **Purpose**: Automatically fetch Nord Pool intraday statistics for configured bidding zones and store in TimescaleDB
 
 **Execution Flow**:
@@ -1008,7 +1008,7 @@ This module defines scheduled background jobs executed by APScheduler within the
 
 **Task**: `auto_fetch_entsoe_job()`
 
-**Schedule**: Every 15 minutes (offset +10 seconds)  
+**Schedule**: Every 15 minutes (offset +10 seconds)
 **Purpose**: Automatically fetch ENTSO-E grid metrics (load and prices) and store in TimescaleDB
 
 **Execution Flow**:
@@ -1085,14 +1085,14 @@ CREATE TABLE intraday_prices (
 );
 
 -- Convert to hypertable (7-day chunks)
-SELECT create_hypertable('intraday_prices', 'start_time', 
+SELECT create_hypertable('intraday_prices', 'start_time',
     chunk_time_interval => INTERVAL '7 days');
 
 -- Composite index for fast queries
 CREATE INDEX idx_area_start_time ON intraday_prices (area, start_time DESC);
 
 -- Unique constraint to prevent duplicates
-ALTER TABLE intraday_prices 
+ALTER TABLE intraday_prices
     ADD CONSTRAINT _start_time_area_uc UNIQUE (start_time, area);
 ```
 
@@ -1111,16 +1111,16 @@ CREATE TABLE entsoe_grid_data (
 );
 
 -- Convert to hypertable
-SELECT create_hypertable('entsoe_grid_data', 'timestamp', 
+SELECT create_hypertable('entsoe_grid_data', 'timestamp',
     chunk_time_interval => INTERVAL '7 days');
 
 -- Composite index for metric queries
-CREATE INDEX idx_entsoe_lookup ON entsoe_grid_data 
+CREATE INDEX idx_entsoe_lookup ON entsoe_grid_data
     (bidding_zone, metric_name, timestamp DESC);
 
 -- Unique constraint
-ALTER TABLE entsoe_grid_data 
-    ADD CONSTRAINT _entsoe_metric_uc 
+ALTER TABLE entsoe_grid_data
+    ADD CONSTRAINT _entsoe_metric_uc
     UNIQUE (timestamp, bidding_zone, metric_name);
 ```
 
@@ -1294,7 +1294,7 @@ Grafana alerts monitor data quality and detect market anomalies.
 
 **Configuration**:
 ```
-Query: SELECT MAX(price_eur) FROM intraday_prices 
+Query: SELECT MAX(price_eur) FROM intraday_prices
        WHERE start_time >= NOW() - INTERVAL '15 minutes'
        
 Condition: WHEN max() OF query(A, 15m, now) IS ABOVE 250
@@ -1310,7 +1310,7 @@ Notification: Slack channel #energy-alerts
 
 **Configuration**:
 ```
-Query: SELECT COUNT(*) FROM intraday_prices 
+Query: SELECT COUNT(*) FROM intraday_prices
        WHERE fetched_at >= NOW() - INTERVAL '30 minutes'
        
 Condition: WHEN count() OF query(A, 30m, now) IS BELOW 1
@@ -1996,7 +1996,7 @@ docker-compose exec timeseries-db psql -U trader_admin -d power_db -f /docker-en
 
 3. **Regulatory and Market Guidelines**
    - European Commission. "Commission Recommendation on long-term Power Purchase Agreements." [EUR-Lex Access](https://eur-lex.europa.eu/)
-   - ACER (Agency for the Cooperation of Energy Regulators). "Decision on the establishment of a common methodology for intraday cross-zonal capacity allocation." 
+   - ACER (Agency for the Cooperation of Energy Regulators). "Decision on the establishment of a common methodology for intraday cross-zonal capacity allocation."
    - ENTSO-E Network Codes: Balancing, Capacity Allocation, and Congestion Management
 
 ### Technical Documentation and Libraries
@@ -2056,28 +2056,23 @@ docker-compose exec timeseries-db psql -U trader_admin -d power_db -f /docker-en
 
 ---
 
-**Document Version**: 2.0  
-**Last Updated**: 2026-07-21  
-**Maintained by**: Power Trading Data Platform Development Team  
-**License**: MIT (for code components) | CC BY 4.0 (for documentation)
-
 ### Primary Data Sources
 
-1. Nord Pool Group - Intraday Auctions  
+1. Nord Pool Group - Intraday Auctions
    [https://www.nordpoolgroup.com/en/services/power-market-data-services/intraday-auctions/](https://www.nordpoolgroup.com/en/services/power-market-data-services/intraday-auctions/)
 
-2. Nord Pool Data Portal - Intraday Hourly Statistics  
+2. Nord Pool Data Portal - Intraday Hourly Statistics
    [https://data.nordpoolgroup.com/intraday/intraday-hourly-statistics?deliveryDate=latest&deliveryArea=DK1](https://data.nordpoolgroup.com/intraday/intraday-hourly-statistics?deliveryDate=latest&deliveryArea=DK1)
 
-3. ENTSO-E Transparency Platform  
+3. ENTSO-E Transparency Platform
    [https://transparency.entsoe.eu/](https://transparency.entsoe.eu/)
 
 ### Technical and Educational Resources
 
-4. Next Kraftwerke - Intraday Trading Knowledge Base  
+4. Next Kraftwerke - Intraday Trading Knowledge Base
    [https://www.next-kraftwerke.com/knowledge/intraday-trading](https://www.next-kraftwerke.com/knowledge/intraday-trading)
 
-5. SmartPulse - Intraday Power Trading Strategies and Algorithms  
+5. SmartPulse - Intraday Power Trading Strategies and Algorithms
    [https://www.smartpulse.io/intraday-power-trading-2-how-to-trade-strategies-algorithms/](https://www.smartpulse.io/intraday-power-trading-2-how-to-trade-strategies-algorithms/)
 
 ### Market Context
@@ -2091,3 +2086,8 @@ docker-compose exec timeseries-db psql -U trader_admin -d power_db -f /docker-en
 ---
 
 *Document prepared as an academic resource for understanding power markets, PPAs, and intraday trading mechanisms. Data and examples focus on Nordic markets (Sweden, Norway, Finland, Denmark) for the period 2024-2026.*
+
+
+**License**: MIT (for source code) | CC BY 4.0 (for documentation)
+
+**Last Updated**: July 21, 2026
