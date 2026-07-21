@@ -1,0 +1,108 @@
+version: '3.8'
+
+# ==============================================================================
+# Power Trading Data Platform - Docker Compose Configuration
+# ==============================================================================
+# Multi-container orchestration for:
+#   - TimescaleDB (time-series database)
+#   - FastAPI Backend (data collection and API)
+#   - Grafana (visualization dashboard)
+# ==============================================================================
+
+services:
+  # ============================================================================
+  # TimescaleDB: High-performance time-series database
+  # ============================================================================
+  timeseries-db:
+    image: timescale/timescaledb-ha:pg16
+    container_name: power_trading_db
+    environment:
+      POSTGRES_USER: trader_admin
+      POSTGRES_PASSWORD: SecureTradingPassword2026!
+      POSTGRES_DB: power_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_trading_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trader_admin -d power_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - trading_network
+    restart: unless-stopped
+
+  # ============================================================================
+  # FastAPI Backend: Data collection and REST API
+  # ============================================================================
+  trading-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: power_trading_backend
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://trader_admin:SecureTradingPassword2026!@timeseries-db:5432/power_db
+      - NORDPOOL_API_KEY=${NORDPOOL_API_KEY:-your_nordpool_api_key_here}
+      - ENTSOE_API_KEY=${ENTSOE_API_KEY:-your_entsoe_api_key_here}
+      - APP_ENV=production
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./scripts:/app/scripts
+      - ./data:/app/data
+    depends_on:
+      timeseries-db:
+        condition: service_healthy
+    networks:
+      - trading_network
+    restart: unless-stopped
+    labels:
+      com.powertrading.service: "backend"
+      com.powertrading.version: "1.0.0"
+
+  # ============================================================================
+  # Grafana: Visualization and monitoring dashboard
+  # ============================================================================
+  grafana-dashboard:
+    image: grafana/grafana-oss:latest
+    container_name: power_trading_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:-admin_grafana_pass}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+      - GF_INSTALL_PLUGINS=
+    depends_on:
+      - timeseries-db
+    networks:
+      - trading_network
+    restart: unless-stopped
+    labels:
+      com.powertrading.service: "grafana"
+
+# ==============================================================================
+# Persistent Volume Definitions
+# ==============================================================================
+volumes:
+  postgres_trading_data:
+    driver: local
+    name: power_trading_postgres_data
+  grafana_storage:
+    driver: local
+    name: power_trading_grafana_data
+
+# ==============================================================================
+# Network Configuration
+# ==============================================================================
+networks:
+  trading_network:
+    driver: bridge
+    name: power_trading_network

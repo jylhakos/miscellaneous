@@ -1,0 +1,28 @@
+# ==============================================================================
+# Grafana Data Source Provisioning
+# ==============================================================================
+# Automatically configures PostgreSQL/TimescaleDB connection on Grafana startup
+# Eliminates manual data source configuration via UI
+# ==============================================================================
+
+apiVersion: 1
+
+datasources:
+  - name: PostgreSQL-PowerDB
+    type: postgres
+    access: proxy
+    url: timeseries-db:5432
+    user: trader_admin
+    database: power_db
+    secureJsonData:
+      password: SecureTradingPassword2026!
+    jsonData:
+      sslmode: 'disable'
+      postgresVersion: 16
+      timescaledb: true
+      maxOpenConns: 10
+      maxIdleConns: 5
+      connMaxLifetime: 300
+    editable: true
+    isDefault: true
+    version: 1

@@ -1,0 +1,34 @@
+# Core FastAPI Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# HTTP Client Libraries
+httpx==0.26.0
+requests==2.31.0
+
+# Database and ORM
+sqlalchemy==2.0.25
+asyncpg==0.29.0
+psycopg2-binary==2.9.9
+
+# Task Scheduling
+apscheduler==3.10.4
+
+# Energy Market Data APIs
+entsoe-py==0.6.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.26.3
+
+# Date and Time Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Environment Variables
+python-dotenv==1.0.0
+
+# Logging and Monitoring
+python-json-logger==2.0.7
