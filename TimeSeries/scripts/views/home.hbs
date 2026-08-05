@@ -1,0 +1,208 @@
+<html>
+  <head>
+  	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+    <script src="/socket.io/socket.io.js"></script>
+	<script src="/static/jquery-1.10.2.min.js"></script>
+	<script src="/static/Chart.js"></script>
+	<script src="/static/utils.js"></script>
+  </head>
+  <div id="header" style="padding-left: 5px; padding-bottom: 10px;">
+    <span id="feature" style="padding-left: 5px; font-style:italic;"></span>
+  </div>
+
+  <body style="padding-left: 5px; padding-right: 5px; padding-bottom: 25px;">
+
+    <canvas id="demo_chart" width="400" height="200">
+
+    <script>
+
+    	var timestamp_array = new Array(10);
+
+		var predicted_array = new Array(10);
+
+        //var history_array = new Array(10);
+
+		var predicted_index = 0;
+
+        var history_index = -1;
+
+    	var ctx = document.getElementById('demo_chart').getContext('2d');
+
+        var history_deduct = false;
+
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+	            labels: timestamp_array,
+	            datasets: [{
+	                label: "predicted",
+	                borderColor: 'rgb(255, 0, 0)',
+	                data: predicted_array,
+	                fill: false,
+	                pointStyle: 'circle',
+	                backgroundColor: 'rgb(255, 0, 0)',
+	                pointRadius: 3,
+	                pointHoverRadius: 5,
+	                lineTension: 0
+	            },
+                /*{
+                    label: "actual",
+                    borderColor: 'rgb(0, 0, 255)',
+                    data: history_array,
+                    fill: false,
+                    pointStyle: 'cross',
+                    backgroundColor: 'rgb(0, 0, 255)',
+                    pointRadius: 5,
+                    pointHoverRadius: 5,
+                    lineTension: 0
+                }*/]
+            },
+            options: {
+            	scales: {
+        			yAxes: [{
+            			ticks: {
+	            			scaleOverride : true,
+	                    	scaleSteps : 10,
+	                    	scaleStepWidth : 10,
+	                    	precision: 2,
+            			}
+        			}],
+    			}
+            }
+        });
+
+        function update_chart() {
+
+            chart.update();
+        }
+
+    	var socket = io.connect('localhost:3001');
+
+    	socket.on('connect', function() {
+
+            console.log('connected');
+
+        });
+
+        socket.on('update', function (data) {
+
+            console.log('LOG: ' + JSON.stringify(data));
+
+            console.log('log: ' + data.log);
+
+            console.log('update: ' + data);
+
+            //document.getElementById("place").textContent = "PLACE: " + data.place;
+            //document.getElementById("meter").textContent = "METER : " + data.meter;
+            document.getElementById("feature").textContent = "FEATURE: " + data.feature;
+
+        	if(predicted_index > 9) {
+
+                console.log('0');
+
+                for (var i = 1; i < 10; i++) {
+
+                    timestamp_temp = timestamp_array[i];
+
+                    predicted_temp = predicted_array[i];
+
+                    timestamp_array[i-1] = timestamp_temp;
+
+                    predicted_array[i-1] = predicted_temp;
+                }
+
+        		predicted_index = 9;
+
+                timestamp_array[predicted_index] = data.timestamp;
+
+                predicted_array[predicted_index] = data.predicted;
+
+                chart.data.datasets[0].data = predicted_array;
+
+                chart.data.labels = timestamp_array;
+
+                predicted_index = predicted_index + 1;
+
+                setTimeout(update_chart, 500);
+
+        	} else {
+
+                console.log(data.timestamp);
+
+        		timestamp_array[predicted_index] = data.timestamp;
+
+                console.log(data.predicted);
+
+        		predicted_array[predicted_index] = data.predicted;
+
+                console.log('1');
+
+        		chart.data.datasets[0].data = predicted_array;
+
+                console.log('2');
+
+                chart.data.labels = timestamp_array;
+
+                console.log('3');
+
+                predicted_index = predicted_index + 1;
+
+                setTimeout(update_chart,0);
+
+            }
+
+            if(history_index > 8) {
+
+                history_index = 8;
+
+                for (var i = 1; i < 9; i++) {
+
+                    //history_temp = history_array[i];
+
+                    //history_array[i-1] = history_temp;
+                }
+
+                //history_deduct = true;
+
+                //history_array[history_index-1] = data.history;
+
+                //if(history_deduct == true) {
+
+                        //history_array[history_index-1] = data.history;
+
+                    //} else {
+
+                        
+                    //}
+
+                //history_array[history_index] = data.history;
+
+                setTimeout(update_chart,0);
+
+                //history_index = history_index + 1;
+
+            } else {
+
+                if(history_index > -1) {
+
+                    //console.log(data.history);
+
+                    //history_array[history_index] = data.history;
+
+                    //chart.data.datasets[1].data = history_array;
+
+                    console.log('4');
+
+                    setTimeout(update_chart, 500);
+                }
+
+                console.log('5');
+
+    			history_index = history_index + 1;
+            }
+  		});
+
+    </script>
+  </body>
+</html>

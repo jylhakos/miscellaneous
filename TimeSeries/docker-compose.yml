@@ -1,0 +1,167 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14-alpine
+    container_name: timeseries_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-demo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-demo}
+      POSTGRES_DB: ${DB_NAME:-demo}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - timeseries_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-demo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis TimeSeries
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: timeseries_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - timeseries_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MQTT Broker (Eclipse Mosquitto)
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: timeseries_mqtt
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - timeseries_network
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Data Collector Service
+  data-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: timeseries_data_collector
+    command: python water_data_collector.py
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-demo}
+      - DB_PASSWORD=${DB_PASSWORD:-demo}
+      - DB_NAME=${DB_NAME:-demo}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mosquitto:
+        condition: service_healthy
+    networks:
+      - timeseries_network
+    restart: unless-stopped
+
+  # LSTM Service GPU-0
+  lstm-gpu-0:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: timeseries_lstm_gpu0
+    command: python water_lstm_service_improved.py 0
+    environment:
+      - GPU_ID=0
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - ./MODEL:/app/MODEL:ro
+    depends_on:
+      - data-collector
+    networks:
+      - timeseries_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # Output Service 0
+  output-service-0:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: timeseries_output_0
+    command: python water_output_service_0.py
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-demo}
+      - DB_PASSWORD=${DB_PASSWORD:-demo}
+      - DB_NAME=${DB_NAME:-demo}
+    depends_on:
+      - lstm-gpu-0
+      - postgres
+    networks:
+      - timeseries_network
+    restart: unless-stopped
+
+  # Web Application
+  web-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodejs
+    container_name: timeseries_webapp
+    command: node water_app.js
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-demo}
+      - DB_PASSWORD=${DB_PASSWORD:-demo}
+      - DB_NAME=${DB_NAME:-demo}
+      - WEB_APP_PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - output-service-0
+    networks:
+      - timeseries_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/predict"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  timeseries_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
