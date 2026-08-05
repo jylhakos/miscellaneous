@@ -24,6 +24,7 @@ miscellaneous/
 ├── 🎯 Patterns/                  # Software Design Patterns
 ├── ❓ QUESTIONS/                 # Technical Interview Q&A
 ├── 🏠 SmartBuildings/            # IoT & Building Automation
+├── ⏱️ TimeSeries/                # Water Quality Prediction System
 └── ⛓️ SupplyChain/               # Blockchain Distribution Network
 ```
 
@@ -280,6 +281,22 @@ miscellaneous/
 - Features multiple communication protocols (MQTT, HTTP, gRPC) for gateway-to-cloud integration
 
 **Technologies:** C, Python, Bluetooth Mesh, Bluetooth Low Energy (BLE), IoT, MQTT, HTTP, gRPC, TCP/IP, Raspberry Pi (ARM), nRF52 MCU, JSON, Ubuntu Linux, Edge Computing
+
+---
+
+## ⏱️ TimeSeries
+
+**Overview:** Event-driven microservices system for real-time water quality time-series forecasting using LSTM neural networks and distributed message-oriented architecture. Implements production-scale streaming inference pipeline with asynchronous data processing for IoT sensor data, featuring multi-GPU model serving and ZeroMQ-based event-driven communication for high-throughput predictions.
+
+**Key Insights:**
+- Implements event-driven architecture with ZeroMQ PUSH-PULL pattern for asynchronous message passing and load balancing across multiple LSTM inference services
+- Demonstrates message-oriented microservices with producer-consumer pattern enabling independent scaling of data ingestion, ML inference (4 GPU services), and output processing layers
+- Features LSTM model serving with TensorFlow/Keras for real-time time-series prediction on streaming water quality sensor data (COD, pH, temperature, suspended solids)
+- Implements asynchronous prediction workflow: MQTT data ingestion → time-series windowing → distributed GPU inference → prediction persistence → real-time dashboard visualization
+- Uses sliding window preprocessing (8-step input sequences) with MinMaxScaler normalization and inverse transformation for denormalized predictions
+- Provides horizontal scalability with round-robin load distribution across 4 independent LSTM services, each bound to separate GPU and ZeroMQ output queue
+
+**Technologies:** **Core ML:** Python, TensorFlow, Keras, LSTM, RNN, NumPy, Pandas, scikit-learn (MinMaxScaler), Deep Learning, Time-Series Forecasting | **Event-Driven Messaging:** ZeroMQ (PUSH-PULL pattern), Paho MQTT (Eclipse Mosquitto), Message-Oriented Architecture, Asynchronous Processing | **Data Storage:** PostgreSQL (Time-Series DB), Redis TimeSeries | **Web Services:** Node.js, Express, Socket.IO, Chart.js, jQuery, WebSockets | **Infrastructure:** Docker, Docker Compose, CUDA, NVIDIA GPU (Multi-GPU), Linux | **Monitoring:** Real-time Dashboard, Live Visualization, Streaming Inference
 
 ---
 
